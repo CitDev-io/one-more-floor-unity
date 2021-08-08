@@ -35,6 +35,7 @@ public class GameController_DDOL : MonoBehaviour
     {
         _sceneChanger = GetComponent<ChangeScene>();
         SetSoundLevel(2);
+        SetMusicToggle(false);
     }
 
     public void ChangeScene(string sceneName)
@@ -137,7 +138,7 @@ public class GameController_DDOL : MonoBehaviour
 
 
     public int currentVolume = 1;
-    public bool musicOn = true;
+    public bool musicOn = false;
     [SerializeField] public AudioSource audioSource_SFX;
     [SerializeField] public AudioSource audioSource_Music;
 
