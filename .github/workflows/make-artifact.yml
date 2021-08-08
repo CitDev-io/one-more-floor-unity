@@ -1,6 +1,9 @@
-name: Make Artifact
+name: Build & Deploy Main
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
