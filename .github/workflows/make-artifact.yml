@@ -1,0 +1,52 @@
+name: Make Artifact
+
+on: [push]
+
+jobs:
+  build:
+    name: Download from Github and Build C# Project
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+      # Test
+     #- name: Run tests
+     #   uses: game-ci/unity-test-runner@v2
+     #   env:
+     #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+     #   with:
+     #     githubToken: ${{ secrets.GITHUB_TOKEN }}
+      # Build
+      - name: Build and Transpile to Javascript for WebGL Build
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: WebGL
+
+      # Output
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Build
+          path: build
+          
+      - name: Push WebGL Build to Itch.io
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.2
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: webgl
+          ITCH_GAME: untitled-game-01
+          ITCH_USER: citizendevelopers
+          PACKAGE: build
