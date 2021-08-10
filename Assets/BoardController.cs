@@ -130,12 +130,14 @@ namespace citdev {
             {
                 CollectTiles(selection);
                 ClearSelection();
+            } else {
+                ClearSelection();
             }
         }
 
         bool isSelectionFinishable()
         {
-            return selection.Count > 1;
+            return selection.Count > 2;
         }
 
         void ClearSelection()
