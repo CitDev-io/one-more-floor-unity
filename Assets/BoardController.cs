@@ -137,7 +137,14 @@ namespace citdev {
 
         bool isSelectionFinishable()
         {
-            return selection.Count > 2;
+            if (selection.Count < 3) return false;
+
+            if (selection.Any(o => o.tileType == TileType.Monster)
+            && !selection.Any(o => o.tileType == TileType.Sword)) {
+                return false;
+            }
+            
+            return true;
         }
 
         void ClearSelection()
@@ -274,7 +281,7 @@ namespace citdev {
 
         bool isEligibleToAddToSelection(GameTile tile)
         {
-            if (selection.Count == 0 && tile.tileType != TileType.Monster)
+            if (selection.Count == 0)
             {
                 return true;
             }
