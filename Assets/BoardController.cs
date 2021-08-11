@@ -13,6 +13,7 @@ namespace citdev {
         RoundController _rc;
         LineRenderer _lr;
         GameController_DDOL _gc;
+        [SerializeField] Transform SelectionCountDoodad; 
 
         int TOP_COLUMN_INDEX = 5;
         int COUNT_ROWS = 6;
@@ -55,7 +56,7 @@ namespace citdev {
 
         public void ToggleTileFreeze(bool freeze)
         {
-            selection.Clear();
+            ClearSelection();
             isFrozen = freeze;
         }
 
@@ -163,6 +164,13 @@ namespace citdev {
             _lr.SetPositions(
                 selection.Select((o) => o.transform.position).ToArray()
             );
+            if (selection.Count == 0) {
+                SelectionCountDoodad.gameObject.SetActive(false);
+            } else {
+                SelectionCountDoodad.gameObject.SetActive(true);
+                SelectionCountDoodad.position = selection.ElementAt(selection.Count - 1).gameObject.transform.position;
+                SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(selection.Count + "");               
+            }
         }
 
         public List<GameTile> GetMonsters()

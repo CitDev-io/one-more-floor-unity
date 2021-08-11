@@ -415,15 +415,15 @@ public class RoundController : MonoBehaviour
                 tile.HitPoints = 0;
                 break;
             case TileType.Heart:
-                tile.Power = Random.Range(1, stats.HeartInstanceMax + 1);
+                tile.Power = 1;
                 tile.HitPoints = 0;
                 break;
             case TileType.Shield:
-                tile.Power = Random.Range(1, stats.ShieldInstanceMax + 1);
+                tile.Power = 1;
                 tile.HitPoints = 0;
                 break;
             case TileType.Sword:
-                tile.Power = Random.Range(stats.SwordInstanceMin, stats.SwordInstanceMax + 1);
+                tile.Power = stats.SwordInstanceMin;
                 tile.HitPoints = 0;
                 break;
             case TileType.Monster:
@@ -436,7 +436,7 @@ public class RoundController : MonoBehaviour
                 break;
         }
         tile.label1.text = tile.HitPoints > 0 ? tile.HitPoints + "" : "";
-        tile.label2.text = tile.Power > 0 && tile.tileType != TileType.Coin ? tile.Power + "" : "";
+        tile.label2.text = tile.tileType == TileType.Monster ? tile.Power + "" : "";
         tile.TurnAppeared = turn;
     }
 
