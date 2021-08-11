@@ -294,17 +294,60 @@ namespace citdev {
                 return true;
             }
 
-            GameTile lastTile = selection.Count > 0 ? selection.ElementAt(selection.Count - 1) : null;
-            if (
-                lastTile != null
-                && isTangential(tile, lastTile)
-                && isChainable(tile, lastTile)
-            )
+            GameTile lastTile = selection.ElementAt(selection.Count - 1);
+            if (isChainable(tile, lastTile))
             {
-                return true;
+                if (isAdjacent(tile, lastTile)) {
+                    return true;
+                }
+
+                if (hasDirectPath(tile, lastTile)) {
+                    List<GameTile> tilesInBetween = GetInBetweenTiles(tile, lastTile);
+                    tilesInBetween.Reverse();
+                    if (areAssumedChainable(tile, tilesInBetween)) {
+                        selection.AddRange(tilesInBetween);
+                        return true;
+                    }
+                }
             }
 
             return false;
+        }
+
+        List<GameTile> GetInBetweenTiles(GameTile first, GameTile next) {
+            if (!hasDirectPath(first, next)) throw new System.ArgumentException("should never have called this");
+    
+            Vector2Int diff = GetTileDiff(first, next);
+
+
+            Vector2Int normalized = new Vector2Int(System.Math.Sign(diff.x), System.Math.Sign(diff.y));
+
+            Vector2Int stopPoint = new Vector2Int(next.col, next.row);
+            Vector2Int pointer = new Vector2Int(first.col, first.row) + normalized;
+            List<GameTile> betweeners = new List<GameTile>();
+            int i = 0;
+            while (pointer != stopPoint && i < 6) {
+                var checkTile = tiles.FirstOrDefault(o => o.col == pointer.x && o.row == pointer.y);
+                betweeners.Add(checkTile);
+                pointer += normalized;
+                i += 1; // because i'm scared
+            }
+
+            return betweeners;
+        }
+
+        bool hasDirectPath(GameTile first, GameTile next) {
+            Vector2Int diff = GetTileDiff(first, next);
+
+            if (diff.x == 0 || diff.y == 0) return true;
+            if (Mathf.Abs(diff.x) == Mathf.Abs(diff.y)) return true;
+
+            return false;
+        }
+
+
+        bool areAssumedChainable(GameTile first, List<GameTile> betweeners) {
+            return betweeners.All(o => isChainable(first, o) && !selection.Contains(o));
         }
 
         bool isChainable(GameTile first, GameTile next)
@@ -322,11 +365,18 @@ namespace citdev {
             return false;
         }
 
-        bool isTangential(GameTile tile1, GameTile tile2)
+        bool isAdjacent(GameTile tile1, GameTile tile2)
         {
-            int rowDiff = Mathf.Abs(tile1.row - tile2.row);
-            int colDiff = Mathf.Abs(tile1.col - tile2.col);
-            return (rowDiff < 2) && (colDiff < 2) && (rowDiff + colDiff > 0);
+            Vector2Int diff = GetAbsTileDiff(tile1, tile2);
+            return (diff.y == 1 || diff.x == 1) && diff.x + diff.y <= 2;
+        }
+
+        Vector2Int GetAbsTileDiff(GameTile first, GameTile next) {
+            return new Vector2Int(Mathf.Abs(next.col - first.col), Mathf.Abs(next.row - first.row));
+        }
+
+        Vector2Int GetTileDiff(GameTile first, GameTile next) {
+            return new Vector2Int(next.col - first.col, next.row - first.row);
         }
 
         bool doesTileMatchLastInSelection(GameTile tile)

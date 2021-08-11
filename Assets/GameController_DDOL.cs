@@ -166,7 +166,6 @@ public class GameController_DDOL : MonoBehaviour
         if (audioClip != null)
         {
             audioSource_SFX.PlayOneShot(audioClip);
-            Debug.Log(clipName);
         }
         else
         {
