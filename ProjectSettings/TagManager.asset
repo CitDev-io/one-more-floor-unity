@@ -38,6 +38,24 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 2291069783
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: TileBackFx
+    uniqueID: 231019133
+    locked: 0
+  - name: Tile
+    uniqueID: 3370746201
+    locked: 0
+  - name: TileForeFx
+    uniqueID: 3576027231
+    locked: 0
+  - name: TileIndicator
+    uniqueID: 830411817
+    locked: 0
+  - name: BoardFx
+    uniqueID: 238792559
     locked: 0
