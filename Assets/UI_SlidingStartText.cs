@@ -40,6 +40,6 @@ public class UI_SlidingStartText : MonoBehaviour
 
     private void Start()
     {
-        GoGoStartText("WAVE START","WAVE START");
+       // GoGoStartText("WAVE START","WAVE START");
     }
 }

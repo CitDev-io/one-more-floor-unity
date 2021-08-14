@@ -3,7 +3,7 @@ using TMPro;
 
 public class UI_RoundProgress : MonoBehaviour
 {
-    [SerializeField] GameObject text;
+    [SerializeField] TextMeshProUGUI text;
     [SerializeField] GameObject check;
 
     RoundController _rc;
@@ -16,7 +16,7 @@ public class UI_RoundProgress : MonoBehaviour
     private void Start()
     {
         _rc.OnRoundEnd += OnRoundEnd;
-        text.SetActive(true);
+        text.gameObject.SetActive(true);
         check.SetActive(false);
     }
 
@@ -27,7 +27,11 @@ public class UI_RoundProgress : MonoBehaviour
 
     void OnRoundEnd()
     {
-        text.SetActive(false);
+        text.gameObject.SetActive(false);
         check.SetActive(true);
+    }
+
+    void OnGUI() {
+        text.text = "x" + (_rc.KillRequirement - _rc.Kills);
     }
 }

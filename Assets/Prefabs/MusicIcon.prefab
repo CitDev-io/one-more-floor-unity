@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: dee6c2a474732e14994e3d6bdd8e9675, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ef6ae6455763b5a4e996d3636c520076, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -85,8 +85,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4519048484194766056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b40f09d189393940bd5e6447b959802, type: 3}
+  m_Script: {fileID: 11500000, guid: 76c6071d8b18c674fb8384a22a3e860f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicOnIcon: {fileID: 21300000, guid: dee6c2a474732e14994e3d6bdd8e9675, type: 3}
-  musicOffIcon: {fileID: 21300000, guid: 9cad5403f5284b947806b41f7d3d7fb0, type: 3}
+  musicOnIcon: {fileID: 21300000, guid: ef6ae6455763b5a4e996d3636c520076, type: 3}
+  musicOffIcon: {fileID: 21300000, guid: 102e709029237f848aeacb7cc08cde10, type: 3}

@@ -47,7 +47,6 @@ public class GameController_DDOL : MonoBehaviour
     {
         round = 0;
         totalKills = 0;
-        coins = 0;
         score = 0;
         PreviousRoundScore = 0;
         PreviousRoundMoves = 0;
