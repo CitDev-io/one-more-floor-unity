@@ -109,7 +109,7 @@ public class RoundController : MonoBehaviour
 
         _gc.round += 1;
         round = _gc.round;
-        DoCharacterProgressionCheck();
+        // DoCharacterProgressionCheck();
         SetEnemyStatsByRound();
         SetupCharacterForRound();
     }
@@ -268,7 +268,7 @@ public class RoundController : MonoBehaviour
     {
         Kills += 1;
         _gc.OnMonsterKilled();
-        DoCharacterProgressionCheck();
+        // DoCharacterProgressionCheck();
       
         if (Kills >= KillRequirement)
         {
@@ -276,56 +276,56 @@ public class RoundController : MonoBehaviour
         }
     }
 
-    void DoCharacterProgressionCheck()
-    {
-        int totalKills = _gc.totalKills;
-        int prevLevel = CharacterLevel;
-        int achievedLevel = 1;
-        int costOfEntry = 5;
-        while (totalKills >= costOfEntry)
-        {
-            achievedLevel += 1;
-            costOfEntry += achievedLevel * 5;
-        }
+    // void DoCharacterProgressionCheck()
+    // {
+    //     int totalKills = _gc.totalKills;
+    //     int prevLevel = CharacterLevel;
+    //     int achievedLevel = 1;
+    //     int costOfEntry = 5;
+    //     while (totalKills >= costOfEntry)
+    //     {
+    //         achievedLevel += 1;
+    //         costOfEntry += achievedLevel * 5;
+    //     }
 
-        CharacterLevel = achievedLevel;
-        NextLevelAt = costOfEntry;
+    //     CharacterLevel = achievedLevel;
+    //     NextLevelAt = costOfEntry;
 
-        if (achievedLevel > prevLevel)
-        {
-            DoLevelUp(prevLevel, achievedLevel);
-        }
-    }
+    //     if (achievedLevel > prevLevel)
+    //     {
+    //         DoLevelUp(prevLevel, achievedLevel);
+    //     }
+    // }
 
-    void DoLevelUp(int from, int to)
-    {
-        if (from == 0) return;
-        FindObjectOfType<BoardController>()?.ToggleTileFreeze(true);
-        WaitingForUpgrade = true;
+    // void DoLevelUp(int from, int to)
+    // {
+    //     if (from == 0) return;
+    //     FindObjectOfType<BoardController>()?.ToggleTileFreeze(true);
+    //     WaitingForUpgrade = true;
 
-        levelupPanel.SetActive(true);
+    //     levelupPanel.SetActive(true);
 
-        List<int> pickedUpgrades = new List<int>();
-        CharacterUpgrade currentUps = _gc.GetUpgradeValues();
+    //     List<int> pickedUpgrades = new List<int>();
+    //     CharacterUpgrade currentUps = _gc.GetUpgradeValues();
 
-        if (currentUps.SwordInstanceMin == currentUps.SwordInstanceMax)
-        {
-            pickedUpgrades.Add(5); // Make Minimum Sword +1 unavilable
-        }
+    //     if (currentUps.SwordInstanceMin == currentUps.SwordInstanceMax)
+    //     {
+    //         pickedUpgrades.Add(5); // Make Minimum Sword +1 unavilable
+    //     }
 
-        foreach (UI_UpgradeOption upgradeSlot in upgradeSlots)
-        {
-            int randomId = Random.Range(1, 9);
-            while (pickedUpgrades.Contains(randomId))
-            {
-                randomId = Random.Range(1, 9);
-            }
-            pickedUpgrades.Add(randomId);
-            CharacterUpgrade rando = Resources.Load<CharacterUpgrade>("CharacterUpgrade/" + randomId);
+    //     foreach (UI_UpgradeOption upgradeSlot in upgradeSlots)
+    //     {
+    //         int randomId = Random.Range(1, 9);
+    //         while (pickedUpgrades.Contains(randomId))
+    //         {
+    //             randomId = Random.Range(1, 9);
+    //         }
+    //         pickedUpgrades.Add(randomId);
+    //         CharacterUpgrade rando = Resources.Load<CharacterUpgrade>("CharacterUpgrade/" + randomId);
 
-            upgradeSlot.SetupButtonWithValues(rando);
-        }
-    }
+    //         upgradeSlot.SetupButtonWithValues(rando);
+    //     }
+    // }
 
     void DoLose()
     {
@@ -356,8 +356,8 @@ public class RoundController : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
 
-        yield return new WaitForSeconds(0.5f);
-        FindObjectOfType<UI_SlidingStartText>().GoGoStartText("WAVE COMPLETE", "WAVE COMPLETE");
+        // yield return new WaitForSeconds(0.5f);
+        // FindObjectOfType<UI_SlidingStartText>().GoGoStartText("WAVE COMPLETE", "WAVE COMPLETE");
 
         _gc.PreviousRoundScore = RoundScore;
         _gc.PreviousRoundMoves = RoundMoves;
