@@ -45,8 +45,6 @@ public class GameController_DDOL : MonoBehaviour
 
     public void Reset()
     {
-        round = 0;
-        totalKills = 0;
         score = 0;
         PreviousRoundScore = 0;
         PreviousRoundMoves = 0;

@@ -6,21 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Title.unity
-    guid: 9059abb73eb1fcc4fa2df7951bcec66c
+    path: Assets/Scenes/Title/Title.unity
+    guid: 3da464a5cf251be478b75ee5d089c07f
   - enabled: 1
-    path: Assets/Scenes/LoopD1.unity
+    path: Assets/Scenes/Grid/Grid.unity
     guid: ca51e52922fb9eb469580ec23dddd970
   - enabled: 1
     path: Assets/Scenes/RoundScore.unity
     guid: 12efae41cdbdf9e4e8d8b4eb4d696cd7
   - enabled: 1
-    path: Assets/Scenes/Store.unity
-    guid: 2efd6c912bd19b64db528d31a7e06e07
-  - enabled: 1
-    path: Assets/Scenes/OpenMysteryBox.unity
-    guid: b33f5e3f398cd1c46a8f166738f51ad9
-  - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: 4ecf650971be7ae4c9a9725cd6064915
+  - enabled: 1
+    path: Assets/Scenes/AdventureSelect/AdventureSelect.unity
+    guid: 0ba57d0a090cd3c42a1340e3d1ad4212
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelect/CharacterSelect.unity
+    guid: 31f512766b048644090a57c07d460738
   m_configObjects: {}

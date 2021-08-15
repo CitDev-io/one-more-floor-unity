@@ -17,11 +17,11 @@ MonoBehaviour:
   description: Take this with you, it will help you on your journey
   iconName: none
   CoinValue: 10
-  ShieldInstanceMax: 2
-  HeartInstanceMax: 2
-  SwordInstanceMax: 2
+  ShieldInstanceMax: 1
+  HeartInstanceMax: 1
+  SwordInstanceMax: 1
   SwordInstanceMin: 1
   RoundStartShieldCount: 0
-  ShieldMax: 25
-  HitPointMax: 50
+  ShieldMax: 15
+  HitPointMax: 20
   armorMaxPercentModifier: 0

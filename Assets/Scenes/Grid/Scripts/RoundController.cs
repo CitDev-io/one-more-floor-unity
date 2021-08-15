@@ -128,8 +128,9 @@ public class RoundController : MonoBehaviour
 
     void SetEnemyStatsByRound()
     {
-        enemyHp = round + 1;
-        enemyDmg = Mathf.Max(round - (round % 2), 1);
+
+        enemyHp = Mathf.Min((int) Mathf.Ceil(round / 3f) + 1, 4);
+        enemyDmg = Mathf.Min((int) Mathf.Ceil(round / 4f), 3);
     }
 
     void AssessAttack(int damage)
@@ -337,8 +338,8 @@ public class RoundController : MonoBehaviour
         FindObjectOfType<BoardController>()?.ToggleTileFreeze(true);
         _gc.PreviousRoundMoves = RoundMoves;
         _gc.PreviousRoundScore = RoundScore;
-        FindObjectOfType<UI_SlidingStartText>().GoGoStartText("YOU LOSE", "YOU LOSE");
-        yield return new WaitForSeconds(3.0f);
+        //FindObjectOfType<UI_SlidingStartText>().GoGoStartText("YOU LOSE", "YOU LOSE");
+        yield return new WaitForSeconds(0.2f);
         _gc.ChangeScene("GameOver");
     }
 
