@@ -11,9 +11,8 @@ public class UI_ArmorTicker : MonoBehaviour
         _rc = GameObject.FindObjectOfType<RoundController>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
-    private void OnGUI()
-    {
-        int shieldMax = _rc.StatSheet().ShieldMax + (int)(_rc.StatSheet().ShieldMax * (_rc.StatSheet().armorMaxPercentModifier / 100));
-        _txt.text = _rc.Armor + " / " + shieldMax;
+    private void OnGUI() {
+        _txt.text = _rc.Armor + " / 10";
     }
 }
+

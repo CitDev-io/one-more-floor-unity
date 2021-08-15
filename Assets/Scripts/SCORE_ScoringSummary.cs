@@ -28,38 +28,12 @@ public class SCORE_ScoringSummary : MonoBehaviour
 
     void SetValues()
     {
-        roundPoints.text = "" + _gc.PreviousRoundScore;
-        int roundBo = _gc.round * 1000;
-        roundBonus.text = roundBo + "";
-
-        float moveBonus = 1f;
-
-        if (_gc.PreviousRoundMoves <= 20)
-        {
-            moveBonus = 3f;
-        } else if (_gc.PreviousRoundMoves <= 25)
-        {
-            moveBonus = 2f;
-        } else if (_gc.PreviousRoundMoves <= 30)
-        {
-            moveBonus = 1.5f;
-        } else if (_gc.PreviousRoundMoves <= 35)
-        {
-            moveBonus = 1.25f;
-        }
-
-        movesBonus.text = "x" + moveBonus;
+        roundPoints.text = "-";
+        roundBonus.text = "-";
+        movesBonus.text = "-";
         movesCount.text = _gc.PreviousRoundMoves + "";
-
-        int roundSco = (int) ((_gc.PreviousRoundScore + roundBo) * moveBonus);
-        roundScore.text = roundSco + "";
-
-        int extra = roundSco - _gc.PreviousRoundScore;
-
-        int totalSco = _gc.score + extra;
-        totalScore.text = totalSco + "";
-
-        _gc.score += extra;
+        roundScore.text = "-";
+        totalScore.text = "-";
     }
 
     IEnumerator DoScoreDisplay()
