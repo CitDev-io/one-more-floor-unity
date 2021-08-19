@@ -429,9 +429,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 185434369}
-  - component: {fileID: 185434368}
   - component: {fileID: 185434370}
   - component: {fileID: 185434371}
+  - component: {fileID: 185434372}
   m_Layer: 0
   m_Name: BoardController
   m_TagString: Untagged
@@ -439,20 +439,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &185434368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185434367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a25a680227cdff4ebd2dc66e3d32356, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 7992245267510586328, guid: 6c4f856f54a80af409bf3e4b0b253c2b, type: 3}
-  SelectionCountDoodad: {fileID: 1458359901}
 --- !u!4 &185434369
 Transform:
   m_ObjectHideFlags: 0
@@ -490,6 +476,8 @@ MonoBehaviour:
   apPrefab: {fileID: 8766646252445709156, guid: 4c3f53a5a0d16cd4998a29343f52fba2, type: 3}
   gpPrefab: {fileID: 1916482323283787625, guid: 48ba655b9a3951d4bba09518acb0664d, type: 3}
   floaterParent: {fileID: 2039224253}
+  tilePrefab: {fileID: 7992245267510586328, guid: 6c4f856f54a80af409bf3e4b0b253c2b, type: 3}
+  SelectionCountDoodad: {fileID: 1458359901}
 --- !u!120 &185434371
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -586,6 +574,18 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
+--- !u!114 &185434372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185434367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce1755291616fd3479c42cdd51021ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &197984291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,7 +1716,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1 to 3
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb0ab02da75ff7444aabce5a70fd2d9a, type: 2}
   m_sharedMaterial: {fileID: 2831392358145086997, guid: fb0ab02da75ff7444aabce5a70fd2d9a, type: 2}
