@@ -5,8 +5,13 @@ using TMPro;
 using Spine.Unity;
 
 namespace citdev {
+    public delegate void TileDelegate(GameTile tile);
+
     public class GameTile : MonoBehaviour
     {
+        public TileDelegate OnTileClick;
+        public TileDelegate OnTileHoverEnter;
+
         [Header("Plumbing")]
         [SerializeField] GameObject highlight;
         [SerializeField] SpriteRenderer sr;
@@ -17,11 +22,11 @@ namespace citdev {
         [SerializeField] GameObject MonsterFace;
 
         [Header("State")]
-        public bool isHighlighted = false;
         public TileType tileType;
         public int HitPoints = 0;
-        public int Power = 0;
-        public int TurnAppeared = 0;
+        public int MaxHitPoints = 2;
+        public int TurnsAlive = 0;
+        public int Damage = 2;
 
         [Space(25)]
         float speed = 7f;
@@ -29,6 +34,16 @@ namespace citdev {
         [Header("Assignment")]
         public int row = 5; // Y Y Y Y Y Y 
         public int col = 5; // X X X X X X
+
+        void OnGUI() {
+            label1.text = tileType == TileType.Monster ? HitPoints + "" : "";
+            label2.text = tileType == TileType.Monster ? Damage + "" : "";
+        }
+
+        public void Reset() {
+            HitPoints = MaxHitPoints;
+            TurnsAlive = 0;
+        }
 
         public void SetTileType(TileType tt)
         {
@@ -64,6 +79,15 @@ namespace citdev {
             }
         }
 
+        public void RecycleAsType(TileType tileType, bool RecyclePosition = false) {
+            SetTileType(tileType);
+            SnapToPosition(col, 7);
+            if (RecyclePosition) {
+                AssignPosition(col, 5);
+            }
+            Reset();
+        }
+
         public void SnapToPosition(float x, float y)
         {
             SnapToPosition(new Vector2(x, y));
@@ -85,28 +109,13 @@ namespace citdev {
             col = (int) newPos.x;
         }
 
-        private void OnMouseDown()
+        void OnMouseDown()
         {
-            var bc = GameObject.FindObjectOfType<BoardController>();
-
-            bc.OnTileClick(this);
+            OnTileClick?.Invoke(this);
         }
-        private void OnMouseEnter()
+        void OnMouseEnter()
         {
-            var bc = GameObject.FindObjectOfType<BoardController>();
-
-            bc.OnTileDragOver(this);
-        }
-
-        public void ToggleHighlight(bool setVal)
-        {
-            // highlight.SetActive(setVal);
-            isHighlighted = setVal;
-        }
-
-        public void ToggleHighlight()
-        {
-            ToggleHighlight(!isHighlighted);
+            OnTileHoverEnter?.Invoke(this);
         }
     }
 }

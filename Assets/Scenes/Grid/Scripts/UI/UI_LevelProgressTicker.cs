@@ -1,9 +1,10 @@
 using UnityEngine;
 using TMPro;
 
+namespace citdev {
 public class UI_LevelProgressTicker : MonoBehaviour
 {
-    RoundController _rc;
+    GridGameManager _rc;
     RectTransform _transform;
 
     public double _width;
@@ -11,7 +12,7 @@ public class UI_LevelProgressTicker : MonoBehaviour
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<RoundController>();
+        _rc = GameObject.FindObjectOfType<GridGameManager>();
         _transform = GetComponent<RectTransform>();
     }
     private void OnGUI()
@@ -22,4 +23,5 @@ public class UI_LevelProgressTicker : MonoBehaviour
         _width = width;
         _transform.sizeDelta = new Vector2((float)width, _transform.sizeDelta.y);
     }
+}
 }

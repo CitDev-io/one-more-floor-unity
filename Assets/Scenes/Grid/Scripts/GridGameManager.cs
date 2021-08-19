@@ -5,24 +5,32 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
+namespace citdev {
 public delegate void NoParamDelegate();
+public delegate void TilesDelegate(List<GameTile> t);
+public delegate void IntDelegate(int i);
 
-public class RoundController : MonoBehaviour
+[RequireComponent(typeof(GridInputManager))]
+public class GridGameManager : MonoBehaviour
 {
     public NoParamDelegate OnRoundEnd;
+
+    BoardController Board;
+    GridInputManager _gim;
 
     [SerializeField] public int HitPoints;
     [SerializeField] public int Armor;
     [SerializeField] public int Kills = 0;
 
     GameController_DDOL _gc;
-
-    bool roundEnded = false;
+    LineRenderer _lr;
 
     int enemyHp = 4;
     int enemyDmg = 2;
 
-    int turn = 1;
+    int COUNT_ROWS = 6;
+    int COUNT_COLS = 6;
+
     int round = 1;
     public int KillRequirement = 15;
     public int tilesCleared = 0;
@@ -32,6 +40,9 @@ public class RoundController : MonoBehaviour
     [SerializeField] GameObject apPrefab;
     [SerializeField] GameObject gpPrefab;
     [SerializeField] GameObject floaterParent;
+    [SerializeField] GameObject tilePrefab;
+    [SerializeField] Transform SelectionCountDoodad;
+    List<GameTile> tiles = new List<GameTile>();
 
     void FloatDamage(int dmg)
     {
@@ -54,7 +65,12 @@ public class RoundController : MonoBehaviour
         go.GetComponent<TextMeshProUGUI>().text = "+" + dmg + " GP";
     }
 
-    private void Start()
+    void Awake() {
+        _gim = GetComponent<GridInputManager>();
+        _lr = gameObject.GetComponent<LineRenderer>();
+    }
+
+    void Start()
     {
         _gc = FindObjectOfType<GameController_DDOL>();
 
@@ -62,6 +78,76 @@ public class RoundController : MonoBehaviour
         round = _gc.round;
         SetEnemyStatsByRound();
         SetupCharacterForRound();
+        for (var rowid = 0; rowid < COUNT_ROWS; rowid++)
+            {
+                for (var colid = 0; colid < COUNT_COLS; colid++)
+                {
+                    GameObject g = GameObject.Instantiate(
+                        tilePrefab,
+                        new Vector2(rowid, colid),
+                        Quaternion.identity
+                    );
+                    GameTile tile = g.GetComponent<GameTile>();
+                    _gim.AttachTileToGrid(tile);
+                    tile.AssignPosition(colid, rowid);
+                    tile.MaxHitPoints = enemyHp;
+                    tile.HitPoints = enemyHp;
+                    tile.Damage = enemyDmg;
+                    tiles.Add(tile);
+                }
+            }
+        Board = new BoardController(tiles, _gim, enemyHp, enemyDmg);
+        Board.OnPlayerCollectedTiles += PlayerCollectedTiles;
+        Board.OnTileAddedToSelection += HandleTileAddedToSelection;
+        Board.OnSelectionChange += HandleSelectionChange;
+        Board.OnMonstersAttack += HandleMonstersAttack;
+        Board.RunGrid();
+    }
+
+    void HandleMonstersAttack(List<GameTile> monsters) {
+        int damageReceived = monsters.Count * enemyDmg;
+
+        if (damageReceived == 0) return;
+         
+        int random = Random.Range(1, 4);
+        _gc.PlaySound("Monster_Hit_" + random);
+        FloatDamage(damageReceived);
+        AssessAttack(damageReceived);
+        foreach(GameTile monster in monsters) {
+            monster.MonsterMenace();
+        }
+    }
+
+    void HandleSelectionChange(List<GameTile> selection) {
+        _lr.positionCount = selection.Count;
+        _lr.SetPositions(
+            selection.Select((o) => o.transform.position).ToArray()
+        );
+        if (selection.Count == 0) {
+            SelectionCountDoodad.gameObject.SetActive(false);
+        } else {
+            SelectionCountDoodad.gameObject.SetActive(true);
+            SelectionCountDoodad.position = selection.ElementAt(selection.Count - 1).gameObject.transform.position;
+            SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(selection.Where((o) => o.tileType != TileType.Monster).ToList().Count + "");               
+        }
+    }
+
+    void HandleTileAddedToSelection(GameTile tile) {
+        switch (tile.tileType) {
+            case TileType.Coin:
+                _gc.PlaySound("Coin_Select");
+                break;
+            case TileType.Heart:
+                _gc.PlaySound("Heart_Select");
+                break;
+            case TileType.Shield:
+                _gc.PlaySound("Shield_Select");
+                break;
+
+            default:
+                _gc.PlaySound("Sword_Select");
+                break;
+        }
     }
 
     void SetupCharacterForRound()
@@ -109,29 +195,23 @@ public class RoundController : MonoBehaviour
         Armor = Mathf.Clamp(Armor + changeAmount, 0, 10);
     }
 
-    public void PlayerCollectedTiles(List<GameTile> collected, BoardController board)
+    public void PlayerCollectedTiles(List<GameTile> collected)
     {
         RoundMoves++;
 
         int healthGained = collected
             .Where((o) => o.tileType == TileType.Heart)
-            .Aggregate(0, (acc, cur) => acc + cur.Power);
+            .ToList().Count;
 
         int armorGained = collected
             .Where((o) => o.tileType == TileType.Shield)
-            .Aggregate(0, (acc, cur) => acc + cur.Power);
-
-        int coinMultiplier = 1;
+            .ToList().Count;
 
         List<GameTile> coinsCollected = collected.Where((o) => o.tileType == TileType.Coin).ToList();
 
-        if (coinsCollected.Count > 0) {
-            _gc.PlaySound("Coin_Collect");
-        }
-
         int coinGained = collected
             .Where((o) => o.tileType == TileType.Coin)
-            .Aggregate(0, (acc, cur) => acc + cur.Power) * coinMultiplier;
+            .ToList().Count * 10;
 
         if (coinsCollected.Count > 0)
         {
@@ -141,7 +221,7 @@ public class RoundController : MonoBehaviour
 
         int damageDealt = collected
             .Where((o) => o.tileType == TileType.Sword)
-            .Aggregate(0, (acc, cur) => acc + cur.Power);
+            .ToList().Count;
 
         List<GameTile> enemies = collected
             .Where((o) => o.tileType == TileType.Monster).ToList();
@@ -184,10 +264,6 @@ public class RoundController : MonoBehaviour
                 monster.label1.text = monster.HitPoints + "";
             }
         }
-
-        board.ClearTiles(clearableTiles);
-        // (e) : FINISHED RESOLVING USER COLLECTION
-        DoEnemiesTurn();
     }
 
     void OnMonsterKill()
@@ -207,7 +283,7 @@ public class RoundController : MonoBehaviour
 
     IEnumerator LoseRoutine()
     {
-        FindObjectOfType<BoardController>()?.ToggleTileFreeze(true);
+        // FindObjectOfType<BoardController>()?.ToggleTileFreeze(true);
         _gc.PreviousRoundMoves = RoundMoves;
         yield return new WaitForSeconds(0.2f);
         _gc.ChangeScene("GameOver");
@@ -215,7 +291,6 @@ public class RoundController : MonoBehaviour
 
     void DoVictory()
     {
-        roundEnded = true;
         OnRoundEnd?.Invoke();
         StartCoroutine("RoundVictory");
     }
@@ -226,91 +301,5 @@ public class RoundController : MonoBehaviour
         yield return new WaitForSeconds(3f);
         _gc.ChangeScene("RoundScore");
     }
-
-    void DoEnemiesTurn()
-    {
-        if (roundEnded) return;
-
-        // deal damage to player for existing monsters
-        var monsters = GameObject.FindObjectOfType<BoardController>().GetMonsters()
-            .Where((o) => o.TurnAppeared < turn).ToList();
-
-        int damageReceived = monsters
-                .Aggregate(0, (acc, cur) => acc + cur.Power);
-
-        if (monsters.Count > 0)
-        {
-            int random = Random.Range(1, 4);
-            _gc.PlaySound("Monster_Hit_" + random);
-            FloatDamage(damageReceived);
-        }
-        AssessAttack(damageReceived);
-        FindObjectOfType<BoardController>()?.EnemyIconsTaunt();
-        turn += 1;
-    }
-
-    TileType GetNextTile()
-    {
-        tilesCleared += 1;
-
-        if (tilesCleared > 40 && tilesCleared % 8 == 0)
-        {
-            return TileType.Monster;
-        }
-
-        return GetRandomTile();
-    }
-
-    TileType GetRandomTile()
-    {
-        int tileChoice = Random.Range(0, 4);
-        return (TileType)tileChoice;
-    }
-
-    void PrepNewTile(GameTile tile)
-    {
-        switch (tile.tileType) {
-            case TileType.Coin:
-                tile.Power = 10;
-                tile.HitPoints = 0;
-                break;
-            case TileType.Heart:
-                tile.Power = 1;
-                tile.HitPoints = 0;
-                break;
-            case TileType.Shield:
-                tile.Power = 1;
-                tile.HitPoints = 0;
-                break;
-            case TileType.Sword:
-                tile.Power = 1;
-                tile.HitPoints = 0;
-                break;
-            case TileType.Monster:
-                tile.Power = enemyDmg;
-                tile.HitPoints = enemyHp;
-                break;
-            default:
-                tile.Power = 0;
-                tile.HitPoints = 0;
-                break;
-        }
-        tile.label1.text = tile.HitPoints > 0 ? tile.HitPoints + "" : "";
-        tile.label2.text = tile.tileType == TileType.Monster ? tile.Power + "" : "";
-        tile.TurnAppeared = turn;
-    }
-
-    public void ConvertTileToSword(GameTile tile)
-    {
-        PrepNewTile(tile);
-    }
-
-    // should not be called locally! board needs to cascade guys above
-    public void RecycleTileForPosition(GameTile tile, Vector2 position)
-    {
-        tile.SetTileType(GetNextTile());
-        tile.SnapToPosition(position.x, 7);
-        tile.AssignPosition(position);
-        PrepNewTile(tile);
-    }
+}
 }

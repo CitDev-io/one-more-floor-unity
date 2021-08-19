@@ -1,18 +1,20 @@
 using UnityEngine;
 using TMPro;
 
+namespace citdev {
 public class UI_HPTicker : MonoBehaviour
 {
-    RoundController _rc;
+    GridGameManager _rc;
     TextMeshProUGUI _txt;
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<RoundController>();
+        _rc = GameObject.FindObjectOfType<GridGameManager>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
     private void OnGUI()
     {
         _txt.text = _rc.HitPoints + " / 15";
     }
+}
 }

@@ -1,16 +1,17 @@
 using UnityEngine;
 using TMPro;
 
+namespace citdev {
 public class UI_RoundProgress : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] GameObject check;
 
-    RoundController _rc;
+    GridGameManager _rc;
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<RoundController>();
+        _rc = GameObject.FindObjectOfType<GridGameManager>();
     }
 
     private void Start()
@@ -34,4 +35,5 @@ public class UI_RoundProgress : MonoBehaviour
     void OnGUI() {
         text.text = "x" + (_rc.KillRequirement - _rc.Kills);
     }
+}
 }
