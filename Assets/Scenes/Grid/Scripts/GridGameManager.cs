@@ -26,6 +26,7 @@ public class GridGameManager : MonoBehaviour
     LineRenderer _lr;
 
     int enemyHp = 4;
+    bool RoundHasEnded = false;
     int enemyDmg = 2;
 
     int COUNT_ROWS = 6;
@@ -74,7 +75,7 @@ public class GridGameManager : MonoBehaviour
     {
         _gc = FindObjectOfType<GameController_DDOL>();
 
-        _gc.round += 1;
+        // _gc.round += 1;
         round = _gc.round;
         SetEnemyStatsByRound();
         SetupCharacterForRound();
@@ -105,6 +106,7 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleMonstersAttack(List<GameTile> monsters) {
+        if (RoundHasEnded) return;
         int damageReceived = monsters.Count * enemyDmg;
 
         if (damageReceived == 0) return;
@@ -278,6 +280,9 @@ public class GridGameManager : MonoBehaviour
 
     void DoLose()
     {
+        if (RoundHasEnded) return;
+        RoundHasEnded = true;
+        OnRoundEnd?.Invoke();
         StartCoroutine("LoseRoutine");
     }
 
@@ -291,6 +296,8 @@ public class GridGameManager : MonoBehaviour
 
     void DoVictory()
     {
+        if (RoundHasEnded) return;
+        RoundHasEnded = true;
         OnRoundEnd?.Invoke();
         StartCoroutine("RoundVictory");
     }
@@ -299,6 +306,7 @@ public class GridGameManager : MonoBehaviour
     {
         _gc.PreviousRoundMoves = RoundMoves;
         yield return new WaitForSeconds(3f);
+        _gc.round += 1;
         _gc.ChangeScene("RoundScore");
     }
 }

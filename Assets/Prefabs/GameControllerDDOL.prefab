@@ -52,17 +52,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80de7625c0da91745b13ca3d9dfb8ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  round: 0
+  round: 1
   totalKills: 0
   coins: 0
-  score: 0
-  mysteryBoxPrice: 100
-  PreviousRoundScore: 0
   PreviousRoundMoves: 0
-  upgrades: []
-  hasHelmet: 0
-  hasChestplate: 0
-  hasBelt: 0
   currentVolume: 1
   musicOn: 1
   audioSource_SFX: {fileID: 860184326}
