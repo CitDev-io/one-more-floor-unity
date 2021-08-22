@@ -4,25 +4,24 @@ using UnityEngine;
 using System.Linq;
 
 namespace citdev {
-public class ChainValidator
+public abstract class ChainValidator
 {
-    List<GameTile> Tiles;
-    List<GameTile> Selection;
-    public ChainValidator(List<GameTile> tiles, List<GameTile> selection) {
-        Tiles = tiles;
-        Selection = selection;
-    }
+    protected List<GameTile> Tiles;
+    protected List<GameTile> Selection;
+
+
+    protected abstract bool moreIsSelectionFinishable();
+    protected abstract bool moreIsChainable(GameTile first, GameTile next);
 
     public bool isSelectionFinishable()
     {
         if (Selection.Count < 3) return false;
 
-        if (Selection.Any(o => o.tileType == TileType.Monster)
-        && !Selection.Any(o => o.tileType == TileType.Sword)) {
+        if (Selection.All(o => o.tileType == TileType.Monster)) {
             return false;
         }
         
-        return true;
+        return moreIsSelectionFinishable();
     }
 
     public bool isEligibleToAddToSelection(GameTile tile)
@@ -100,11 +99,12 @@ public class ChainValidator
             if (
                 attackChainTiles.Contains(first.tileType)
                 && attackChainTiles.Contains(next.tileType)
+                && Selection.All((o) => attackChainTiles.Contains(o.tileType))
             ) {
                 return true;
             }
 
-            return false;
+            return moreIsChainable(first, next);
         }
 
         bool isAdjacent(GameTile tile1, GameTile tile2)

@@ -644,11 +644,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 71a2ea0f233823b499c31dc685754911, type: 3}
   - {fileID: 21300000, guid: d9dc2cf64668118489d63443d2805e31, type: 3}
   MonsterFace: {fileID: 9222222131449547032}
-  isHighlighted: 0
   tileType: 0
   HitPoints: 0
-  Power: 0
-  TurnAppeared: 0
+  MaxHitPoints: 2
+  TurnsAlive: 0
+  Damage: 2
+  StunnedRounds: 0
   row: 0
   col: 7
 --- !u!58 &4396867641409278214
@@ -695,7 +696,7 @@ Transform:
   m_GameObject: {fileID: 9222222131449547032}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0046, y: -0.0325, z: 0}
-  m_LocalScale: {x: 0.28, y: 0.28, z: 0.28}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.04}
   m_Children: []
   m_Father: {fileID: 7992245267510586334}
   m_RootOrder: 3
@@ -783,6 +784,6 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: idle2
+  _animationName: idle
   loop: 1
   timeScale: 1

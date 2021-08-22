@@ -240,13 +240,15 @@ public class GridGameManager : MonoBehaviour
         if (armorGained != 0)
         {
             ApplyArmorChange(armorGained);
-            _gc.PlaySound("Shield_Use");
+            if (enemies.Count == 0){
+                _gc.PlaySound("Shield_Use");
+            }
             FloatArmor(armorGained);
         }
         
         _gc.CoinBalanceChange(coinGained);
 
-        if (enemies.Count > 0)
+        if (enemies.Count > 0 && damageDealt > 0)
         {
             _gc.PlaySound("Sword_Hit");
         }
@@ -263,7 +265,12 @@ public class GridGameManager : MonoBehaviour
             } else
             {
                 // (e) : MONSTER SURVIVED ATTACK
-                monster.label1.text = monster.HitPoints + "";
+            }
+
+            if (armorGained > 0) {
+                // stun the monster
+                monster.Stun();
+                _gc.PlaySound("Bash");
             }
         }
     }
