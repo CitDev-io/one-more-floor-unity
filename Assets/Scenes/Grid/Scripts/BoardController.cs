@@ -34,7 +34,7 @@ namespace citdev {
             input.OnUserEndSelection += HandleUserEndSelection;
             input.OnUserDragIndicatingTile += HandleUserIndicatingTile;
             tileSelector = new TileSelector();
-            chainValidator = new ChainValidator(Tiles, selection);
+            chainValidator = new WarriorChainValidator(Tiles, selection);
         }
 
         public void RunGrid() {
@@ -72,7 +72,10 @@ namespace citdev {
         void ExecuteUserTurn() {
             CollectTiles(selection);
             OnMonstersAttack?.Invoke(
-                Tiles.Where((o) => o.tileType == TileType.Monster && o.TurnsAlive > 0).ToList()
+                Tiles.Where((o) => o.tileType == TileType.Monster
+                && o.TurnsAlive > 0
+                && o.StunnedRounds <= 0
+            ).ToList()
             );
             AgeAllMonsters();
         }
@@ -81,7 +84,8 @@ namespace citdev {
             var monsters = Tiles.Where((o) => o.tileType == TileType.Monster);
             foreach(GameTile monster in monsters) {
                 monster.TurnsAlive += 1;
-            }
+                monster.ResolveStunRound();
+           }
         }
 
         void HandleUserIndicatingTile(GameTile tile)

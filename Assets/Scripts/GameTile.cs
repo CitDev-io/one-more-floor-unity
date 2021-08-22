@@ -27,6 +27,7 @@ namespace citdev {
         public int MaxHitPoints = 2;
         public int TurnsAlive = 0;
         public int Damage = 2;
+        public int StunnedRounds = 0;
 
         [Space(25)]
         float speed = 7f;
@@ -43,6 +44,8 @@ namespace citdev {
         public void Reset() {
             HitPoints = MaxHitPoints;
             TurnsAlive = 0;
+            StunnedRounds = 0;
+            MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle", true, 0f);
         }
 
         public void SetTileType(TileType tt)
@@ -57,8 +60,22 @@ namespace citdev {
 
         public void MonsterMenace()
         {
+            if (StunnedRounds > 0) return;
+
             MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.SetAnimation(0, "attack", false);
-            MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle2", true, 0f);
+            MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle", true, 0f);
+        }
+
+        public void Stun() {
+            StunnedRounds = 2;
+            MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "stunned", true, 0f);
+        }
+
+        public void ResolveStunRound(){
+            if (StunnedRounds == 1) {
+                MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle", true, 0f);
+            }
+            StunnedRounds -= 1;
         }
 
         void Start()
@@ -118,4 +135,5 @@ namespace citdev {
             OnTileHoverEnter?.Invoke(this);
         }
     }
+        
 }
