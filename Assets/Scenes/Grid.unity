@@ -431,9 +431,8 @@ GameObject:
   - component: {fileID: 185434369}
   - component: {fileID: 185434370}
   - component: {fileID: 185434371}
-  - component: {fileID: 185434372}
   m_Layer: 0
-  m_Name: BoardController
+  m_Name: GridGameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -469,7 +468,6 @@ MonoBehaviour:
   Armor: 0
   Kills: 0
   KillRequirement: 15
-  tilesCleared: 0
   RoundMoves: 0
   dmgPrefab: {fileID: 7223485370980304402, guid: 14ab5173ca2c87d4e91c641a5bdb4ae2, type: 3}
   hpPrefab: {fileID: 6487280693032716880, guid: 257accde506d59a489ebf6520a3e0b6e, type: 3}
@@ -574,18 +572,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 0
   m_Loop: 0
---- !u!114 &185434372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 185434367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce1755291616fd3479c42cdd51021ffa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &197984291
 GameObject:
   m_ObjectHideFlags: 0
@@ -2440,7 +2426,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 95a94eedd55e6d4438456e8b8da9e98b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

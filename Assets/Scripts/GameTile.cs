@@ -17,8 +17,6 @@ namespace citdev {
         [SerializeField] SpriteRenderer sr;
         [SerializeField] public TextMeshProUGUI label1;
         [SerializeField] public TextMeshProUGUI label2;
-        [SerializeField]
-        List<Sprite> icons = new List<Sprite>();
         [SerializeField] GameObject MonsterFace;
 
         [Header("State")]
@@ -51,7 +49,7 @@ namespace citdev {
         public void SetTileType(TileType tt)
         {
             tileType = tt;
-            sr.sprite = icons[(int)tt];
+            sr.sprite = Resources.Load<Sprite>("Tiles/" + tt + "1");
 
             bool isAMonster = tt == TileType.Monster;
             MonsterFace.SetActive(isAMonster);
