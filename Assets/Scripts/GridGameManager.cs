@@ -10,13 +10,11 @@ public delegate void NoParamDelegate();
 public delegate void TilesDelegate(List<GameTile> t);
 public delegate void IntDelegate(int i);
 
-[RequireComponent(typeof(GridInputManager))]
 public class GridGameManager : MonoBehaviour
 {
     public NoParamDelegate OnRoundEnd;
 
     BoardController Board;
-    GridInputManager _gim;
 
     [SerializeField] public int HitPoints;
     [SerializeField] public int Armor;
@@ -25,16 +23,10 @@ public class GridGameManager : MonoBehaviour
     GameController_DDOL _gc;
     LineRenderer _lr;
 
-    int enemyHp = 4;
     bool RoundHasEnded = false;
-    int enemyDmg = 2;
-
-    int COUNT_ROWS = 6;
-    int COUNT_COLS = 6;
 
     int round = 1;
     public int KillRequirement = 15;
-    public int tilesCleared = 0;
     public int RoundMoves = 0;
     [SerializeField] GameObject dmgPrefab;
     [SerializeField] GameObject hpPrefab;
@@ -67,47 +59,55 @@ public class GridGameManager : MonoBehaviour
     }
 
     void Awake() {
-        _gim = GetComponent<GridInputManager>();
         _lr = gameObject.GetComponent<LineRenderer>();
     }
 
     void Start()
     {
         _gc = FindObjectOfType<GameController_DDOL>();
-
-        // _gc.round += 1;
         round = _gc.round;
-        SetEnemyStatsByRound();
         SetupCharacterForRound();
-        for (var rowid = 0; rowid < COUNT_ROWS; rowid++)
-            {
-                for (var colid = 0; colid < COUNT_COLS; colid++)
-                {
-                    GameObject g = GameObject.Instantiate(
-                        tilePrefab,
-                        new Vector2(rowid, colid),
-                        Quaternion.identity
-                    );
-                    GameTile tile = g.GetComponent<GameTile>();
-                    _gim.AttachTileToGrid(tile);
-                    tile.AssignPosition(colid, rowid);
-                    tile.MaxHitPoints = enemyHp;
-                    tile.HitPoints = enemyHp;
-                    tile.Damage = enemyDmg;
-                    tiles.Add(tile);
-                }
-            }
-        Board = new BoardController(tiles, _gim, enemyHp, enemyDmg);
+
+        CreateVanillaBoard();
+        SubscribeToBoard();
+
+        Board.StartBoard();
+    }
+
+    void SubscribeToBoard() {
         Board.OnPlayerCollectedTiles += PlayerCollectedTiles;
         Board.OnTileAddedToSelection += HandleTileAddedToSelection;
         Board.OnSelectionChange += HandleSelectionChange;
         Board.OnMonstersAttack += HandleMonstersAttack;
-        Board.RunGrid();
+    }
+
+    void UnsubscribeToBoard() {
+        Board.OnPlayerCollectedTiles -= PlayerCollectedTiles;
+        Board.OnTileAddedToSelection -= HandleTileAddedToSelection;
+        Board.OnSelectionChange -= HandleSelectionChange;
+        Board.OnMonstersAttack -= HandleMonstersAttack;
+    }
+
+    void CreateVanillaBoard() {
+        GameObject boxPrefab = Resources.Load<GameObject>("Prefabs/BoardGameBox");
+        GameObject boxObj = Instantiate(
+            boxPrefab,
+            Vector3.zero,
+            Quaternion.identity
+        );
+        BoardGameBox box = boxObj.GetComponent<BoardGameBox>();
+        BoardContext bctx = new BoardContext(
+            _gc.CurrentCharacter,
+            _gc.round,
+            box
+        );
+
+        Board = new BoardController(bctx);
     }
 
     void HandleMonstersAttack(List<GameTile> monsters) {
         if (RoundHasEnded) return;
-        int damageReceived = monsters.Count * enemyDmg;
+        int damageReceived = monsters.Sum((o) => o.Damage);
 
         if (damageReceived == 0) return;
          
@@ -155,13 +155,6 @@ public class GridGameManager : MonoBehaviour
     void SetupCharacterForRound()
     {
         HitPoints = 15;
-    }
-
-    void SetEnemyStatsByRound()
-    {
-
-        enemyHp = Mathf.Min((int) Mathf.Ceil(round / 3f) + 1, 4);
-        enemyDmg = Mathf.Min((int) Mathf.Ceil(round / 4f), 3);
     }
 
     void AssessAttack(int damage)

@@ -13,7 +13,7 @@ namespace citdev {
         public TilesDelegate OnSelectionChange;
         public TilesDelegate OnMonstersAttack;
 
-        List<GameTile> Tiles;
+        BoardContext ctx;
 
         int EnemyHp = 1;
         int EnemyDmg = 1;
@@ -22,24 +22,45 @@ namespace citdev {
         TileSelector tileSelector;
         ChainValidator chainValidator;
 
-        public BoardController(
-            List<GameTile> tiles,
-            GridInputManager input,
-            int enemyHp,
-            int enemyDmg) {
-            Tiles = tiles;
-            EnemyHp = enemyHp;
-            EnemyDmg = enemyDmg;
-            input.OnUserStartSelection += HandleUserStartSelection;
-            input.OnUserEndSelection += HandleUserEndSelection;
-            input.OnUserDragIndicatingTile += HandleUserIndicatingTile;
-            tileSelector = new TileSelector();
-            chainValidator = new WarriorChainValidator(Tiles, selection);
+        public BoardController(BoardContext bctx) {
+            bctx.Box.Input.OnUserStartSelection += HandleUserStartSelection;
+            bctx.Box.Input.OnUserEndSelection += HandleUserEndSelection;
+            bctx.Box.Input.OnUserDragIndicatingTile += HandleUserIndicatingTile;
+            ctx = bctx;
+            SetEnemyStatsByRound(bctx.Stage);
+            tileSelector = new TileSelector(bctx.PC.TileOptions);
+            switch(bctx.PC.Name.ToLower()) {
+                case "warrior":
+                    chainValidator = new WarriorChainValidator(
+                        bctx.Box.Tiles,
+                        selection
+                    );
+                    break;
+                case "rogue":
+                    chainValidator = new RogueChainValidator(
+                        bctx.Box.Tiles,
+                        selection
+                    );
+                    break;
+                default:
+                    Debug.Log("NOT ESTABLISHED WHAT CLASS YOU ARE");
+                    break;
+            }
         }
 
-        public void RunGrid() {
-            foreach(GameTile tile in Tiles) {
+        void SetEnemyStatsByRound(int round)
+        {
+
+            EnemyHp = Mathf.Min((int) Mathf.Ceil(round / 3f) + 1, 4);
+            EnemyDmg = Mathf.Min((int) Mathf.Ceil(round / 4f), 3);
+        }
+
+        public void StartBoard() {
+            foreach(GameTile tile in ctx.Box.Tiles) {
                 tile.AssignPosition(tile.col, tile.row);
+                tile.MaxHitPoints = EnemyHp;
+                tile.HitPoints = EnemyHp;
+                tile.Damage = EnemyDmg;
                 tile.RecycleAsType(tileSelector.GetNextTile());
             }
         }
@@ -72,7 +93,7 @@ namespace citdev {
         void ExecuteUserTurn() {
             CollectTiles(selection);
             OnMonstersAttack?.Invoke(
-                Tiles.Where((o) => o.tileType == TileType.Monster
+                ctx.Box.Tiles.Where((o) => o.tileType == TileType.Monster
                 && o.TurnsAlive > 0
                 && o.StunnedRounds <= 0
             ).ToList()
@@ -81,7 +102,7 @@ namespace citdev {
         }
 
         void AgeAllMonsters() {
-            var monsters = Tiles.Where((o) => o.tileType == TileType.Monster);
+            var monsters = ctx.Box.Tiles.Where((o) => o.tileType == TileType.Monster);
             foreach(GameTile monster in monsters) {
                 monster.TurnsAlive += 1;
                 monster.ResolveStunRound();
@@ -155,7 +176,7 @@ namespace citdev {
 
         void RecascadeTile(GameTile tile)
         {
-            List<GameTile> aboveTiles = Tiles.FindAll((o) => o.col == tile.col && o.row > tile.row);
+            List<GameTile> aboveTiles = ctx.Box.Tiles.FindAll((o) => o.col == tile.col && o.row > tile.row);
 
             foreach(GameTile t in aboveTiles)
             {

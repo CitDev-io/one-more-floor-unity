@@ -10,7 +10,8 @@ namespace citdev
         Heart,
         Shield,
         Sword,
-        Monster
+        Monster,
+        Poison
     }
 
 }
