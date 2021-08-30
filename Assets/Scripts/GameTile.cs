@@ -65,7 +65,7 @@ namespace citdev {
         }
 
         public void Stun() {
-            StunnedRounds = 2;
+            StunnedRounds = 3;
             MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "stunned", true, 0f);
         }
 
