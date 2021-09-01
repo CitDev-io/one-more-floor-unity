@@ -16,10 +16,10 @@ namespace citdev {
             PCFactory factory = null;
             switch (name.ToLower()) {
                 case "warrior":
-                    factory = new WarriorFactory(0);
+                    factory = new WarriorFactory();
                     break;
                 case "rogue":
-                    factory = new RogueFactory(0);
+                    factory = new RogueFactory();
                     break;
                 default:
                     break;
