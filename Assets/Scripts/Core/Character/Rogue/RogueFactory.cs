@@ -5,14 +5,12 @@ using UnityEngine;
 namespace citdev {
 public class RogueFactory : PCFactory
 {
-    private int _experience;
-
-    public RogueFactory(int experience) {
-        _experience = experience;
+    public RogueFactory() {
+        
     }
 
     public override PlayerCharacter GetPC() {
-        return new PC_Rogue(0);
+        return new PC_Rogue();
     }
 }
 }

@@ -6,11 +6,9 @@ namespace citdev {
 public class PC_Warrior : PlayerCharacter
 {
     private readonly string _name;
-    private int _experience;
 
-    public PC_Warrior(int exp) {
+    public PC_Warrior() {
         _name = "Warrior";
-        _experience = exp;
         TileOptions = new List<TileType> {
             TileType.Shield,
             TileType.Sword,
@@ -21,11 +19,6 @@ public class PC_Warrior : PlayerCharacter
 
     public override string Name {
         get { return _name; }
-    }
-
-    public override int Experience {
-        get { return _experience; }
-        set { _experience = value; }
     }
 }
 }

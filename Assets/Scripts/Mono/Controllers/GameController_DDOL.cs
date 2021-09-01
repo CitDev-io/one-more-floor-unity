@@ -11,7 +11,7 @@ public class GameController_DDOL : MonoBehaviour
     public int coins = 0;
     public int PreviousRoundMoves = 0;
     ChangeScene _sceneChanger;
-    public PlayerCharacter CurrentCharacter = new PC_Rogue(0);
+    public PlayerCharacter CurrentCharacter = new PC_Rogue();
 
     void Awake()
     {
