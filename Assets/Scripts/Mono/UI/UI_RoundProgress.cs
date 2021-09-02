@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-namespace citdev {
 public class UI_RoundProgress : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI text;
@@ -33,7 +32,7 @@ public class UI_RoundProgress : MonoBehaviour
     }
 
     void OnGUI() {
-        text.text = "x" + (_rc.KillRequirement - _rc.Kills);
+        if (_rc.Board == null) return;
+        text.text = "x" + (_rc.Board.KillRequirement - _rc.Board.Kills);
     }
-}
 }

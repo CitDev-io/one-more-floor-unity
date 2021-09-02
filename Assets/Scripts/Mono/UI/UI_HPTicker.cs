@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-namespace citdev {
 public class UI_HPTicker : MonoBehaviour
 {
     GridGameManager _rc;
@@ -14,7 +13,7 @@ public class UI_HPTicker : MonoBehaviour
     }
     private void OnGUI()
     {
-        _txt.text = _rc.HitPoints + " / 15";
+        if (_rc.Board == null) return;
+        _txt.text = _rc.Board.HitPoints + " / 15";
     }
-}
 }

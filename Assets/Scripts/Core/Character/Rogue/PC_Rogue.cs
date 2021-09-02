@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace citdev {
 public class PC_Rogue : PlayerCharacter
 {
     private readonly string _name;
@@ -20,5 +17,4 @@ public class PC_Rogue : PlayerCharacter
     public override string Name {
         get { return _name; }
     }
-}
 }

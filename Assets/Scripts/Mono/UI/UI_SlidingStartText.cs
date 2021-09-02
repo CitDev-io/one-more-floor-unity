@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class UI_SlidingStartText : MonoBehaviour
@@ -40,6 +38,6 @@ public class UI_SlidingStartText : MonoBehaviour
 
     private void Start()
     {
-       // GoGoStartText("WAVE START","WAVE START");
+        
     }
 }

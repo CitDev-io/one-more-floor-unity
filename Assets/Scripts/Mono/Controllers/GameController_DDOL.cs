@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-using citdev;
 
 public class GameController_DDOL : MonoBehaviour
 {
@@ -11,7 +7,7 @@ public class GameController_DDOL : MonoBehaviour
     public int coins = 0;
     public int PreviousRoundMoves = 0;
     ChangeScene _sceneChanger;
-    public PlayerCharacter CurrentCharacter = new PC_Rogue();
+    public PlayerCharacter CurrentCharacter = new PC_Warrior();
 
     void Awake()
     {
@@ -31,7 +27,7 @@ public class GameController_DDOL : MonoBehaviour
         _sceneChanger.SwapToScene(sceneName);
     }
 
-    public void Reset()
+    void Reset()
     {
         PreviousRoundMoves = 0;
     }

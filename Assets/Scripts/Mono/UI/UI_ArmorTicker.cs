@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-namespace citdev {
 public class UI_ArmorTicker : MonoBehaviour
 {
     GridGameManager _rc;
@@ -13,7 +12,7 @@ public class UI_ArmorTicker : MonoBehaviour
         _txt = GetComponent<TextMeshProUGUI>();
     }
     private void OnGUI() {
-        _txt.text = _rc.Armor + " / 10";
+        if (_rc.Board == null) return;
+        _txt.text = _rc.Board.Armor + " / 10";
     }
-}
 }
