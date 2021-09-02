@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-namespace citdev {
 public class UI_XPTicker : MonoBehaviour
 {
     GridGameManager _rc;
@@ -14,7 +13,7 @@ public class UI_XPTicker : MonoBehaviour
     }
     private void OnGUI()
     {
-        _txt.text = "x" + (_rc.KillRequirement - _rc.Kills);
+        if (_rc.Board == null) return;
+        _txt.text = "x" + (_rc.Board.KillRequirement - _rc.Board.Kills);
     }
-}
 }

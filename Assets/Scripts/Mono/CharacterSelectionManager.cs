@@ -1,32 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace citdev {
-    public class CharacterSelectionManager : MonoBehaviour
+public class CharacterSelectionManager : MonoBehaviour
+{
+    GameController_DDOL _gc;
+
+    private void Start()
     {
-        GameController_DDOL _gc;
+        _gc = GameObject.FindObjectOfType<GameController_DDOL>();
+    }
 
-        private void Start()
-        {
-            _gc = GameObject.FindObjectOfType<GameController_DDOL>();
+    public void SelectCharacterClass(string name) {
+        PCFactory factory = null;
+        switch (name.ToLower()) {
+            case "warrior":
+                factory = new WarriorFactory();
+                break;
+            case "rogue":
+                factory = new RogueFactory();
+                break;
+            default:
+                break;
         }
 
-        public void SelectCharacterClass(string name) {
-            PCFactory factory = null;
-            switch (name.ToLower()) {
-                case "warrior":
-                    factory = new WarriorFactory();
-                    break;
-                case "rogue":
-                    factory = new RogueFactory();
-                    break;
-                default:
-                    break;
-            }
-
-            PlayerCharacter pc = factory.GetPC();
-            _gc.CurrentCharacter = pc;
-        }
+        PlayerCharacter pc = factory.GetPC();
+        _gc.CurrentCharacter = pc;
     }
 }

@@ -1,17 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace citdev
+public enum TileType
 {
-    public enum TileType
-    {
-        Coin,
-        Heart,
-        Shield,
-        Sword,
-        Monster,
-        Poison
-    }
-
+    Coin,
+    Heart,
+    Shield,
+    Sword,
+    Monster,
+    Poison
 }

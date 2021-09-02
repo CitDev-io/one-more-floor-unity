@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-namespace citdev {
+
 public class GridInputManager : MonoBehaviour
 {
     public TileDelegate OnUserStartSelection;
@@ -36,13 +35,12 @@ public class GridInputManager : MonoBehaviour
 
     void HandleTileClick(GameTile tile) {
         Dragging = true;
-        OnUserStartSelection?.Invoke(tile);
+        OnUserStartSelection?.Invoke(tile._tile);
     }
 
     void HandleTileHoverEnter(GameTile tile) {
         if (!Dragging) return;
 
-        OnUserDragIndicatingTile?.Invoke(tile);
+        OnUserDragIndicatingTile?.Invoke(tile._tile);
     }
-}
 }

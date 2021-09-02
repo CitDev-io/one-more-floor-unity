@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace citdev {
 public abstract class PlayerCharacter
 {
    public abstract string Name { get; }
@@ -13,13 +10,12 @@ public abstract class PlayerCharacter
    public int GoldExpPoints { get; set; }
    public int SpecialExpPoints { get; set; }
 
-   public int Damage { get; set; }
-   public int MaxHitPoints { get; set; }
-   public int MaxSpecialPoints { get; set; }
+   public int Damage { get; set; } = 0;
+   public int MaxHitPoints { get; set; } = 10;
+   public int MaxSpecialPoints { get; set; } = 10;
 
-   public int HitPoints { get; set; }
-   public int SpecialPoints { get; set; }
+   public int HitPoints { get; set; } = 10;
+   public int SpecialPoints { get; set; } = 0;
 
    public List<TileType> TileOptions { get; set; }
-}
 }
