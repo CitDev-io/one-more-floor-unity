@@ -6,6 +6,8 @@ public delegate void TilesDelegate(List<Tile> t);
 public delegate void TileDelegate(Tile t);
 public delegate void IntDelegate(int i);
 public delegate void NoParamDelegate();
+public delegate void StatSheetDelegate(StatSheet statSheet);
+
 public class GameBoard
 {
     public TilesDelegate OnPlayerCollectedTiles;
@@ -18,15 +20,12 @@ public class GameBoard
     public IntDelegate OnSwordsCollected;
     public NoParamDelegate OnEnemyStunned;
     public NoParamDelegate OnMonsterKillEarned;
-    public NoParamDelegate OnWin;
-    public NoParamDelegate OnLose;
+    public StatSheetDelegate OnWin;
+    public StatSheetDelegate OnLose;
 
     public List<Tile> Tiles = new List<Tile>();
     BoardContext ctx;
-    public int HitPoints { get; private set; } = 1;
-    public int MaxHitPoints { get; private set; } = 1;
-    public int Armor { get; private set; } = 0;
-    public int MaxArmor { get; private set; } = 0;
+    public StatSheet Player;
     public int Kills { get; private set; } = 0;
     public int KillRequirement = 15;
     public int MovesMade = 0;
@@ -75,11 +74,7 @@ public class GameBoard
                 Debug.Log("NOT ESTABLISHED WHAT CLASS YOU ARE");
                 break;
         }
-
-        HitPoints = bctx.PC.HitPoints;
-        MaxHitPoints = bctx.PC.MaxHitPoints;
-        Armor = bctx.PC.SpecialPoints;
-        MaxArmor = bctx.PC.MaxSpecialPoints;
+        Player = bctx.PC.GetStatSheet();
     }
 
     public void UserStartSelection(Tile tile)
@@ -112,17 +107,17 @@ public class GameBoard
 
     void ApplyHpChange(int changeAmount)
     {
-        HitPoints = Mathf.Clamp(HitPoints + changeAmount, 0, MaxHitPoints);
+        Player.ApplyHP(changeAmount);
 
-        if (HitPoints == 0)
+        if (Player.Hp == 0)
         {
-            OnLose?.Invoke();
+            OnLose?.Invoke(Player);
         }
     }
 
     void ApplyArmorChange(int changeAmount)
     {
-        Armor = Mathf.Clamp(Armor + changeAmount, 0, MaxArmor);
+        Player.ApplySP(changeAmount);
     }
 
     void SetEnemyStatsByRound(int round)
@@ -148,24 +143,23 @@ public class GameBoard
         
         if (damageReceived == 0) return;
         OnMonstersAttack?.Invoke(damageReceived);
+        foreach(Tile monster in monsters) {
+            monster.DoAttack();
+        }
         
-        
-        if (Armor >= damageReceived)
+        if (Player.Sp >= damageReceived)
         {
             ApplyArmorChange(-damageReceived);
             return;
         }
 
-        int remainingDmg = damageReceived - Armor;
-        if (Armor > 0)
+        int remainingDmg = damageReceived - Player.Sp;
+        if (Player.Sp > 0)
         {
-            ApplyArmorChange(-Armor);
+            ApplyArmorChange(-Player.Sp);
         }
 
         ApplyHpChange(-remainingDmg);
-        foreach(Tile monster in monsters) {
-            monster.DoAttack();
-        }
     }
 
     void AgeAllMonsters() {
@@ -237,9 +231,13 @@ public class GameBoard
             OnCoinCollected?.Invoke(coinGained);
         }
 
-        int damageDealt = collected
+        int swordsCollected = collected
             .Where((o) => o.tileType == TileType.Sword)
             .ToList().Count;
+        
+        if (swordsCollected > 0) {
+            Player.ApplySwords(swordsCollected);
+        }
 
         List<Tile> enemies = collected
             .Where((o) => o.tileType == TileType.Monster).ToList();
@@ -258,14 +256,16 @@ public class GameBoard
             OnShieldsCollected?.Invoke(armorGained);
         }
 
-        if (enemies.Count > 0 && damageDealt > 0)
+        if (swordsCollected > 0)
         {
-            OnSwordsCollected?.Invoke(damageDealt);
+            OnSwordsCollected?.Invoke(swordsCollected);
         }
 
         if (enemies.Count > 0 && armorGained > 0) {
             OnEnemyStunned?.Invoke();
         }
+
+        int damageDealt = swordsCollected * Player.Damage;
 
         foreach (Tile monster in enemies)
         {
@@ -291,7 +291,7 @@ public class GameBoard
         OnMonsterKillEarned?.Invoke();
         if (Kills >= KillRequirement)
         {
-            OnWin?.Invoke();
+            OnWin?.Invoke(Player);
         }
     }
 

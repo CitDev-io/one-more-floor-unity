@@ -148,16 +148,13 @@ public class GridGameManager : MonoBehaviour
         }
     }
 
-    void AssessAttack(int damage)
-    {
-        
-    }
-
-    void HandleWin() {
+    void HandleWin(StatSheet s) {
+        _gc.PreviousRoundStats = s;
         DoVictory();
     }
 
-    void HandleLose() {
+    void HandleLose(StatSheet s) {
+        _gc.PreviousRoundStats = s;
         DoLose();
     }
     void HandleMonsterKillEarned() {

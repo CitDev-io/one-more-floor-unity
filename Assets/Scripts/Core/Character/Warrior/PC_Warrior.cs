@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 public class PC_Warrior : PlayerCharacter
 {
@@ -6,6 +7,7 @@ public class PC_Warrior : PlayerCharacter
 
     public PC_Warrior() {
         _name = "Warrior";
+        BaseHp = 14;
         TileOptions = new List<TileType> {
             TileType.Shield,
             TileType.Sword,
@@ -16,5 +18,26 @@ public class PC_Warrior : PlayerCharacter
 
     public override string Name {
         get { return _name; }
+    }
+
+    public override StatSheet GetStatSheet()
+    {
+        return new StatSheet(MaxHp(), MaxSp(), Damage());
+    }
+
+    int Damage() {
+        return 1 + (int) Math.Floor(SwordExpPoints/ 150d);
+    }
+
+    int MaxHp()
+    {
+        int heartLevels = (int) Math.Floor(HeartExpPoints / 40d);
+        return BaseHp + (heartLevels * 3);
+    }
+
+    int MaxSp()
+    {
+        int spLevels = (int) Math.Floor(SpecialExpPoints / 40d);
+        return 10 + (spLevels * 3);
     }
 }

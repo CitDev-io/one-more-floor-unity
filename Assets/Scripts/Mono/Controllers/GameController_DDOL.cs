@@ -6,8 +6,10 @@ public class GameController_DDOL : MonoBehaviour
     public int totalKills = 0;
     public int coins = 0;
     public int PreviousRoundMoves = 0;
+    public StatSheet PreviousRoundStats;
     ChangeScene _sceneChanger;
     public PlayerCharacter CurrentCharacter = new PC_Warrior();
+    public CharacterManager characterManager = new CharacterManager();
 
     void Awake()
     {
@@ -41,7 +43,10 @@ public class GameController_DDOL : MonoBehaviour
         totalKills += 1;
     }
 
-
+    public void AwardExp() {
+        PreviousRoundStats.ExpPoints = 75;
+        CurrentCharacter.GainExp(PreviousRoundStats);
+    }
 
 
 
