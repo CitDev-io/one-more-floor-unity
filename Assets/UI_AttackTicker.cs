@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_ArmorTicker : MonoBehaviour
+public class UI_AttackTicker : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
@@ -11,8 +11,9 @@ public class UI_ArmorTicker : MonoBehaviour
         _rc = GameObject.FindObjectOfType<GridGameManager>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
-    private void OnGUI() {
+    private void OnGUI()
+    {
         if (_rc.Board == null) return;
-        _txt.text = _rc.Board.Player.Sp + " / " + _rc.Board.Player.MaxSp;
+        _txt.text = "" + _rc.Board.Player.Damage;
     }
 }

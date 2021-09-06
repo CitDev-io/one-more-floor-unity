@@ -4,8 +4,8 @@ using TMPro;
 public class UI_SelectedPCBanner : MonoBehaviour
 {
     GameController_DDOL _gc;
-    [SerializeField]
-    TextMeshProUGUI _txt;
+    [SerializeField] TextMeshProUGUI _nameTxt;
+    [SerializeField] TextMeshProUGUI _lvlTxt;
 
     private void Start()
     {
@@ -13,6 +13,7 @@ public class UI_SelectedPCBanner : MonoBehaviour
     }
     private void OnGUI()
     {
-        _txt.text = _gc.CurrentCharacter.Name;
+        _nameTxt.text = _gc.CurrentCharacter.Name;
+        _lvlTxt.text = "level " + _gc.CurrentCharacter.Level();
     }
 }

@@ -10,19 +10,6 @@ public class CharacterSelectionManager : MonoBehaviour
     }
 
     public void SelectCharacterClass(string name) {
-        PCFactory factory = null;
-        switch (name.ToLower()) {
-            case "warrior":
-                factory = new WarriorFactory();
-                break;
-            case "rogue":
-                factory = new RogueFactory();
-                break;
-            default:
-                break;
-        }
-
-        PlayerCharacter pc = factory.GetPC();
-        _gc.CurrentCharacter = pc;
+        _gc.CurrentCharacter = _gc.characterManager.GetCharacterByClassName(name);
     }
 }
