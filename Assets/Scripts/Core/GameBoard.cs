@@ -7,6 +7,7 @@ public delegate void TileDelegate(Tile t);
 public delegate void IntDelegate(int i);
 public delegate void NoParamDelegate();
 public delegate void StatSheetDelegate(StatSheet statSheet);
+public delegate void SourcedDamageDelegate(int damage, DamageSource source);
 
 public class GameBoard
 {
@@ -17,12 +18,13 @@ public class GameBoard
     public IntDelegate OnCoinCollected;
     public IntDelegate OnHeartsCollected;
     public IntDelegate OnShieldsCollected;
+    public IntDelegate OnPoisonCollected;
     public IntDelegate OnSwordsCollected;
     public NoParamDelegate OnEnemyStunned;
     public NoParamDelegate OnMonsterKillEarned;
     public StatSheetDelegate OnWin;
     public StatSheetDelegate OnLose;
-
+    public NoParamDelegate OnReadyForNextTurn;
     public List<Tile> Tiles = new List<Tile>();
     BoardContext ctx;
     public StatSheet Player;
@@ -31,8 +33,11 @@ public class GameBoard
     public int MovesMade = 0;
     int EnemyHp = 1;
     int EnemyDmg = 1;
+    bool BoardComplete = false;
+    bool AwaitingRoundChange = false;
 
     List<Tile> selection = new List<Tile>();
+
     TileSelector tileSelector;
     ChainValidator chainValidator;
 
@@ -57,14 +62,14 @@ public class GameBoard
             }
         }
 
-        switch(bctx.PC.Name.ToLower()) {
-            case "warrior":
+        switch(CurrentCharacterType()) {
+            case CharacterType.Warrior:
                 chainValidator = new WarriorChainValidator(
                     Tiles,
                     selection
                 );
                 break;
-            case "rogue":
+            case CharacterType.Rogue:
                 chainValidator = new RogueChainValidator(
                     Tiles,
                     selection
@@ -77,6 +82,16 @@ public class GameBoard
         Player = bctx.PC.GetStatSheet();
     }
 
+    public CharacterType CurrentCharacterType() {
+        switch(ctx.PC.Name.ToLower()) {
+            case "warrior":
+                return CharacterType.Warrior;
+            case "rogue":
+                return CharacterType.Rogue;
+            default:
+                return CharacterType.Warrior;
+        }
+    }
     public void UserStartSelection(Tile tile)
     {
         ClearSelection();
@@ -87,7 +102,7 @@ public class GameBoard
     {
         if (chainValidator.isSelectionFinishable())
         {
-            ExecuteUserTurn();
+            DoPhase_Collection();
         }
 
         ClearSelection();
@@ -115,6 +130,10 @@ public class GameBoard
         }
     }
 
+    void ApplyPoisonChanged(int changeAmount) {
+        Player.ApplySP(changeAmount);
+    }
+
     void ApplyArmorChange(int changeAmount)
     {
         Player.ApplySP(changeAmount);
@@ -127,18 +146,78 @@ public class GameBoard
         EnemyDmg = Mathf.Min((int) Mathf.Ceil(round / 4f), 3);
     }
 
-    void ExecuteUserTurn() {
-        CollectTiles(selection);
+    void DoPhase_Collection() {
+        CollectTiles();
+
+        DoPhase_Post();
+    }
+
+    void DoPhase_Post() {
+        var monsters = Tiles.Where((o) => o.tileType == TileType.Monster && o.isAlive());
+        if (ctx.PC.Name.ToLower() == "rogue" && Player.Sp > 0 && monsters.Any()) {
+            int sprayCount = Mathf.Min(3, Player.Sp);
+            Debug.Log(sprayCount + " sprays");
+
+            var spraysDone = 0;
+            for(var i = 0; i < sprayCount; i++) {
+                if (monsters.Count() == 0) continue;
+
+                int indexChosen = Random.Range(0, monsters.Count());
+                var monster = monsters.ElementAt(indexChosen);
+
+                monster.TakeDamage(1, DamageSource.PoisonDart);
+                CheckIfMonsterDied(monster);
+                spraysDone++;
+            }
+            Player.ApplySP(-spraysDone);
+        }
+
+        DoPhase_Monsters();
+    }
+
+    public void RoundProceed()
+    {
+        Debug.Log("TRY TO PROCEED");
+        if (!AwaitingRoundChange) return;
+        DoPhase_Populate();
+        AwaitingRoundChange = false;
+    }
+
+    void DoPhase_Monsters() {
+
         var monsters = Tiles.Where((o) => o.tileType == TileType.Monster
             && o.wasAliveBeforeLastUserAction()
             && !o.isStunned()
+            && o.isAlive()
         ).ToList();
         MonstersAttack(monsters);
         
         AgeAllMonsters();
+        DoPhase_Cleanup();
+    }
+
+    void DoPhase_Cleanup() {
+        ClearTiles(selection);
+        AwaitingRoundChange = true;
+        OnReadyForNextTurn?.Invoke();
+    }
+
+    void DoPhase_Populate() {
+        Debug.Log("POPULATE");
+        var tilesToRepop = Tiles.Where((o) => o.IsBeingCollected || !o.isAlive()).OrderByDescending(o => o.row);
+        foreach(Tile t in tilesToRepop) {
+            RecascadeTile(t);
+        }
+        DoPhase_PrePhase();
+    }
+
+    void DoPhase_PrePhase() {
+
     }
 
     void MonstersAttack(List<Tile> monsters) {
+        if (BoardComplete) return;
+
         int damageReceived = monsters.Sum((o) => o.Damage);
         
         if (damageReceived == 0) return;
@@ -177,6 +256,8 @@ public class GameBoard
 
     void DoUserIndicatingTile(Tile tile)
     {
+        if (BoardComplete) return;
+    
         bool AlreadySelected = selection.Contains(tile);
 
         if (AlreadySelected)
@@ -208,21 +289,25 @@ public class GameBoard
         }
     }
 
-    void CollectTiles(List<Tile> collected)
+    void CollectTiles()
     {
         MovesMade += 1;
 
-        int healthGained = collected
+        int healthGained = selection
             .Where((o) => o.tileType == TileType.Heart)
             .ToList().Count;
 
-        int armorGained = collected
+        int armorGained = selection
             .Where((o) => o.tileType == TileType.Shield)
             .ToList().Count;
 
-        List<Tile> coinsCollected = collected.Where((o) => o.tileType == TileType.Coin).ToList();
+        int poisonGained = selection
+            .Where((o) => o.tileType == TileType.Poison)
+            .ToList().Count;
 
-        int coinGained = collected
+        List<Tile> coinsCollected = selection.Where((o) => o.tileType == TileType.Coin).ToList();
+
+        int coinGained = selection
             .Where((o) => o.tileType == TileType.Coin)
             .ToList().Count * 10;
 
@@ -231,7 +316,7 @@ public class GameBoard
             OnCoinCollected?.Invoke(coinGained);
         }
 
-        int swordsCollected = collected
+        int swordsCollected = selection
             .Where((o) => o.tileType == TileType.Sword)
             .ToList().Count;
         
@@ -239,11 +324,8 @@ public class GameBoard
             Player.ApplySwords(swordsCollected);
         }
 
-        List<Tile> enemies = collected
+        List<Tile> enemies = selection
             .Where((o) => o.tileType == TileType.Monster).ToList();
-
-        List<Tile> clearableTiles = collected
-            .Where((o) => o.tileType != TileType.Monster).ToList();
 
         if (healthGained != 0)
         {
@@ -254,6 +336,11 @@ public class GameBoard
         {
             ApplyArmorChange(armorGained);
             OnShieldsCollected?.Invoke(armorGained);
+        }
+
+        if (poisonGained != 0) {
+            ApplyPoisonChanged(poisonGained);
+            OnPoisonCollected?.Invoke(poisonGained);
         }
 
         if (swordsCollected > 0)
@@ -269,41 +356,40 @@ public class GameBoard
 
         foreach (Tile monster in enemies)
         {
-            monster.TakeDamage(damageDealt);
-            if (!monster.isAlive())
-            {
-                clearableTiles.Add(monster);
-                OnMonsterKill();
-            }
-
+            monster.TakeDamage(damageDealt, DamageSource.SwordAttack);
             if (armorGained > 0) {
                 monster.Stun();
             }
+            CheckIfMonsterDied(monster);
         }
 
-        OnPlayerCollectedTiles?.Invoke(collected);
-        ClearTiles(collected);
+        OnPlayerCollectedTiles?.Invoke(selection);
     }
 
+    void CheckIfMonsterDied(Tile monster) {
+        if (!monster.isAlive()) {
+            OnMonsterKill();
+        }
+    }
     void OnMonsterKill()
     {
         Kills += 1;
         OnMonsterKillEarned?.Invoke();
         if (Kills >= KillRequirement)
         {
+            BoardComplete = true;
             OnWin?.Invoke(Player);
         }
     }
 
     void ClearTiles(List<Tile> clearedTiles)
     {
-        clearedTiles.OrderByDescending(o => o.row);
         foreach(Tile t in clearedTiles)
         {
-            if (t.tileType == TileType.Monster && t.HitPoints > 0) {
+            if (t.tileType == TileType.Monster && t.isAlive()) {
                 continue;
             }
-            RecascadeTile(t);
+            t.IsBeingCollected = true;
         }
     }
 

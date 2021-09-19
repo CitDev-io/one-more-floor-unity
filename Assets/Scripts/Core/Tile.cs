@@ -7,12 +7,15 @@ public class Tile
     public NoParamDelegate OnStunned;
     public NoParamDelegate OnUnstunned;
     public NoParamDelegate OnDoAttack;
+    public SourcedDamageDelegate OnDamageTaken;
     public TileType tileType { get; private set; }
     public int HitPoints { get; private set; } = 2;
     public int MaxHitPoints { get; private set; } = 2;
     public int Damage { get; private set; } = 2;
     int StunnedRounds = 0;
     int TurnsAlive = 0;
+    public bool IsBeingCollected = false;
+
     public Tile(int x, int y, int HP, int DMG, TileType tt)
     {
         HitPoints = HP;
@@ -60,8 +63,9 @@ public class Tile
         );
     }
 
-    public void TakeDamage(int dmg) {
+    public void TakeDamage(int dmg, DamageSource src) {
         HitPoints -= dmg;
+        OnDamageTaken?.Invoke(dmg, src);
     }
 
     public bool isAlive() {
@@ -101,5 +105,6 @@ public class Tile
         HitPoints = MaxHitPoints;
         TurnsAlive = 0;
         StunnedRounds = 0;
+        IsBeingCollected = false;
     }
 }

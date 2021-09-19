@@ -83,6 +83,7 @@ public class GridGameManager : MonoBehaviour
         Board.OnMonsterKillEarned += HandleMonsterKillEarned;
         Board.OnWin += HandleWin;
         Board.OnLose += HandleLose;
+        Board.OnReadyForNextTurn += HandleReadyForNextTurn;
         _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
         _gim.OnUserStartSelection += Board.UserStartSelection;
         _gim.OnUserEndSelection += Board.UserEndSelection;
@@ -103,6 +104,26 @@ public class GridGameManager : MonoBehaviour
         Board.OnMonsterKillEarned -= HandleMonsterKillEarned;
         Board.OnWin -= HandleWin;
         Board.OnLose -= HandleLose;
+        Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
+    }
+
+
+    bool isActingRightNow() {
+        return false;
+    }
+
+    IEnumerator StartNextRoundWhenDoneActing() {
+        Debug.Log("MAKE SURE YOU AREN't ACTING");
+        while (isActingRightNow()) {
+            yield return new WaitForSeconds(0.2f);
+        }
+        
+        Board.RoundProceed();
+    }
+
+    void HandleReadyForNextTurn() {
+        Debug.Log("HANDLE READY");
+        StartCoroutine("StartNextRoundWhenDoneActing");
     }
 
     void HandlePlayerCollectedTiles(List<Tile> tiles) {
