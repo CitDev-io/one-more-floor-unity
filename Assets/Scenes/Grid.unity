@@ -477,17 +477,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d235bef02b3a92241b4d3853526582f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitPoints: 20
-  Armor: 0
-  Kills: 0
-  KillRequirement: 15
-  RoundMoves: 0
   dmgPrefab: {fileID: 7223485370980304402, guid: 14ab5173ca2c87d4e91c641a5bdb4ae2, type: 3}
   hpPrefab: {fileID: 6487280693032716880, guid: 257accde506d59a489ebf6520a3e0b6e, type: 3}
   apPrefab: {fileID: 8766646252445709156, guid: 4c3f53a5a0d16cd4998a29343f52fba2, type: 3}
   gpPrefab: {fileID: 1916482323283787625, guid: 48ba655b9a3951d4bba09518acb0664d, type: 3}
   floaterParent: {fileID: 2039224253}
-  tilePrefab: {fileID: 7992245267510586328, guid: 6c4f856f54a80af409bf3e4b0b253c2b, type: 3}
   SelectionCountDoodad: {fileID: 1458359901}
 --- !u!120 &185434371
 LineRenderer:
@@ -1587,6 +1581,7 @@ GameObject:
   - component: {fileID: 1194361742}
   - component: {fileID: 1194361745}
   - component: {fileID: 1194361744}
+  - component: {fileID: 1194361743}
   m_Layer: 5
   m_Name: AttackText
   m_TagString: Untagged
@@ -1613,6 +1608,18 @@ RectTransform:
   m_AnchoredPosition: {x: 53, y: -49}
   m_SizeDelta: {x: 137.49292, y: 50}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &1194361743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1194361741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844b6f722dcbef349a5a70b7ff552b4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1194361744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2305,8 +2312,9 @@ GameObject:
   - component: {fileID: 1687211235}
   - component: {fileID: 1687211237}
   - component: {fileID: 1687211236}
+  - component: {fileID: 1687211238}
   m_Layer: 5
-  m_Name: Shield
+  m_Name: Special
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2369,6 +2377,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687211234}
   m_CullTransparentMesh: 1
+--- !u!114 &1687211238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687211234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5731cda62cb62446bab31a6c477bb13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1693809060
 GameObject:
   m_ObjectHideFlags: 0

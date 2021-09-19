@@ -26,10 +26,13 @@ public class GameTile : MonoBehaviour
         tile.OnStunned += HandleStunned;
         tile.OnDoAttack += HandleDoAttack;
         tile.OnUnstunned += HandleUnstunned;
+        tile.OnDamageTaken += HandleDamageTaken;
         SetTileType();
     }
 
-
+    void HandleDamageTaken(int damage, DamageSource src) {
+        Debug.Log("I should make some animated stuff to show that this tile took " + damage + " dmg from " + src);
+    }
     void HandleUnstunned() {
         MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle", true, 0f);
     }
