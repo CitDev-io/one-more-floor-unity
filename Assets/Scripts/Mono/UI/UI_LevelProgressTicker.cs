@@ -16,7 +16,7 @@ public class UI_LevelProgressTicker : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        double percentageToGoal = _rc.Board.Kills / (double) _rc.Board.KillRequirement;
+        double percentageToGoal = _rc.Board.Kills / (double) _rc.Board.GetKillRequirement();
         double width = percentageToGoal * 130f;
         percentage = percentageToGoal;
         _width = width;

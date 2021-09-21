@@ -33,6 +33,6 @@ public class UI_RoundProgress : MonoBehaviour
 
     void OnGUI() {
         if (_rc.Board == null) return;
-        text.text = "x" + (_rc.Board.KillRequirement - _rc.Board.Kills);
+        text.text = "x" + (_rc.Board.GetKillRequirement() - _rc.Board.Kills);
     }
 }

@@ -29,21 +29,19 @@ public class GameBoard
     BoardContext ctx;
     public StatSheet Player;
     public int Kills { get; private set; } = 0;
-    public int KillRequirement = 15;
     public int MovesMade = 0;
-    int EnemyHp = 1;
-    int EnemyDmg = 1;
     bool BoardComplete = false;
     bool AwaitingRoundChange = false;
 
     List<Tile> selection = new List<Tile>();
-
+    public int GetKillRequirement() {
+        return ctx.Stage.KillRequirement();
+    }
     TileSelector tileSelector;
     ChainValidator chainValidator;
 
     public GameBoard(BoardContext bctx) {
         ctx = bctx;
-        SetEnemyStatsByRound(bctx.Stage);
         tileSelector = new TileSelector(bctx.PC.TileOptions);
 
         int COUNT_ROWS = 6;
@@ -54,8 +52,8 @@ public class GameBoard
                 Tile t = new Tile(
                     colid,
                     rowid,
-                    EnemyHp,
-                    EnemyDmg,
+                    ctx.Stage.EnemyHp(),
+                    ctx.Stage.EnemyDmg(),
                     tileSelector.GetNextTile()
                 );
                 Tiles.Add(t);
@@ -137,13 +135,6 @@ public class GameBoard
     void ApplyArmorChange(int changeAmount)
     {
         Player.ApplySP(changeAmount);
-    }
-
-    void SetEnemyStatsByRound(int round)
-    {
-
-        EnemyHp = 7 + (int) Mathf.Ceil(round / 3f) + 1;
-        EnemyDmg = 1 + (int) (round / 4f);
     }
 
     void DoPhase_Collection() {
@@ -376,7 +367,7 @@ public class GameBoard
     {
         Kills += 1;
         OnMonsterKillEarned?.Invoke();
-        if (Kills >= KillRequirement)
+        if (Kills >= ctx.Stage.KillRequirement())
         {
             BoardComplete = true;
             OnWin?.Invoke(Player);
