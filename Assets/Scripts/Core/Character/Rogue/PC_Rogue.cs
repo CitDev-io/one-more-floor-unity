@@ -26,18 +26,18 @@ public class PC_Rogue : PlayerCharacter
     }
 
     int Damage() {
-        return 1 + (int) Math.Floor(SwordExpPoints/ 150d);
+        return 3 + (int) Math.Floor(SwordExpPoints/ 200d);
     }
 
     int MaxHp()
     {
-        int heartLevels = (int) Math.Floor(HeartExpPoints / 40d);
+        int heartLevels = (int) Math.Floor(HeartExpPoints / 140d);
         return BaseHp + (heartLevels * 2);
     }
 
     int MaxSp()
     {
-        int spLevels = (int) Math.Floor(SpecialExpPoints / 40d);
+        int spLevels = (int) Math.Floor(SpecialExpPoints / 60d);
         return 6 + (spLevels);
     }
 }

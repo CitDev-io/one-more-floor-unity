@@ -142,8 +142,8 @@ public class GameBoard
     void SetEnemyStatsByRound(int round)
     {
 
-        EnemyHp = Mathf.Min((int) Mathf.Ceil(round / 3f) + 1, 4);
-        EnemyDmg = Mathf.Min((int) Mathf.Ceil(round / 4f), 3);
+        EnemyHp = 7 + (int) Mathf.Ceil(round / 3f) + 1;
+        EnemyDmg = 1 + (int) (round / 4f);
     }
 
     void DoPhase_Collection() {
@@ -155,8 +155,7 @@ public class GameBoard
     void DoPhase_Post() {
         var monsters = Tiles.Where((o) => o.tileType == TileType.Monster && o.isAlive());
         if (ctx.PC.Name.ToLower() == "rogue" && Player.Sp > 0 && monsters.Any()) {
-            int sprayCount = Mathf.Min(3, Player.Sp);
-            Debug.Log(sprayCount + " sprays");
+            int sprayCount = Player.Sp;
 
             var spraysDone = 0;
             for(var i = 0; i < sprayCount; i++) {
@@ -165,7 +164,7 @@ public class GameBoard
                 int indexChosen = Random.Range(0, monsters.Count());
                 var monster = monsters.ElementAt(indexChosen);
 
-                monster.TakeDamage(1, DamageSource.PoisonDart);
+                monster.TakeDamage(2, DamageSource.PoisonDart);
                 CheckIfMonsterDied(monster);
                 spraysDone++;
             }
@@ -177,7 +176,6 @@ public class GameBoard
 
     public void RoundProceed()
     {
-        Debug.Log("TRY TO PROCEED");
         if (!AwaitingRoundChange) return;
         DoPhase_Populate();
         AwaitingRoundChange = false;
@@ -203,7 +201,6 @@ public class GameBoard
     }
 
     void DoPhase_Populate() {
-        Debug.Log("POPULATE");
         var tilesToRepop = Tiles.Where((o) => o.IsBeingCollected || !o.isAlive()).OrderByDescending(o => o.row);
         foreach(Tile t in tilesToRepop) {
             RecascadeTile(t);
@@ -336,12 +333,6 @@ public class GameBoard
             ApplyHpChange(healthGained);
             OnHeartsCollected?.Invoke(healthGained);
         }
-        if (armorGained != 0)
-        {
-            ApplyArmorChange(armorGained);
-            OnShieldsCollected?.Invoke(armorGained);
-        }
-
         if (poisonGained != 0) {
             ApplyPoisonChanged(poisonGained);
             OnPoisonCollected?.Invoke(poisonGained);
@@ -352,6 +343,12 @@ public class GameBoard
             OnSwordsCollected?.Invoke(swordsCollected);
         }
 
+        if (armorGained != 0 && enemies.Count == 0)
+        {
+            ApplyArmorChange(armorGained);
+            OnShieldsCollected?.Invoke(armorGained);
+        }
+    
         if (enemies.Count > 0 && armorGained > 0) {
             OnEnemyStunned?.Invoke();
         }
