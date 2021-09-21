@@ -226,19 +226,23 @@ public class GameBoard
             monster.DoAttack();
         }
         
-        if (Player.Sp >= damageReceived)
-        {
-            ApplyArmorChange(-damageReceived);
-            return;
-        }
+        if (CurrentCharacterType() == CharacterType.Warrior) {
+            if (Player.Sp >= damageReceived)
+            {
+                ApplyArmorChange(-damageReceived);
+                return;
+            }
 
-        int remainingDmg = damageReceived - Player.Sp;
-        if (Player.Sp > 0)
-        {
-            ApplyArmorChange(-Player.Sp);
-        }
+            int remainingDmg = damageReceived - Player.Sp;
+            if (Player.Sp > 0)
+            {
+                ApplyArmorChange(-Player.Sp);
+            }
 
-        ApplyHpChange(-remainingDmg);
+            ApplyHpChange(-remainingDmg);
+        } else {
+            ApplyHpChange(-damageReceived);
+        }
     }
 
     void AgeAllMonsters() {
