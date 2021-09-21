@@ -1,9 +1,9 @@
 public class BoardContext
 {
     private readonly PlayerCharacter _pc;
-    private readonly int _stage;
+    private readonly Stage _stage;
 
-    public BoardContext(PlayerCharacter playerCharacter, int stage) {
+    public BoardContext(PlayerCharacter playerCharacter, Stage stage) {
         _pc = playerCharacter;
         _stage = stage;        }
 
@@ -11,7 +11,7 @@ public class BoardContext
         get { return _pc; }
     }
 
-    public int Stage {
+    public Stage Stage {
         get { return _stage; }
     }
 }

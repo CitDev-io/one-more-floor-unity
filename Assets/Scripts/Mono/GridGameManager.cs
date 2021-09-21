@@ -53,10 +53,12 @@ public class GridGameManager : MonoBehaviour
     {
         _gc = FindObjectOfType<GameController_DDOL>();
         _gim = gameObject.GetComponent<GridInputManager>();
-
+        Stage s = new Stage(){
+            StageNumber = _gc.round
+        };
         BoardContext bctx = new BoardContext(
             _gc.CurrentCharacter,
-            _gc.round
+            s
         );
         Board = new GameBoard(bctx);
 

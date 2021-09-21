@@ -14,6 +14,6 @@ public class UI_XPTicker : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = "x" + (_rc.Board.KillRequirement - _rc.Board.Kills);
+        _txt.text = "x" + (_rc.Board.GetKillRequirement() - _rc.Board.Kills);
     }
 }
