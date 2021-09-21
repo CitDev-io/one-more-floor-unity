@@ -26,18 +26,18 @@ public class PC_Warrior : PlayerCharacter
     }
 
     int Damage() {
-        return 1 + (int) Math.Floor(SwordExpPoints/ 150d);
+        return 2 + (int) Math.Floor(SwordExpPoints/ 220d);
     }
 
     int MaxHp()
     {
-        int heartLevels = (int) Math.Floor(HeartExpPoints / 40d);
+        int heartLevels = (int) Math.Floor(HeartExpPoints / 100d);
         return BaseHp + (heartLevels * 3);
     }
 
     int MaxSp()
     {
-        int spLevels = (int) Math.Floor(SpecialExpPoints / 40d);
+        int spLevels = (int) Math.Floor(SpecialExpPoints / 80d);
         return 10 + (spLevels * 3);
     }
 }
