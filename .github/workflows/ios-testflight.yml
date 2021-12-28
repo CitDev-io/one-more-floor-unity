@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  buildForiOSPlatform:
     name: Download from Github and Build C# Project
     runs-on: ubuntu-latest
     steps:
