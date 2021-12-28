@@ -43,8 +43,8 @@ jobs:
       # Output
       - uses: actions/upload-artifact@v2
         with:
-          name: Build
-          path: build
+          name: build-iOS
+          path: build/iOS
           
 #      - name: Push WebGL Build to Itch.io
 #        uses: josephbmanley/butler-publish-itchio-action@v1.0.2
