@@ -1,0 +1,3 @@
+lane :release do
+    pilot( api_key_path: "fastlane/D383SF739.json" )
+  end
