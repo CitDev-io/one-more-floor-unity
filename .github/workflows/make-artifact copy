@@ -37,8 +37,7 @@ jobs:
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          targetPlatform: iOS
-          versioning: Semantic
+          targetPlatform: WebGL
 
       # Output
       - uses: actions/upload-artifact@v2
@@ -46,11 +45,11 @@ jobs:
           name: Build
           path: build
           
-#      - name: Push WebGL Build to Itch.io
-#        uses: josephbmanley/butler-publish-itchio-action@v1.0.2
-#        env:
-#          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
- #         CHANNEL: webgl
- #         ITCH_GAME: untitled-game-01
- #         ITCH_USER: citizendevelopers
- #         PACKAGE: build
+      - name: Push WebGL Build to Itch.io
+        uses: josephbmanley/butler-publish-itchio-action@v1.0.2
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: webgl
+          ITCH_GAME: untitled-game-01
+          ITCH_USER: citizendevelopers
+          PACKAGE: build
