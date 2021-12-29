@@ -130,7 +130,7 @@ jobs:
       - name: Upload to Google Play Internal
         uses: maierj/fastlane-action@v2.0.1
         with:
-          lane: 'android alpha'
+          lane: 'android internal'
       # Uncomment to upload to alpha branch
       #    - name: Upload to Google Play Alpha
       #      uses: maierj/fastlane-action@v2.0.1
