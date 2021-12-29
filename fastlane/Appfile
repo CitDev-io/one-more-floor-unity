@@ -4,7 +4,7 @@
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
-for_platform: ios do
+for_platform :ios do
     app_identifier(ENV['IOS_APP_ID'])
 
     apple_dev_portal_id(ENV['APPLE_DEVELOPER_EMAIL'])
