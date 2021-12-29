@@ -1,23 +1,24 @@
-name: Build & Deploy Main
+name: Build & Deploy Mobile
 
 on:
   push:
     branches:
-      - main
+      - mobile
 
 jobs:
   buildForiOSPlatform:
-    name: Download from Github and Build C# Project
+    name: Download from Github and Build iOS Project
     runs-on: ubuntu-latest
     steps:
       # Checkout
-      - name: Checkout repository
+      - name: Download from Github
         uses: actions/checkout@v2
         with:
           lfs: true
 
       # Cache
-      - uses: actions/cache@v2
+      - name: Use cached compiled libraries
+        uses: actions/cache@v2
         with:
           path: Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -41,7 +42,8 @@ jobs:
           versioning: Semantic
 
       # Output
-      - uses: actions/upload-artifact@v2
+      - name: Upload iOS Artifact
+        uses: actions/upload-artifact@v2
         with:
           name: build-iOS
           path: build/iOS
@@ -55,7 +57,7 @@ jobs:
  #         ITCH_USER: citizendevelopers
  #         PACKAGE: build
   releaseToAppStore:
-    name: Release to the App Store
+    name: Submit to iOS Testflight
     runs-on: macos-latest
     needs: buildForiOSPlatform
     steps:
