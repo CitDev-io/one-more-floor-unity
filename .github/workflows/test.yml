@@ -16,4 +16,4 @@ jobs:
         with:
           url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ/messages/957787734150381668
           method: PATCH
-          payload: '{"content": "UPDATED VIA A WEBHOOK"}'
+          payload: '{"content": "UPDATED\nVIA\nA WEBHOOK"}'
