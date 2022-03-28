@@ -1,0 +1,18 @@
+name: Messing with GHActions
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  build:
+    name: Testing Discord web hook calls
+    runs-on: ubuntu-latest
+    steps:
+      # test this
+      -uses: satak/webrequest-action@master
+        with:
+          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ/messages/957787734150381668
+          method: PATCH
+          payload: '{"content": "UPDATED VIA A WEBHOOK"}'
