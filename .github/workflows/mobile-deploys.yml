@@ -141,3 +141,18 @@ jobs:
         uses: geekyeggo/delete-artifact@v1
         with:
           name: build-Android
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: Chirp Disco
+        uses: satak/webrequest-action@master
+        with:
+          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ/messages/957787734150381668
+          method: PATCH
+          payload: '{"content": ":mobile_phone: **MOBILE BUILDS**\nLast update: ${{ steps.date.outputs.date }}\n\n:robot: Android Internal Testing https://play.google.com/apps/test/io.citdev.kerboblin/59\n:apple: iOS Internal Testing: Available on \"Testflight\" app, send Apple E-Mail to me for invite\n\n-"}'
+      - name: Chirp Disco Thread 2
+        uses: satak/webrequest-action@master
+        with:
+          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ?thread_id=957840791680741426
+          method: POST
+          payload: '{"content": "`${{ github.event.commits[0].author.username }}` created `mobile` branch commit\n${{ github.event.commits[0].url }}\n\n*available in test flight and android shortly*"}'
