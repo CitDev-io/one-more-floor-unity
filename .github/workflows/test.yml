@@ -33,6 +33,6 @@ jobs:
       - name: Chirp Disco Thread
         uses: satak/webrequest-action@master
         with:
-          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ
+          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ?thread_id=957830908470231071
           method: POST
-          payload: '{"thread_id": "957830908470231071", "content": "--- New Build Posted ${{ steps.date.outputs.date }} ---\n`${{ github.event.commits[0].author.username }}` created WebGL branch commit `${{ github.event.commits[0].message }}`\n${{ github.event.commits[0].url }}\n\n-"}'
+          payload: '{"content": "`${{ github.event.commits[0].author.username }}` created `WebGL` branch commit\n${{ github.event.commits[0].url }}\n\n-"}'
