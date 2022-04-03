@@ -22,7 +22,6 @@ public class GameBoard
     public IntDelegate OnSwordsCollected;
     public NoParamDelegate OnEnemyStunned;
     public NoParamDelegate OnMonsterKillEarned;
-    // public StatSheetDelegate OnWin;
     public StatSheetDelegate OnLose;
     public NoParamDelegate OnReadyForNextTurn;
     public List<Tile> Tiles = new List<Tile>();
@@ -367,12 +366,6 @@ public class GameBoard
     {
         Kills += 1;
         OnMonsterKillEarned?.Invoke();
-        // No longer a win condition to the whole board
-        // if (Kills >= ctx.Stage.KillRequirement())
-        // {
-        //     BoardComplete = true;
-        //     OnWin?.Invoke(Player);
-        // }
     }
 
     void ClearTiles(List<Tile> clearedTiles)
