@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class GameController_DDOL : MonoBehaviour
 {
-    public int round = 1;
     public int totalKills = 0;
     public int coins = 0;
     public int PreviousRoundMoves = 0;
