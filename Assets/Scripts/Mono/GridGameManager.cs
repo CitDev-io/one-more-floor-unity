@@ -54,7 +54,7 @@ public class GridGameManager : MonoBehaviour
         _gc = FindObjectOfType<GameController_DDOL>();
         _gim = gameObject.GetComponent<GridInputManager>();
         Stage s = new Stage(){
-            StageNumber = _gc.round
+            StageNumber = 1
         };
         BoardContext bctx = new BoardContext(
             _gc.CurrentCharacter,
@@ -83,7 +83,6 @@ public class GridGameManager : MonoBehaviour
         Board.OnSwordsCollected += HandleSwordsCollected;
         Board.OnEnemyStunned += HandleMonsterStunned;
         Board.OnMonsterKillEarned += HandleMonsterKillEarned;
-        Board.OnWin += HandleWin;
         Board.OnLose += HandleLose;
         Board.OnReadyForNextTurn += HandleReadyForNextTurn;
         _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
@@ -104,7 +103,6 @@ public class GridGameManager : MonoBehaviour
         Board.OnSwordsCollected -= HandleSwordsCollected;
         Board.OnEnemyStunned -= HandleMonsterStunned;
         Board.OnMonsterKillEarned -= HandleMonsterKillEarned;
-        Board.OnWin -= HandleWin;
         Board.OnLose -= HandleLose;
         Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
     }
@@ -171,11 +169,6 @@ public class GridGameManager : MonoBehaviour
         }
     }
 
-    void HandleWin(StatSheet s) {
-        _gc.PreviousRoundStats = s;
-        DoVictory();
-    }
-
     void HandleLose(StatSheet s) {
         _gc.PreviousRoundStats = s;
         DoLose();
@@ -219,21 +212,5 @@ public class GridGameManager : MonoBehaviour
         _gc.PreviousRoundMoves = Board.MovesMade;
         yield return new WaitForSeconds(0.2f);
         _gc.ChangeScene("GameOver");
-    }
-
-    void DoVictory()
-    {
-        if (RoundHasEnded) return;
-        RoundHasEnded = true;
-        OnRoundEnd?.Invoke();
-        StartCoroutine("RoundVictory");
-    }
-
-    IEnumerator RoundVictory()
-    {
-        _gc.PreviousRoundMoves = Board.MovesMade;
-        yield return new WaitForSeconds(3f);
-        _gc.round += 1;
-        _gc.ChangeScene("RoundScore");
     }
 }
