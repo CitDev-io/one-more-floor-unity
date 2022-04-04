@@ -22,7 +22,7 @@ public class PC_Warrior : PlayerCharacter
 
     public override StatSheet GetStatSheet()
     {
-        return new StatSheet(MaxHp(), MaxSp(), Damage());
+        return new StatSheet(MaxHp(), MaxSp(), Damage(), 0);
     }
 
     int Damage() {
