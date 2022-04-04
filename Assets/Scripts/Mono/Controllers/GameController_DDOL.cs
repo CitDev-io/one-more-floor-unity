@@ -3,7 +3,6 @@ using UnityEngine;
 public class GameController_DDOL : MonoBehaviour
 {
     public int totalKills = 0;
-    public int coins = 0;
     public int PreviousRoundMoves = 0;
     public StatSheet PreviousRoundStats;
     ChangeScene _sceneChanger;
@@ -33,10 +32,6 @@ public class GameController_DDOL : MonoBehaviour
         PreviousRoundMoves = 0;
     }
 
-    public void CoinBalanceChange(int delta)
-    {
-        coins += delta;
-    }
     public void OnMonsterKilled()
     {
         totalKills += 1;

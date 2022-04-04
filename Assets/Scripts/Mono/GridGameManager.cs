@@ -88,6 +88,7 @@ public class GridGameManager : MonoBehaviour
         _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
         _gim.OnUserStartSelection += Board.UserStartSelection;
         _gim.OnUserEndSelection += Board.UserEndSelection;
+        Board.OnGoldGoalReached += HandleGoldGoalReached;
     }
 
     void OnDestroy() {
@@ -105,6 +106,11 @@ public class GridGameManager : MonoBehaviour
         Board.OnMonsterKillEarned -= HandleMonsterKillEarned;
         Board.OnLose -= HandleLose;
         Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
+        Board.OnGoldGoalReached -= HandleGoldGoalReached;
+    }
+
+    void HandleGoldGoalReached() {
+        Debug.Log("DID IT!");
     }
 
 
@@ -113,7 +119,6 @@ public class GridGameManager : MonoBehaviour
     }
 
     IEnumerator StartNextRoundWhenDoneActing() {
-        Debug.Log("MAKE SURE YOU AREN't ACTING");
         while (isActingRightNow()) {
             yield return new WaitForSeconds(0.2f);
         }
@@ -182,7 +187,6 @@ public class GridGameManager : MonoBehaviour
     void HandleCoinCollected(int amt) {
         _gc.PlaySound("Coin_Collect");
         FloatGold(amt);
-        _gc.CoinBalanceChange(amt);
     }
 
     void HandleHeartsCollected(int amt) {

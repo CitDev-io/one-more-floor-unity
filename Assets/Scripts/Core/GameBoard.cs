@@ -23,6 +23,7 @@ public class GameBoard
     public NoParamDelegate OnEnemyStunned;
     public NoParamDelegate OnMonsterKillEarned;
     public StatSheetDelegate OnLose;
+    public NoParamDelegate OnGoldGoalReached;
     public NoParamDelegate OnReadyForNextTurn;
     public List<Tile> Tiles = new List<Tile>();
     BoardContext ctx;
@@ -300,11 +301,14 @@ public class GameBoard
 
         int coinGained = selection
             .Where((o) => o.tileType == TileType.Coin)
-            .ToList().Count * 10;
+            .ToList().Count;
 
-        if (coinGained > 0)
-        {
+        if (coinGained > 0) {
+            int newCoinTotal = Player.CollectCoins(coinGained);
             OnCoinCollected?.Invoke(coinGained);
+            if (Player.HasReachedCoinGoal()) {
+                OnGoldGoalReached?.Invoke();
+            }
         }
 
         int swordsCollected = selection

@@ -13,6 +13,6 @@ public class UI_CoinTicker : MonoBehaviour
     }
     private void OnGUI()
     {
-        _txt.text = _gc.coins + "";
+        _txt.text = _gc.CurrentCharacter.GetStatSheet().Coins + "";
     }
 }
