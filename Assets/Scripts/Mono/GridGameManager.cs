@@ -82,7 +82,7 @@ public class GridGameManager : MonoBehaviour
         Board.OnShieldsCollected += HandleShieldsCollected;
         Board.OnSwordsCollected += HandleSwordsCollected;
         Board.OnEnemyStunned += HandleMonsterStunned;
-        Board.OnMonsterKillEarned += HandleMonsterKillEarned;
+        Board.OnMonsterKillsEarned += HandleMonsterKillEarned;
         Board.OnLose += HandleLose;
         Board.OnReadyForNextTurn += HandleReadyForNextTurn;
         _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
@@ -104,7 +104,7 @@ public class GridGameManager : MonoBehaviour
         Board.OnShieldsCollected -= HandleShieldsCollected;
         Board.OnSwordsCollected -= HandleSwordsCollected;
         Board.OnEnemyStunned -= HandleMonsterStunned;
-        Board.OnMonsterKillEarned -= HandleMonsterKillEarned;
+        Board.OnMonsterKillsEarned -= HandleMonsterKillEarned;
         Board.OnLose -= HandleLose;
         Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
         Board.OnGoldGoalReached -= HandleGoldGoalReached;
@@ -183,8 +183,8 @@ public class GridGameManager : MonoBehaviour
         _gc.PreviousRoundStats = s;
         DoLose();
     }
-    void HandleMonsterKillEarned() {
-        _gc.OnMonsterKilled();
+    void HandleMonsterKillEarned(int countKilled) {
+        Debug.Log("MONO SAW YOU KILL " + countKilled + " monsters");
     }
     void HandleMonsterStunned() {
         _gc.PlaySound("Sword_Hit");

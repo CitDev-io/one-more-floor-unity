@@ -23,8 +23,15 @@ public class StatSheet
     public int MaxSp { get; private set; }
     public int Coins { get; private set; }
     public int DefensePoints { get; private set; }
+    public int ExperiencePoints { get; private set; }
     int CoinGoal = 25;
     int DefenseGoal = 25;
+    int ExperienceGoal = 20;
+    public int MonstersKilled { get; private set; }
+
+    public bool HasReachedExperienceGoal() {
+        return ExperiencePoints >= ExperienceGoal;
+    }
 
     public bool HasReachedCoinGoal() {
         return Coins >= CoinGoal;
@@ -78,10 +85,17 @@ public class StatSheet
         return Coins += collected;
     }
 
+    public int CollectKilledMonsters(int amt) {
+        ExperiencePoints += amt;
+        return MonstersKilled += amt;
+    }
+
     public int SpendCoins(int spent) {
         return Coins -= spent;
     }
 
+
+    // we deprecating these bad boys. not long for this world. will be when we simplify class stuff
     public int ExpPoints { get; set; }
     public int SwordExpPoints { get; set; }
     public int HeartExpPoints { get; set; }
