@@ -1,7 +1,13 @@
 using System;
 
-public class StatSheet : IExperiencable
+public class StatSheet
 {
+    public class StatAppliedResult {
+        public int Amount;
+        public int Applied;
+        public int Unapplied;
+    }
+
     public StatSheet(int maxHp, int maxSp, int dmg, int coins)
     {
         MaxHp = maxHp;
@@ -16,28 +22,56 @@ public class StatSheet : IExperiencable
     public int Sp { get; private set; }
     public int MaxSp { get; private set; }
     public int Coins { get; private set; }
-    int CoinGoal = 4;
+    public int DefensePoints { get; private set; }
+    int CoinGoal = 25;
+    int DefenseGoal = 25;
 
     public bool HasReachedCoinGoal() {
-        return CoinGoal >= Coins;
+        return Coins >= CoinGoal;
     }
 
-    public void ApplyHP(int amt) {
+    public bool HasReachedDefenseGoal() {
+        return DefensePoints >= DefenseGoal;
+    }
+
+    public StatAppliedResult ApplyHP(int amt) {
         int overheal = Math.Max((Hp + amt) - MaxHp, 0);
 
         Hp = Math.Max(Math.Min(Hp + amt, MaxHp), 0);
         HeartExpPoints += overheal;
+
+        return new StatAppliedResult(){
+            Amount = amt,
+            Unapplied = overheal,
+            Applied = amt - overheal
+        };
     }
 
-    public void ApplySP(int amt) {
+    public int SpendDefensePoints(int spent) {
+        return DefensePoints -= spent;
+    }
+
+    public StatAppliedResult ApplySP(int amt) {
         int overheal = Math.Max((Sp + amt) - MaxSp, 0);
     
         Sp = Math.Max(Math.Min(Sp + amt, MaxSp), 0);
-        SpecialExpPoints += overheal;
+        DefensePoints += overheal;
+
+        return new StatAppliedResult(){
+            Amount = amt,
+            Unapplied = overheal,
+            Applied = amt - overheal
+        };
     }
 
-    public void ApplySwords(int amt) {
+    public StatAppliedResult ApplySwords(int amt) {
         SwordExpPoints += amt;
+
+        return new StatAppliedResult(){
+            Amount = amt,
+            Unapplied = 0,
+            Applied = amt
+        };
     }
 
     public int CollectCoins(int collected) {
@@ -51,5 +85,4 @@ public class StatSheet : IExperiencable
     public int ExpPoints { get; set; }
     public int SwordExpPoints { get; set; }
     public int HeartExpPoints { get; set; }
-    public int SpecialExpPoints { get; set; }
 }

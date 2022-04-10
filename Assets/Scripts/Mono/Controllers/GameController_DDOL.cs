@@ -37,15 +37,6 @@ public class GameController_DDOL : MonoBehaviour
         totalKills += 1;
     }
 
-    public void AwardExp() {
-        PreviousRoundStats.ExpPoints = 75;
-        CurrentCharacter.GainExp(PreviousRoundStats);
-    }
-
-
-
-
-
 
 
 

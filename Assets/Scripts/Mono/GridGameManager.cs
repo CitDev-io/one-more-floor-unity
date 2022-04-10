@@ -89,6 +89,7 @@ public class GridGameManager : MonoBehaviour
         _gim.OnUserStartSelection += Board.UserStartSelection;
         _gim.OnUserEndSelection += Board.UserEndSelection;
         Board.OnGoldGoalReached += HandleGoldGoalReached;
+        Board.OnDefenseGoalReached += HandleDefenseGoalReached;
     }
 
     void OnDestroy() {
@@ -107,10 +108,15 @@ public class GridGameManager : MonoBehaviour
         Board.OnLose -= HandleLose;
         Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
         Board.OnGoldGoalReached -= HandleGoldGoalReached;
+        Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
     }
 
     void HandleGoldGoalReached() {
         Debug.Log("DID IT!");
+    }
+
+    void HandleDefenseGoalReached() {
+        Debug.Log("Did the defense thing");
     }
 
 
