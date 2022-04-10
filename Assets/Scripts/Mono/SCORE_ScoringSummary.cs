@@ -9,9 +9,7 @@ public class SCORE_ScoringSummary : MonoBehaviour
 
     private void Start()
     {
-        _gc = GameObject.FindObjectOfType<GameController_DDOL>();
 
-        _gc.AwardExp();
     }
 
 }

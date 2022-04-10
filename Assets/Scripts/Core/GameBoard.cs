@@ -24,6 +24,7 @@ public class GameBoard
     public NoParamDelegate OnMonsterKillEarned;
     public StatSheetDelegate OnLose;
     public NoParamDelegate OnGoldGoalReached;
+    public NoParamDelegate OnDefenseGoalReached;
     public NoParamDelegate OnReadyForNextTurn;
     public List<Tile> Tiles = new List<Tile>();
     BoardContext ctx;
@@ -308,6 +309,7 @@ public class GameBoard
             OnCoinCollected?.Invoke(coinGained);
             if (Player.HasReachedCoinGoal()) {
                 OnGoldGoalReached?.Invoke();
+                Player.SpendCoins(Player.Coins);
             }
         }
 
@@ -341,6 +343,10 @@ public class GameBoard
         {
             ApplyArmorChange(armorGained);
             OnShieldsCollected?.Invoke(armorGained);
+            if (Player.HasReachedDefenseGoal()) {
+                OnDefenseGoalReached?.Invoke();
+                Player.SpendDefensePoints(Player.DefensePoints);
+            }
         }
     
         if (enemies.Count > 0 && armorGained > 0) {
