@@ -21,7 +21,7 @@ public class GameBoard
     public IntDelegate OnPoisonCollected;
     public IntDelegate OnSwordsCollected;
     public NoParamDelegate OnEnemyStunned;
-    public NoParamDelegate OnMonsterKillEarned;
+    public IntDelegate OnMonsterKillsEarned;
     public StatSheetDelegate OnLose;
     public NoParamDelegate OnGoldGoalReached;
     public NoParamDelegate OnDefenseGoalReached;
@@ -29,15 +29,12 @@ public class GameBoard
     public List<Tile> Tiles = new List<Tile>();
     BoardContext ctx;
     public StatSheet Player;
-    public int Kills { get; private set; } = 0;
     public int MovesMade = 0;
     bool BoardComplete = false;
     bool AwaitingRoundChange = false;
 
     List<Tile> selection = new List<Tile>();
-    public int GetKillRequirement() {
-        return ctx.Stage.KillRequirement();
-    }
+
     TileSelector tileSelector;
     ChainValidator chainValidator;
 
@@ -150,6 +147,7 @@ public class GameBoard
             int sprayCount = Player.Sp;
 
             var spraysDone = 0;
+            var killCount = 0;
             for(var i = 0; i < sprayCount; i++) {
                 if (monsters.Count() == 0) continue;
 
@@ -157,10 +155,15 @@ public class GameBoard
                 var monster = monsters.ElementAt(indexChosen);
 
                 monster.TakeDamage(2, DamageSource.PoisonDart);
-                CheckIfMonsterDied(monster);
+                if (!monster.isAlive()) killCount++;
                 spraysDone++;
             }
             Player.ApplySP(-spraysDone);
+
+            if (killCount > 0) {
+                OnMonsterKillsEarned?.Invoke(killCount);
+                Player.CollectKilledMonsters(killCount);
+            }
         }
 
         DoPhase_Monsters();
@@ -361,21 +364,16 @@ public class GameBoard
             if (armorGained > 0) {
                 monster.Stun();
             }
-            CheckIfMonsterDied(monster);
+            //CheckIfMonsterDied(monster);
+        }
+
+        int killCount = enemies.Where((o) => !o.isAlive()).Count();
+        if (killCount > 0) {
+            OnMonsterKillsEarned?.Invoke(killCount);
+            Player.CollectKilledMonsters(killCount);
         }
 
         OnPlayerCollectedTiles?.Invoke(selection);
-    }
-
-    void CheckIfMonsterDied(Tile monster) {
-        if (!monster.isAlive()) {
-            OnMonsterKill();
-        }
-    }
-    void OnMonsterKill()
-    {
-        Kills += 1;
-        OnMonsterKillEarned?.Invoke();
     }
 
     void ClearTiles(List<Tile> clearedTiles)

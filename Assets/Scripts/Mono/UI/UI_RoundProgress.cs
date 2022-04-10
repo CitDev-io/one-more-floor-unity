@@ -3,6 +3,7 @@ using TMPro;
 
 public class UI_RoundProgress : MonoBehaviour
 {
+    //not in use
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] GameObject check;
 
@@ -33,6 +34,6 @@ public class UI_RoundProgress : MonoBehaviour
 
     void OnGUI() {
         if (_rc.Board == null) return;
-        text.text = "x" + (_rc.Board.GetKillRequirement() - _rc.Board.Kills);
+        text.text = "x??togo";
     }
 }

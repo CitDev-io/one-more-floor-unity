@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class GameController_DDOL : MonoBehaviour
 {
-    public int totalKills = 0;
     public int PreviousRoundMoves = 0;
     public StatSheet PreviousRoundStats;
     ChangeScene _sceneChanger;
@@ -30,11 +29,6 @@ public class GameController_DDOL : MonoBehaviour
     void Reset()
     {
         PreviousRoundMoves = 0;
-    }
-
-    public void OnMonsterKilled()
-    {
-        totalKills += 1;
     }
 
 
