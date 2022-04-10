@@ -127,7 +127,6 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleReadyForNextTurn() {
-        Debug.Log("HANDLE READY");
         StartCoroutine("StartNextRoundWhenDoneActing");
     }
 
