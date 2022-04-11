@@ -158,12 +158,14 @@ public class GridGameManager : MonoBehaviour
         _lr.SetPositions(
             selection.Select((o) => o.GridPosition()).ToArray()
         );
+
         if (selection.Count == 0) {
             SelectionCountDoodad.gameObject.SetActive(false);
         } else {
+            var doodadOffset = new Vector3(.5f, -.25f, 0);
             SelectionCountDoodad.gameObject.SetActive(true);
-            SelectionCountDoodad.position = selection.ElementAt(selection.Count - 1).GridPosition();
-            SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(selection.Where((o) => o.tileType != TileType.Monster).ToList().Count + "");               
+            SelectionCountDoodad.position = selection.ElementAt(selection.Count - 1).GridPosition() - doodadOffset;
+            SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(selection.Where((o) => o.tileType != TileType.Monster).ToList().Count + "");
         }
     }
 

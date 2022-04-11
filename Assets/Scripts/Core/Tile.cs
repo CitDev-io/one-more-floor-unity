@@ -15,6 +15,7 @@ public class Tile
     int StunnedRounds = 0;
     int TurnsAlive = 0;
     public bool IsBeingCollected = false;
+    public int selectedAgainstDamage = 0;
 
     public Tile(int x, int y, int HP, int DMG, TileType tt)
     {
@@ -106,5 +107,6 @@ public class Tile
         TurnsAlive = 0;
         StunnedRounds = 0;
         IsBeingCollected = false;
+        selectedAgainstDamage = 0;
     }
 }

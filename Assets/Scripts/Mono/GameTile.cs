@@ -14,6 +14,7 @@ public class GameTile : MonoBehaviour
     [SerializeField] SpriteRenderer sr;
     [SerializeField] public TextMeshProUGUI label1;
     [SerializeField] public TextMeshProUGUI label2;
+    [SerializeField] public TextMeshProUGUI xoutlabel;
     [SerializeField] GameObject MonsterFace;
 
     [Space(25)]
@@ -72,8 +73,10 @@ public class GameTile : MonoBehaviour
     void OnGUI() {
         if (_tile == null) return;
 
-        label1.text = _tile.tileType == TileType.Monster ? _tile.HitPoints + "" : "";
-        label2.text = _tile.tileType == TileType.Monster ? _tile.Damage + "" : "";
+        bool isMonster = _tile.tileType == TileType.Monster;
+        label1.text = isMonster ? _tile.HitPoints + "" : "";
+        label2.text = isMonster ? _tile.Damage + "" : "";
+        xoutlabel.gameObject.SetActive(isMonster && _tile.selectedAgainstDamage >= _tile.HitPoints);
     }
 
     void SetTileType()

@@ -257,7 +257,7 @@ public class GameBoard
     void ClearSelection()
     {
         selection.Clear();
-        OnSelectionChange?.Invoke(selection);
+        SelectionChanged();
     }
 
     void DoUserIndicatingTile(Tile tile)
@@ -279,8 +279,9 @@ public class GameBoard
         if (chainValidator.isEligibleToAddToSelection(tile))
         {
             selection.Add(tile);
+            foreach(Tile t in selection) { t.selectedAgainstDamage = 1; }
             OnTileAddedToSelection?.Invoke(tile);
-            OnSelectionChange?.Invoke(selection);
+            SelectionChanged();
         }
     }
 
@@ -291,8 +292,16 @@ public class GameBoard
         foreach (Tile t in tilesToUnhighlight)
         {
             selection.Remove(t);
-            OnSelectionChange?.Invoke(selection);
+            SelectionChanged();
         }
+    }
+
+    void SelectionChanged() {
+        int dmgSelected = Player.Damage * selection.Where((t) => t.tileType == TileType.Sword).Count();
+        foreach(Tile t in Tiles) {
+            t.selectedAgainstDamage = selection.Contains(t) ? dmgSelected : 0;
+        }
+        OnSelectionChange?.Invoke(selection);
     }
 
     void CollectTiles()
