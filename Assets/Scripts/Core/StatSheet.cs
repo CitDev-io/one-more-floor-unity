@@ -26,7 +26,7 @@ public class StatSheet
     public int ExperiencePoints { get; private set; }
     int CoinGoal = 25;
     int DefenseGoal = 25;
-    int ExperienceGoal = 20;
+    int ExperienceGoal = 2;
     public int MonstersKilled { get; private set; }
 
     public bool HasReachedExperienceGoal() {
@@ -39,6 +39,10 @@ public class StatSheet
 
     public bool HasReachedDefenseGoal() {
         return DefensePoints >= DefenseGoal;
+    }
+
+    public void IterateToNextExpGoal() {
+        ExperienceGoal += 20;
     }
 
     public StatAppliedResult ApplyHP(int amt) {

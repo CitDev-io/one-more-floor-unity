@@ -25,6 +25,7 @@ public class GameBoard
     public StatSheetDelegate OnLose;
     public NoParamDelegate OnGoldGoalReached;
     public NoParamDelegate OnDefenseGoalReached;
+    public NoParamDelegate OnExperienceGoalReached;
     public NoParamDelegate OnReadyForNextTurn;
     public List<Tile> Tiles = new List<Tile>();
     BoardContext ctx;
@@ -166,7 +167,16 @@ public class GameBoard
             }
         }
 
+        CheckXPLevelUp();
+
         DoPhase_Monsters();
+    }
+
+    void CheckXPLevelUp() {
+        if (Player.HasReachedExperienceGoal()) {
+            OnExperienceGoalReached?.Invoke();
+            Player.IterateToNextExpGoal();
+        }
     }
 
     public void RoundProceed()

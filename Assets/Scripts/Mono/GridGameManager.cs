@@ -90,6 +90,7 @@ public class GridGameManager : MonoBehaviour
         _gim.OnUserEndSelection += Board.UserEndSelection;
         Board.OnGoldGoalReached += HandleGoldGoalReached;
         Board.OnDefenseGoalReached += HandleDefenseGoalReached;
+        Board.OnExperienceGoalReached += HandleExperienceGoalReached;
     }
 
     void OnDestroy() {
@@ -109,6 +110,11 @@ public class GridGameManager : MonoBehaviour
         Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
         Board.OnGoldGoalReached -= HandleGoldGoalReached;
         Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
+        Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
+    }
+
+    void HandleExperienceGoalReached() {
+        Debug.Log("HIT XP GOAL");
     }
 
     void HandleGoldGoalReached() {
