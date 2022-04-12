@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 
-public class RogueChainValidator : ChainValidator
+public class StandardChainValidator : ChainValidator
 {
-    public RogueChainValidator(List<Tile> tiles, List<Tile> selection) {
+    public StandardChainValidator(List<Tile> tiles, List<Tile> selection) {
         Tiles = tiles;
         Selection = selection;
     }
@@ -10,7 +11,6 @@ public class RogueChainValidator : ChainValidator
         return true;
     }
     protected override bool moreIsChainable(Tile first, Tile next) {
-
         return false;
     }
 }

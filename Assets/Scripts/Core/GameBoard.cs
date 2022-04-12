@@ -58,24 +58,7 @@ public class GameBoard
                 Tiles.Add(t);
             }
         }
-
-        switch(CurrentCharacterType()) {
-            case CharacterType.Warrior:
-                chainValidator = new WarriorChainValidator(
-                    Tiles,
-                    selection
-                );
-                break;
-            case CharacterType.Rogue:
-                chainValidator = new RogueChainValidator(
-                    Tiles,
-                    selection
-                );
-                break;
-            default:
-                Debug.Log("NOT ESTABLISHED WHAT CLASS YOU ARE");
-                break;
-        }
+        chainValidator = new StandardChainValidator(Tiles, selection);
         Player = bctx.PC.GetStatSheet();
     }
 
