@@ -13,7 +13,7 @@ public class UI_SelectedPCBanner : MonoBehaviour
     }
     private void OnGUI()
     {
-        _nameTxt.text = _gc.CurrentCharacter.Name;
-        _lvlTxt.text = "level " + _gc.CurrentCharacter.Level();
+        _nameTxt.text = "warrior";
+        _lvlTxt.text = "level 1";
     }
 }

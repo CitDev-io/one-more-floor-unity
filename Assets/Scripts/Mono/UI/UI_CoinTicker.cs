@@ -3,16 +3,16 @@ using TMPro;
 
 public class UI_CoinTicker : MonoBehaviour
 {
-    GameController_DDOL _gc;
+    GridGameManager _rc;
     TextMeshProUGUI _txt;
 
-    private void Start()
+    private void Awake()
     {
-        _gc = GameObject.FindObjectOfType<GameController_DDOL>();
+        _rc = GameObject.FindObjectOfType<GridGameManager>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
-    private void OnGUI()
-    {
-        _txt.text = _gc.CurrentCharacter.GetStatSheet().Coins + "";
+    private void OnGUI() {
+        if (_rc.Board == null) return;
+        _txt.text = _rc.Board.Player.Coins + " / " + _rc.Board.Player.CoinGoal;
     }
 }

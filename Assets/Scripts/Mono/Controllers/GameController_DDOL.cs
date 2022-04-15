@@ -5,8 +5,6 @@ public class GameController_DDOL : MonoBehaviour
     public int PreviousRoundMoves = 0;
     public StatSheet PreviousRoundStats;
     ChangeScene _sceneChanger;
-    public PlayerCharacter CurrentCharacter = new PC_Warrior();
-    public CharacterManager characterManager = new CharacterManager();
 
     void Awake()
     {

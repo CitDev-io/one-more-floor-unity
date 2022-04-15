@@ -28,7 +28,6 @@ public class GameBoard
     public NoParamDelegate OnExperienceGoalReached;
     public NoParamDelegate OnReadyForNextTurn;
     public List<Tile> Tiles = new List<Tile>();
-    BoardContext ctx;
     public StatSheet Player;
     public int MovesMade = 0;
     bool BoardComplete = false;
@@ -39,9 +38,13 @@ public class GameBoard
     TileSelector tileSelector;
     ChainValidator chainValidator;
 
-    public GameBoard(BoardContext bctx) {
-        ctx = bctx;
-        tileSelector = new TileSelector(bctx.PC.TileOptions);
+    public GameBoard() {
+        tileSelector = new TileSelector(new List<TileType> {
+            TileType.Shield,
+            TileType.Sword,
+            TileType.Heart,
+            TileType.Coin
+        });
 
         int COUNT_ROWS = 6;
         int COUNT_COLS = 6;
@@ -51,27 +54,17 @@ public class GameBoard
                 Tile t = new Tile(
                     colid,
                     rowid,
-                    ctx.Stage.EnemyHp(),
-                    ctx.Stage.EnemyDmg(),
+                    3, //enemy hp
+                    1, // enemy dmg
                     tileSelector.GetNextTile()
                 );
                 Tiles.Add(t);
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = bctx.PC.GetStatSheet();
+        Player = new StatSheet(10, 10, 1, 0);
     }
 
-    public CharacterType CurrentCharacterType() {
-        switch(ctx.PC.Name.ToLower()) {
-            case "warrior":
-                return CharacterType.Warrior;
-            case "rogue":
-                return CharacterType.Rogue;
-            default:
-                return CharacterType.Warrior;
-        }
-    }
     public void UserStartSelection(Tile tile)
     {
         ClearSelection();
@@ -126,29 +119,29 @@ public class GameBoard
     }
 
     void DoPhase_Post() {
-        var monsters = Tiles.Where((o) => o.tileType == TileType.Monster && o.isAlive());
-        if (ctx.PC.Name.ToLower() == "rogue" && Player.Sp > 0 && monsters.Any()) {
-            int sprayCount = Player.Sp;
+        // var monsters = Tiles.Where((o) => o.tileType == TileType.Monster && o.isAlive());
+        // if (ctx.PC.Name.ToLower() == "rogue" && Player.Sp > 0 && monsters.Any()) {
+        //     int sprayCount = Player.Sp;
 
-            var spraysDone = 0;
-            var killCount = 0;
-            for(var i = 0; i < sprayCount; i++) {
-                if (monsters.Count() == 0) continue;
+        //     var spraysDone = 0;
+        //     var killCount = 0;
+        //     for(var i = 0; i < sprayCount; i++) {
+        //         if (monsters.Count() == 0) continue;
 
-                int indexChosen = Random.Range(0, monsters.Count());
-                var monster = monsters.ElementAt(indexChosen);
+        //         int indexChosen = Random.Range(0, monsters.Count());
+        //         var monster = monsters.ElementAt(indexChosen);
 
-                monster.TakeDamage(2, DamageSource.PoisonDart);
-                if (!monster.isAlive()) killCount++;
-                spraysDone++;
-            }
-            Player.ApplySP(-spraysDone);
+        //         monster.TakeDamage(2, DamageSource.PoisonDart);
+        //         if (!monster.isAlive()) killCount++;
+        //         spraysDone++;
+        //     }
+        //     Player.ApplySP(-spraysDone);
 
-            if (killCount > 0) {
-                OnMonsterKillsEarned?.Invoke(killCount);
-                Player.CollectKilledMonsters(killCount);
-            }
-        }
+        //     if (killCount > 0) {
+        //         OnMonsterKillsEarned?.Invoke(killCount);
+        //         Player.CollectKilledMonsters(killCount);
+        //     }
+        // }   ROGUE SPRAY SCRIPT
 
         CheckXPLevelUp();
 
@@ -210,24 +203,20 @@ public class GameBoard
         foreach(Tile monster in monsters) {
             monster.DoAttack();
         }
-        
-        if (CurrentCharacterType() == CharacterType.Warrior) {
-            if (Player.Sp >= damageReceived)
-            {
-                ApplyArmorChange(-damageReceived);
-                return;
-            }
 
-            int remainingDmg = damageReceived - Player.Sp;
-            if (Player.Sp > 0)
-            {
-                ApplyArmorChange(-Player.Sp);
-            }
-
-            ApplyHpChange(-remainingDmg);
-        } else {
-            ApplyHpChange(-damageReceived);
+        if (Player.Sp >= damageReceived)
+        {
+            ApplyArmorChange(-damageReceived);
+            return;
         }
+
+        int remainingDmg = damageReceived - Player.Sp;
+        if (Player.Sp > 0)
+        {
+            ApplyArmorChange(-Player.Sp);
+        }
+
+        ApplyHpChange(-remainingDmg);
     }
 
     void AgeAllMonsters() {

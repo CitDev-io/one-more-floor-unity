@@ -53,14 +53,8 @@ public class GridGameManager : MonoBehaviour
     {
         _gc = FindObjectOfType<GameController_DDOL>();
         _gim = gameObject.GetComponent<GridInputManager>();
-        Stage s = new Stage(){
-            StageNumber = 1
-        };
-        BoardContext bctx = new BoardContext(
-            _gc.CurrentCharacter,
-            s
-        );
-        Board = new GameBoard(bctx);
+        Stage s = new Stage();
+        Board = new GameBoard();
 
         foreach (Tile tile in Board.Tiles) {
             GameObject tilePrefab = Resources.Load<GameObject>("Prefabs/Tile");
