@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 
 public delegate void TilesDelegate(List<Tile> t);
@@ -11,23 +10,17 @@ public delegate void SourcedDamageDelegate(int damage, DamageSource source);
 
 public class GameBoard
 {
-    public TilesDelegate OnPlayerCollectedTiles;
+    public TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
     public TileDelegate OnTileAddedToSelection;
-    public TilesDelegate OnSelectionChange;
-    public IntDelegate OnMonstersAttack;
-    public IntDelegate OnCoinCollected;
-    public IntDelegate OnHeartsCollected;
-    public IntDelegate OnShieldsCollected;
-    public IntDelegate OnPoisonCollected;
-    public IntDelegate OnSwordsCollected;
-    public NoParamDelegate OnEnemyStunned;
+    public IntDelegate OnMonstersAttack, OnCoinCollected, OnHeartsCollected;
+    public IntDelegate OnShieldsCollected, OnPoisonCollected, OnSwordsCollected;
     public IntDelegate OnMonsterKillsEarned;
-    public StatSheetDelegate OnLose;
-    public NoParamDelegate OnGoldGoalReached;
-    public NoParamDelegate OnDefenseGoalReached;
-    public NoParamDelegate OnExperienceGoalReached;
-    public NoParamDelegate OnReadyForNextTurn;
+    public NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
+    public NoParamDelegate OnExperienceGoalReached, OnReadyForNextTurn;
+
+
     public List<Tile> Tiles = new List<Tile>();
+    public StatSheetDelegate OnLose;
     public StatSheet Player;
     public int MovesMade = 0;
     bool BoardComplete = false;
@@ -119,30 +112,6 @@ public class GameBoard
     }
 
     void DoPhase_Post() {
-        // var monsters = Tiles.Where((o) => o.tileType == TileType.Monster && o.isAlive());
-        // if (ctx.PC.Name.ToLower() == "rogue" && Player.Sp > 0 && monsters.Any()) {
-        //     int sprayCount = Player.Sp;
-
-        //     var spraysDone = 0;
-        //     var killCount = 0;
-        //     for(var i = 0; i < sprayCount; i++) {
-        //         if (monsters.Count() == 0) continue;
-
-        //         int indexChosen = Random.Range(0, monsters.Count());
-        //         var monster = monsters.ElementAt(indexChosen);
-
-        //         monster.TakeDamage(2, DamageSource.PoisonDart);
-        //         if (!monster.isAlive()) killCount++;
-        //         spraysDone++;
-        //     }
-        //     Player.ApplySP(-spraysDone);
-
-        //     if (killCount > 0) {
-        //         OnMonsterKillsEarned?.Invoke(killCount);
-        //         Player.CollectKilledMonsters(killCount);
-        //     }
-        // }   ROGUE SPRAY SCRIPT
-
         CheckXPLevelUp();
 
         DoPhase_Monsters();

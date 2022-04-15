@@ -53,7 +53,6 @@ public class GridGameManager : MonoBehaviour
     {
         _gc = FindObjectOfType<GameController_DDOL>();
         _gim = gameObject.GetComponent<GridInputManager>();
-        Stage s = new Stage();
         Board = new GameBoard();
 
         foreach (Tile tile in Board.Tiles) {
