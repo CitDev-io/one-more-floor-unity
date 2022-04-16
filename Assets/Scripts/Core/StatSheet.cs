@@ -22,6 +22,18 @@ public class StatSheet
     public int Sp { get; private set; }
     public int MaxSp { get; private set; }
     public int Coins { get; private set; }
+
+
+    public int Strength { get; private set; } = 1;
+    public int Dexterity { get; private set; } = 1;
+    public int Vitality { get; private set; } = 1;
+    public int Luck { get; private set; } = 1;
+    public int WeaponDamage { get; private set; } = 1;
+    public int ArmorPiercing { get; private set; } = 50;
+    public int ArmorDurability { get; private set; } = 50;
+    public int Defense { get; private set; } = 1;
+
+
     public int DefensePoints { get; private set; }
     public int ExperiencePoints { get; private set; }
     public int CoinGoal = 15;

@@ -48,14 +48,14 @@ public class GameBoard
                     colid,
                     rowid,
                     3, //enemy hp
-                    1, // enemy dmg
+                    2, // enemy dmg
                     tileSelector.GetNextTile()
                 );
                 Tiles.Add(t);
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = new StatSheet(10, 10, 1, 0);
+        Player = new StatSheet(40, 6, 1, 0);
     }
 
     public void UserStartSelection(Tile tile)
