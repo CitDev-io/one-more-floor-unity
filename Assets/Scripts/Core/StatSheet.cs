@@ -49,7 +49,6 @@ public class StatSheet
         int overheal = Math.Max((Hp + amt) - MaxHp, 0);
 
         Hp = Math.Max(Math.Min(Hp + amt, MaxHp), 0);
-        HeartExpPoints += overheal;
 
         return new StatAppliedResult(){
             Amount = amt,
@@ -102,5 +101,4 @@ public class StatSheet
     // we deprecating these bad boys. not long for this world. will be when we simplify class stuff
     public int ExpPoints { get; set; }
     public int SwordExpPoints { get; set; }
-    public int HeartExpPoints { get; set; }
 }

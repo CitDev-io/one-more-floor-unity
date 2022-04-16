@@ -1,7 +1,7 @@
 public enum TileType
 {
     Coin,
-    Heart,
+    Potion,
     Shield,
     Sword,
     Monster,

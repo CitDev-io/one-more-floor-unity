@@ -71,7 +71,7 @@ public class GridGameManager : MonoBehaviour
         Board.OnSelectionChange += HandleSelectionChange;
         Board.OnMonstersAttack += HandleMonstersAttack;
         Board.OnCoinCollected += HandleCoinCollected;
-        Board.OnHeartsCollected += HandleHeartsCollected;
+        Board.OnPotionsCollected += HandlePotionsCollected;
         Board.OnShieldsCollected += HandleShieldsCollected;
         Board.OnSwordsCollected += HandleSwordsCollected;
         Board.OnEnemyStunned += HandleMonsterStunned;
@@ -94,7 +94,7 @@ public class GridGameManager : MonoBehaviour
         Board.OnSelectionChange -= HandleSelectionChange;
         Board.OnMonstersAttack -= HandleMonstersAttack;
         Board.OnCoinCollected -= HandleCoinCollected;
-        Board.OnHeartsCollected -= HandleHeartsCollected;
+        Board.OnPotionsCollected -= HandlePotionsCollected;
         Board.OnShieldsCollected -= HandleShieldsCollected;
         Board.OnSwordsCollected -= HandleSwordsCollected;
         Board.OnEnemyStunned -= HandleMonsterStunned;
@@ -167,8 +167,8 @@ public class GridGameManager : MonoBehaviour
             case TileType.Coin:
                 _gc.PlaySound("Coin_Select");
                 break;
-            case TileType.Heart:
-                _gc.PlaySound("Heart_Select");
+            case TileType.Potion:
+                _gc.PlaySound("Potion_Select");
                 break;
             case TileType.Shield:
                 _gc.PlaySound("Shield_Select");
@@ -195,8 +195,8 @@ public class GridGameManager : MonoBehaviour
         FloatGold(amt);
     }
 
-    void HandleHeartsCollected(int amt) {
-        _gc.PlaySound("Heart_Use");
+    void HandlePotionsCollected(int amt) {
+        _gc.PlaySound("Potion_Use");
         FloatHeal(amt);
     }
 

@@ -81,6 +81,7 @@ public class GameTile : MonoBehaviour
 
     void SetTileType()
     {
+        Debug.Log(_tile.tileType);
         sr.sprite = Resources.Load<Sprite>("Tiles/" + _tile.tileType + "1");
 
         bool isAMonster = _tile.tileType == TileType.Monster;

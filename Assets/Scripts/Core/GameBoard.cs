@@ -12,7 +12,7 @@ public class GameBoard
 {
     public TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
     public TileDelegate OnTileAddedToSelection;
-    public IntDelegate OnMonstersAttack, OnCoinCollected, OnHeartsCollected;
+    public IntDelegate OnMonstersAttack, OnCoinCollected, OnPotionsCollected;
     public IntDelegate OnShieldsCollected, OnPoisonCollected, OnSwordsCollected;
     public IntDelegate OnMonsterKillsEarned;
     public NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
@@ -35,7 +35,7 @@ public class GameBoard
         tileSelector = new TileSelector(new List<TileType> {
             TileType.Shield,
             TileType.Sword,
-            TileType.Heart,
+            TileType.Potion,
             TileType.Coin
         });
 
@@ -250,7 +250,7 @@ public class GameBoard
         MovesMade += 1;
 
         int healthGained = selection
-            .Where((o) => o.tileType == TileType.Heart)
+            .Where((o) => o.tileType == TileType.Potion)
             .ToList().Count;
 
         int armorGained = selection
@@ -290,7 +290,7 @@ public class GameBoard
         if (healthGained != 0)
         {
             ApplyHpChange(healthGained);
-            OnHeartsCollected?.Invoke(healthGained);
+            OnPotionsCollected?.Invoke(healthGained);
         }
         if (poisonGained != 0) {
             ApplyPoisonChanged(poisonGained);
