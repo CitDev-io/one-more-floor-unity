@@ -14,7 +14,7 @@ public class GameBoard
     public TileDelegate OnTileAddedToSelection;
     public IntDelegate OnMonstersAttack, OnCoinCollected, OnPotionsCollected;
     public IntDelegate OnShieldsCollected, OnPoisonCollected, OnSwordsCollected;
-    public IntDelegate OnMonsterKillsEarned;
+    public IntDelegate OnMonsterKillsEarned, OnExperienceGained;
     public NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
     public NoParamDelegate OnExperienceGoalReached, OnReadyForNextTurn;
 
@@ -57,7 +57,7 @@ public class GameBoard
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = new StatSheet(40, 6, 1, 0);
+        Player = new StatSheet(40, 6, 0);
     }
 
     public void UserStartSelection(Tile tile)
@@ -122,7 +122,7 @@ public class GameBoard
     void CheckXPLevelUp() {
         if (Player.HasReachedExperienceGoal()) {
             OnExperienceGoalReached?.Invoke();
-            Player.IterateToNextExpGoal();
+            Player.SpendDownExp();
         }
     }
 
@@ -240,7 +240,7 @@ public class GameBoard
     }
 
     void SelectionChanged() {
-        int dmgSelected = Player.Damage * selection.Where((t) => t.tileType == TileType.Sword).Count();
+        int dmgSelected = Player.CalcDamageDone(selection.Where((t) => t.tileType == TileType.Sword).Count());
         foreach(Tile t in Tiles) {
             t.selectedAgainstDamage = selection.Contains(t) ? dmgSelected : 0;
         }
@@ -274,7 +274,7 @@ public class GameBoard
             OnCoinCollected?.Invoke(coinGained);
             if (Player.HasReachedCoinGoal()) {
                 OnGoldGoalReached?.Invoke();
-                Player.SpendCoins(Player.Coins);
+                Player.SpendDownCoins();
             }
         }
 
@@ -310,7 +310,7 @@ public class GameBoard
             OnShieldsCollected?.Invoke(armorGained);
             if (Player.HasReachedDefenseGoal()) {
                 OnDefenseGoalReached?.Invoke();
-                Player.SpendDefensePoints(Player.DefensePoints);
+                Player.SpendDownDefensePoints();
             }
         }
     
@@ -318,7 +318,7 @@ public class GameBoard
             OnEnemyStunned?.Invoke();
         }
 
-        int damageDealt = swordsCollected * Player.Damage;
+        int damageDealt = Player.CalcDamageDone(swordsCollected);
 
         foreach (Tile monster in enemies)
         {
@@ -332,7 +332,8 @@ public class GameBoard
         int killCount = enemies.Where((o) => !o.isAlive()).Count();
         if (killCount > 0) {
             OnMonsterKillsEarned?.Invoke(killCount);
-            Player.CollectKilledMonsters(killCount);
+            MonsterCollectionResult result = Player.CollectKilledMonsters(killCount);
+            OnExperienceGained?.Invoke(result.XPEarned + result.BonusXPGained);
         }
 
         OnPlayerCollectedTiles?.Invoke(selection);

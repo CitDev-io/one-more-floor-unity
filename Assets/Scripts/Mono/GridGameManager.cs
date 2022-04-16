@@ -21,27 +21,58 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] GameObject hpPrefab;
     [SerializeField] GameObject apPrefab;
     [SerializeField] GameObject gpPrefab;
+    [SerializeField] GameObject xpPrefab;
     [SerializeField] GameObject floaterParent;
+    [SerializeField] Transform floaterPositionRef;
     [SerializeField] Transform SelectionCountDoodad;
 
+    void FloatExp(int xp) {
+        var go = Instantiate(
+            xpPrefab,
+            floaterPositionRef.position,
+            Quaternion.identity,
+            floaterParent.transform
+        );
+        go.GetComponent<TextMeshProUGUI>().text = "+" + xp + " XP";
+    }
     void FloatDamage(int dmg)
     {
-        var go = Instantiate(dmgPrefab, floaterParent.transform);
+        var go = Instantiate(
+            dmgPrefab,
+            floaterPositionRef.position,
+            Quaternion.identity,
+            floaterParent.transform
+        );
         go.GetComponent<TextMeshProUGUI>().text = "-" + dmg + " HP";
     }
     void FloatHeal(int dmg)
     {
-        var go = Instantiate(hpPrefab, floaterParent.transform);
+        var go = Instantiate(
+            hpPrefab,
+            floaterPositionRef.position,
+            Quaternion.identity,
+            floaterParent.transform
+        );
         go.GetComponent<TextMeshProUGUI>().text = "+" + dmg + " HP";
     }
     void FloatArmor(int dmg)
     {
-        var go = Instantiate(apPrefab, floaterParent.transform);
+        var go = Instantiate(
+            apPrefab,
+            floaterPositionRef.position,
+            Quaternion.identity,
+            floaterParent.transform
+        );
         go.GetComponent<TextMeshProUGUI>().text = "+" + dmg + " AP";
     }
     void FloatGold(int dmg)
     {
-        var go = Instantiate(gpPrefab, floaterParent.transform);
+        var go = Instantiate(
+            gpPrefab,
+            floaterPositionRef.position,
+            Quaternion.identity,
+            floaterParent.transform
+        );
         go.GetComponent<TextMeshProUGUI>().text = "+" + dmg + " GP";
     }
 
@@ -76,6 +107,7 @@ public class GridGameManager : MonoBehaviour
         Board.OnSwordsCollected += HandleSwordsCollected;
         Board.OnEnemyStunned += HandleMonsterStunned;
         Board.OnMonsterKillsEarned += HandleMonsterKillEarned;
+        Board.OnExperienceGained += HandleExperienceGained;
         Board.OnLose += HandleLose;
         Board.OnReadyForNextTurn += HandleReadyForNextTurn;
         _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
@@ -99,11 +131,17 @@ public class GridGameManager : MonoBehaviour
         Board.OnSwordsCollected -= HandleSwordsCollected;
         Board.OnEnemyStunned -= HandleMonsterStunned;
         Board.OnMonsterKillsEarned -= HandleMonsterKillEarned;
+        Board.OnExperienceGained -= HandleExperienceGained;
         Board.OnLose -= HandleLose;
         Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
         Board.OnGoldGoalReached -= HandleGoldGoalReached;
         Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
         Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
+    }
+
+    void HandleExperienceGained(int exp) {
+        Debug.Log($"exp gained: {exp}");
+        FloatExp(exp);
     }
 
     void HandleExperienceGoalReached() {
@@ -158,7 +196,15 @@ public class GridGameManager : MonoBehaviour
             var doodadOffset = new Vector3(.5f, -.25f, 0);
             SelectionCountDoodad.gameObject.SetActive(true);
             SelectionCountDoodad.position = selection.ElementAt(selection.Count - 1).GridPosition() - doodadOffset;
-            SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(selection.Where((o) => o.tileType != TileType.Monster).ToList().Count + "");
+            
+            var circleText = selection.Where((o) => o.tileType != TileType.Monster).ToList().Count + "";
+            int swordCount = selection.Where((o) => o.tileType == TileType.Sword).ToList().Count;
+        
+            if (swordCount > 0) {
+                circleText = Board.Player.CalcDamageDone(swordCount) + "D";
+            }
+            
+            SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(circleText);
         }
     }
 

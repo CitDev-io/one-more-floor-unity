@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_AttackTicker : MonoBehaviour
+public class UI_StatDump3 : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
@@ -11,9 +11,10 @@ public class UI_AttackTicker : MonoBehaviour
         _rc = GameObject.FindObjectOfType<GridGameManager>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
-    private void OnGUI()
-    {
+    private void OnGUI() {
         if (_rc.Board == null) return;
-        _txt.text = "" + _rc.Board.Player.CalcBaseDamage();
+
+        var ss = _rc.Board.Player;
+        _txt.text = $"%BonusXP={ss.BonusXpChance()}";
     }
 }

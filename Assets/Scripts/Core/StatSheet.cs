@@ -8,15 +8,20 @@ public class StatSheet
         public int Unapplied;
     }
 
-    public StatSheet(int maxHp, int maxSp, int dmg, int coins)
+    public StatSheet(int maxHp, int maxSp, int coins)
     {
         MaxHp = maxHp;
         Hp = maxHp;
         MaxSp = maxSp;
-        Damage = dmg;
         Coins = coins;
     }
-    public int Damage { get; private set; }
+    public RandomRoller roller = new RandomRoller();
+
+    int BASE_Damage = 2;
+    int BASE_BonusXPChance = 15;
+    int PERSTRENGTH_BonusXPChance = 5;
+    int PERROLL_BonusXP = 1;
+
     public int Hp { get; private set; }
     public int MaxHp { get; private set; }
     public int Sp { get; private set; }
@@ -41,6 +46,15 @@ public class StatSheet
     public int ExperienceGoal = 12;
     public int MonstersKilled { get; private set; }
 
+    public int CalcDamageDone(int swords) {
+        return CalcBaseDamage() + (swords * WeaponDamage);
+    }
+
+    public int CalcBaseDamage() {
+        return Strength + BASE_Damage;
+    }
+
+
     public bool HasReachedExperienceGoal() {
         return ExperiencePoints >= ExperienceGoal;
     }
@@ -53,9 +67,9 @@ public class StatSheet
         return DefensePoints >= DefenseGoal;
     }
 
-    public void IterateToNextExpGoal() {
-        ExperienceGoal += 12;
-    }
+    // public void IterateToNextExpGoal() {
+    //     ExperienceGoal += 12;
+    // }
 
     public StatAppliedResult ApplyHP(int amt) {
         int overheal = Math.Max((Hp + amt) - MaxHp, 0);
@@ -67,10 +81,6 @@ public class StatSheet
             Unapplied = overheal,
             Applied = amt - overheal
         };
-    }
-
-    public int SpendDefensePoints(int spent) {
-        return DefensePoints -= spent;
     }
 
     public StatAppliedResult ApplySP(int amt) {
@@ -87,8 +97,6 @@ public class StatSheet
     }
 
     public StatAppliedResult ApplySwords(int amt) {
-        SwordExpPoints += amt;
-
         return new StatAppliedResult(){
             Amount = amt,
             Unapplied = 0,
@@ -100,17 +108,56 @@ public class StatSheet
         return Coins += collected;
     }
 
-    public int CollectKilledMonsters(int amt) {
-        ExperiencePoints += amt;
-        return MonstersKilled += amt;
+    public int SpendDownCoins() {
+        return Coins -= CoinGoal;
     }
 
-    public int SpendCoins(int spent) {
-        return Coins -= spent;
+    public int SpendDownExp() {
+        return ExperiencePoints -= ExperienceGoal;
     }
 
+    public int SpendDownDefensePoints() {
+        return DefensePoints - DefenseGoal;
+    }
 
-    // we deprecating these bad boys. not long for this world. will be when we simplify class stuff
-    public int ExpPoints { get; set; }
-    public int SwordExpPoints { get; set; }
+    public MonsterCollectionResult CollectKilledMonsters(int amt) {
+        int experienceEarned = amt;
+        MonstersKilled += amt;
+
+        int bonusExperienceRollCount = Math.Max(amt - 3, 0);
+        
+        int successfulXpBonuses = doBonusExperienceRolls(bonusExperienceRollCount);
+        int bonusXp = successfulXpBonuses * PERROLL_BonusXP;
+        ExperiencePoints += experienceEarned + bonusXp;
+        
+        return new MonsterCollectionResult(){
+            Collected = amt,
+            GameTotalCollected = MonstersKilled,
+            XPEarned = experienceEarned,
+            BonusXPRollCount = bonusExperienceRollCount,
+            SuccessfulBonusXPRollCount = successfulXpBonuses,
+            BonusXPGained = bonusXp
+        };
+    }
+
+    public int BonusXpChance() {
+        return BASE_BonusXPChance + (PERSTRENGTH_BonusXPChance * Strength);
+    }
+    
+
+    /*
+        INTERNAL
+    */
+
+    int doBonusExperienceRolls(int bonusRolls) {
+        var successfulRolls = 0;
+        int percentChancePerRoll = BonusXpChance();
+        for(var i=0; i<bonusRolls; i++) {
+            int roll = roller.Roll();
+
+            if (roll <= percentChancePerRoll) successfulRolls +=1;
+        }
+        return successfulRolls;
+    }
+
 }
