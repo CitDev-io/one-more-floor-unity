@@ -47,8 +47,10 @@ public class GameBoard
                 Tile t = new Tile(
                     colid,
                     rowid,
-                    3, //enemy hp
-                    2, // enemy dmg
+                    new EnemyStatSheet(){
+                        Vitality = 3,
+                        Strength = 2
+                    },
                     tileSelector.GetNextTile()
                 );
                 Tiles.Add(t);
@@ -165,7 +167,7 @@ public class GameBoard
     void MonstersAttack(List<Tile> monsters) {
         if (BoardComplete) return;
 
-        int damageReceived = monsters.Sum((o) => o.Damage);
+        int damageReceived = monsters.Sum((o) => o.CurrentMonster.Strength);
         
         if (damageReceived == 0) return;
         OnMonstersAttack?.Invoke(damageReceived);

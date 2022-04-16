@@ -9,19 +9,16 @@ public class Tile
     public NoParamDelegate OnDoAttack;
     public SourcedDamageDelegate OnDamageTaken;
     public TileType tileType { get; private set; }
-    public int HitPoints { get; private set; } = 2;
-    public int MaxHitPoints { get; private set; } = 2;
-    public int Damage { get; private set; } = 2;
+
+    public EnemyStatSheet CurrentMonster = new EnemyStatSheet();
     int StunnedRounds = 0;
     int TurnsAlive = 0;
     public bool IsBeingCollected = false;
     public int selectedAgainstDamage = 0;
 
-    public Tile(int x, int y, int HP, int DMG, TileType tt)
+    public Tile(int x, int y, EnemyStatSheet enemy, TileType tt)
     {
-        HitPoints = HP;
-        MaxHitPoints = HP;
-        Damage = DMG;
+        CurrentMonster = enemy;
 
         col = x;
         row = y;
@@ -65,12 +62,12 @@ public class Tile
     }
 
     public void TakeDamage(int dmg, DamageSource src) {
-        HitPoints -= dmg;
+        CurrentMonster.Vitality -= dmg;
         OnDamageTaken?.Invoke(dmg, src);
     }
 
     public bool isAlive() {
-        return HitPoints > 0;
+        return CurrentMonster.Vitality > 0;
     }
 
     public bool isStunned() {
@@ -103,7 +100,7 @@ public class Tile
     }
 
     void Reset() {
-        HitPoints = MaxHitPoints;
+        CurrentMonster.Vitality = 2;
         TurnsAlive = 0;
         StunnedRounds = 0;
         IsBeingCollected = false;
