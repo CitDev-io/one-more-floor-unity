@@ -76,5 +76,4 @@ public class StatSheetTests
 
     // TODO: REQUIRES MOCKING TO PROVE THAT ROLLS EVALUATED CORRECTLY
     // CollectShields x4 need set of tests each
-
 }

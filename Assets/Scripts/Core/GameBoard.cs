@@ -6,19 +6,20 @@ public delegate void TileDelegate(Tile t);
 public delegate void IntDelegate(int i);
 public delegate void NoParamDelegate();
 public delegate void StatSheetDelegate(StatSheet statSheet);
+public delegate void DamageDelegate(DamageResult result);
 public delegate void SourcedDamageDelegate(int damage, DamageSource source);
 
 public class GameBoard
 {
     public TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
     public TileDelegate OnTileAddedToSelection;
-    public IntDelegate OnMonstersAttack, OnCoinCollected, OnPotionsCollected;
+    public IntDelegate OnCoinCollected, OnPotionsCollected;
     public IntDelegate OnShieldsCollected, OnPoisonCollected, OnSwordsCollected;
     public IntDelegate OnMonsterKillsEarned, OnExperienceGained;
     public NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
     public NoParamDelegate OnExperienceGoalReached, OnReadyForNextTurn;
 
-
+    public DamageDelegate OnMonstersAttack;
     public List<Tile> Tiles = new List<Tile>();
     public StatSheetDelegate OnLose;
     public StatSheet Player;
@@ -156,8 +157,8 @@ public class GameBoard
         
         if (damageReceived == 0) return;
 
-        Player.TakeDamage(damageReceived);
-        OnMonstersAttack?.Invoke(damageReceived);
+        DamageResult result = Player.TakeDamage(damageReceived);
+        OnMonstersAttack?.Invoke(result);
         foreach(Tile monster in monsters) {
             monster.DoAttack();
         }

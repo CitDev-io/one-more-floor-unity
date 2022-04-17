@@ -177,11 +177,11 @@ public class GridGameManager : MonoBehaviour
 
     }
 
-    void HandleMonstersAttack(int damageReceived) {
+    void HandleMonstersAttack(DamageResult playerTookDamage) {
         if (RoundHasEnded) return;
         int random = Random.Range(1, 4);
         _gc.PlaySound("Monster_Hit_" + random);
-        FloatDamage(damageReceived);
+        FloatDamage(playerTookDamage.Attempted);
     }
 
     void HandleSelectionChange(List<Tile> selection) {

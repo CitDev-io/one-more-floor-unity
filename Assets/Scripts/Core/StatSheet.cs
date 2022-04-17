@@ -99,21 +99,37 @@ public class StatSheet
         return DefensePoints >= DefenseGoal;
     }
 
-    public void TakeDamage(int damageReceived) {
+    public DamageResult TakeDamage(int damageReceived) {
+        int assignedToArmor = 0;
+        int assignedToHealth = 0;
+        int actualArmorDamage = 0;
+        int actualHPDamage = 0;
+
         if (Armor >= damageReceived)
         {
-            Armor -= damageReceived;
-            return;
+            assignedToArmor = damageReceived;
+            actualArmorDamage = doDamageOnShieldChecks(damageReceived);
+        } else {
+            actualArmorDamage = doDamageOnShieldChecks(Armor);
+
+            int remainingDmg = damageReceived - Armor;
+            assignedToArmor = Armor;
+            assignedToHealth = remainingDmg;
+            Hp -= remainingDmg;
         }
 
-        int remainingDmg = damageReceived - Armor;
-        Armor = 0;
-        Hp -= remainingDmg;
+        return new DamageResult(){
+            Attempted = damageReceived,
+            AssignedToArmor = assignedToArmor,
+            AssignedToHitPoints = assignedToHealth,
+            ArmorRemoved = actualArmorDamage,
+            HitPointsRemoved = actualHPDamage
+        };
     }
 
     public CollectionResult CollectShields(int shieldsCollected) {
         int bonusShieldRollCount = Math.Max(shieldsCollected - 3, 0);
-        int bonusShields = doBonusRollsAgainstChance(bonusShieldRollCount, BonusShieldChance());
+        int bonusShields = doRollsAgainstChance(bonusShieldRollCount, BonusShieldChance());
         
         int armorEarned = CalcArmorGained(shieldsCollected);
         int bonusGained = CalcArmorGained(bonusShields);
@@ -138,7 +154,7 @@ public class StatSheet
         int coinsEarned = collected;
         int bonusCoinRollCount = Math.Max(collected - 3, 0);
 
-        int successfulCoinBonuses = doBonusRollsAgainstChance(bonusCoinRollCount, BonusCoinChance());
+        int successfulCoinBonuses = doRollsAgainstChance(bonusCoinRollCount, BonusCoinChance());
         int bonusCoins = successfulCoinBonuses;
 
         Gold += CalcGoldGained(coinsEarned + bonusCoins);
@@ -157,7 +173,7 @@ public class StatSheet
         int healingEarned = CalcHealingDone(collected);
         int bonusPotionRollCount = Math.Max(collected - 3, 0);
 
-        int successfulPotionBonuses = doBonusRollsAgainstChance(bonusPotionRollCount, BonusHpChance());
+        int successfulPotionBonuses = doRollsAgainstChance(bonusPotionRollCount, BonusHpChance());
         int bonusHealGained = CalcHealingDone(successfulPotionBonuses);
 
         
@@ -182,7 +198,7 @@ public class StatSheet
 
         int bonusExperienceRollCount = Math.Max(amt - 3, 0);
         
-        int successfulXpBonuses = doBonusRollsAgainstChance(bonusExperienceRollCount, BonusXpChance());
+        int successfulXpBonuses = doRollsAgainstChance(bonusExperienceRollCount, BonusXpChance());
         int bonusXp = successfulXpBonuses * PERROLL_BonusXP;
         ExperiencePoints += experienceEarned + bonusXp;
         
@@ -232,7 +248,17 @@ public class StatSheet
         INTERNAL
     */
 
-    int doBonusRollsAgainstChance(int bonusRolls, int bonusChance) {
+
+    int doDamageOnShieldChecks(int checks) {
+        int shieldSaves = doRollsAgainstChance(checks, ArmorDurability);
+        int lostShields = checks - shieldSaves;
+
+        Armor -= lostShields;
+
+        return lostShields;
+    }
+
+    int doRollsAgainstChance(int bonusRolls, int bonusChance) {
         var successfulRolls = 0;
         int percentChancePerRoll = bonusChance;
         for(var i=0; i<bonusRolls; i++) {
