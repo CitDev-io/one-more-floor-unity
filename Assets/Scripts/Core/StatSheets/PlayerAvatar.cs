@@ -1,22 +1,6 @@
 using System;
 
-public class StatSheet
-{
-
-    public StatSheet()
-    {
-        Hp = CalcMaxHp();
-    }
-    public RandomRoller roller = new RandomRoller();
-
-    public int BASE_HP = 35;
-    public int BASE_Damage = 2;
-    int PERDEXTERITY_ShieldArmorPoints = 1;
-    int PERLUCK_PotionHealingPoints = 1;
-    int PERSTRENGTH_BaseDamage = 1;
-    int PERVITALITY_MaxHitPoints = 5;
-
-
+public class PlayerAvatar: StatSheet {
     int PERVITALITY_BonusPotionChance = 5;
     public int BASE_BonusXPChance = 15;
     public int BASE_BonusHPChance = 15;
@@ -27,66 +11,13 @@ public class StatSheet
     int PERSTRENGTH_BonusXPChance = 5;
     int PERROLL_BonusXP = 1;
 
-    public int Hp { get; private set; }
-    public int Armor { get; private set; }
-
-
-    public int Strength { get; private set; } = 1;
-    public int Dexterity { get; private set; } = 1;
-    public int Vitality { get; private set; } = 1;
-    public int Luck { get; private set; } = 1;
-    public int WeaponDamage { get; private set; } = 1;
-    public int ArmorPiercing { get; private set; } = 50;
-    public int ArmorDurability { get; private set; } = 50;
-    public int Defense { get; private set; } = 4;
-
-
-    public int Gold { get; private set; }
     public int GoldGoal = 15;
     public int GearPoints { get; private set; }
     public int GearGoal = 15;
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 12;
-
-    
     public int MonstersKilled { get; private set; }
-
-    public bool isAlive() {
-        return Hp > 0;
-    }
-
-    public int CalcMaxArmor() {
-        return Defense;
-    }
-
-    public int CalcHealingDone(int potions) {
-        return CalcHealPerPotion() * potions;
-    }
-
-    public int CalcDamageDone(int swords) {
-        return CalcBaseDamage() + (swords * WeaponDamage);
-    }
-
-    public int CalcGoldGained(int coins) {
-        return coins * 1;
-    }
-
-    public int CalcArmorGained(int shields) {
-        return shields * PERDEXTERITY_ShieldArmorPoints;
-    }
-
-    public int CalcHealPerPotion() {
-        return Luck * PERLUCK_PotionHealingPoints;
-    }
-
-    public int CalcBaseDamage() {
-        return (Strength * PERSTRENGTH_BaseDamage) + BASE_Damage;
-    }
-
-    public int CalcMaxHp() {
-        return BASE_HP + (PERVITALITY_MaxHitPoints * Vitality);
-    }
-
+    
     public bool HasReachedExperienceGoal() {
         return ExperiencePoints >= ExperienceGoal;
     }
@@ -97,32 +28,6 @@ public class StatSheet
 
     public bool HasReachedDefenseGoal() {
         return GearPoints >= GearGoal;
-    }
-
-    public DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {
-        int assignedToArmor = 0;
-        int assignedToHealth = 0;
-        int actualArmorDamage = 0;
-
-        assignedToArmor = Math.Min(damageReceived, Armor);
-        assignedToHealth = Math.Max(damageReceived - Armor, 0);
-        
-        int countOfPiercedShields = doPiercingOnShieldChecks(assignedToArmor, attackerArmorPiercing);
-        assignedToArmor -= countOfPiercedShields;
-        assignedToHealth += countOfPiercedShields;
-        
-        actualArmorDamage = doDamageOnShieldChecks(assignedToArmor);
-        Armor -= actualArmorDamage;
-        Hp -= assignedToHealth;
-    
-        return new DamageResult(){
-            Attempted = damageReceived,
-            AssignedToArmor = assignedToArmor,
-            AssignedToHitPoints = assignedToHealth,
-            ArmorRemoved = actualArmorDamage,
-            HitPointsRemoved = assignedToHealth,
-            ArmorPierced = countOfPiercedShields
-        };
     }
 
     public CollectionResult CollectShields(int shieldsCollected) {
@@ -210,22 +115,6 @@ public class StatSheet
         };
     }
 
-
-    public int SpendDownCoins() {
-        return Gold -= GoldGoal;
-    }
-
-    public int SpendDownExp() {
-        return ExperiencePoints -= ExperienceGoal;
-    }
-
-    public int SpendDownDefensePoints() {
-        return GearPoints -= GearGoal;
-    }
-
-
-
-
     public int BonusXpChance() {
         return BASE_BonusXPChance + (PERSTRENGTH_BonusXPChance * Strength);
     }
@@ -242,30 +131,15 @@ public class StatSheet
         return BASE_BonusAPChance + (PERDEXTERITY_BonusShieldChance * Dexterity);
     }
 
-    /*
-        INTERNAL
-    */
-
-    int doPiercingOnShieldChecks(int checks, int attackerArmorPiercing) {
-        int shieldsPierced = doRollsAgainstChance(checks, attackerArmorPiercing);
-        return shieldsPierced;
+    public int SpendDownCoins() {
+        return Gold -= GoldGoal;
     }
 
-    int doDamageOnShieldChecks(int checks) {
-        int shieldSaves = doRollsAgainstChance(checks, ArmorDurability);
-        int lostShields = checks - shieldSaves;
-
-        return lostShields;
+    public int SpendDownExp() {
+        return ExperiencePoints -= ExperienceGoal;
     }
 
-    int doRollsAgainstChance(int bonusRolls, int bonusChance) {
-        var successfulRolls = 0;
-        int percentChancePerRoll = bonusChance;
-        for(var i=0; i<bonusRolls; i++) {
-            int roll = roller.Roll();
-
-            if (roll <= percentChancePerRoll) successfulRolls +=1;
-        }
-        return successfulRolls;
+    public int SpendDownDefensePoints() {
+        return GearPoints -= GearGoal;
     }
 }

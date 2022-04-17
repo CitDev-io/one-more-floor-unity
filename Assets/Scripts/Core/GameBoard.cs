@@ -22,7 +22,7 @@ public class GameBoard
     public DamageDelegate OnMonstersAttack;
     public List<Tile> Tiles = new List<Tile>();
     public StatSheetDelegate OnLose;
-    public StatSheet Player;
+    public PlayerAvatar Player;
     public int MovesMade = 0;
     bool BoardComplete = false;
     bool AwaitingRoundChange = false;
@@ -58,7 +58,7 @@ public class GameBoard
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = new StatSheet();
+        Player = new PlayerAvatar();
     }
 
     public void UserStartSelection(Tile tile)
