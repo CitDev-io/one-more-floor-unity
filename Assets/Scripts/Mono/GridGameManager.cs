@@ -140,20 +140,20 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleExperienceGained(int exp) {
-        Debug.Log($"exp gained: {exp}");
+      //  Debug.Log($"exp gained: {exp}");
         FloatExp(exp);
     }
 
     void HandleExperienceGoalReached() {
-        Debug.Log("HIT XP GOAL");
+      //  Debug.Log("HIT XP GOAL");
     }
 
     void HandleGoldGoalReached() {
-        Debug.Log("DID IT!");
+      //  Debug.Log("DID IT!");
     }
 
     void HandleDefenseGoalReached() {
-        Debug.Log("Did the defense thing");
+//        Debug.Log("Did the defense thing");
     }
 
 
@@ -199,9 +199,19 @@ public class GridGameManager : MonoBehaviour
             
             var circleText = selection.Where((o) => o.tileType != TileType.Monster).ToList().Count + "";
             int swordCount = selection.Where((o) => o.tileType == TileType.Sword).ToList().Count;
-        
+            int potionCount = selection.Where((o) => o.tileType == TileType.Potion).ToList().Count;
+            int shieldCount = selection.Where((o) => o.tileType == TileType.Shield).ToList().Count;
+
             if (swordCount > 0) {
-                circleText = Board.Player.CalcDamageDone(swordCount) + "D";
+                circleText = $"{Board.Player.CalcDamageDone(swordCount)}D";
+            }
+
+            if (potionCount > 0) {
+                circleText = $"{Board.Player.CalcHealingDone(potionCount)}H";
+            }
+
+            if (shieldCount > 0) {
+                circleText = $"{Board.Player.CalcArmorGained(shieldCount)}A";
             }
             
             SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(circleText);
@@ -231,7 +241,7 @@ public class GridGameManager : MonoBehaviour
         DoLose();
     }
     void HandleMonsterKillEarned(int countKilled) {
-        Debug.Log("MONO SAW YOU KILL " + countKilled + " monsters");
+       // Debug.Log("MONO SAW YOU KILL " + countKilled + " monsters");
     }
     void HandleMonsterStunned() {
         _gc.PlaySound("Sword_Hit");

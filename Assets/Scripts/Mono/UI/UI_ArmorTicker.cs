@@ -13,6 +13,6 @@ public class UI_ArmorTicker : MonoBehaviour
     }
     private void OnGUI() {
         if (_rc.Board == null) return;
-        _txt.text = _rc.Board.Player.Sp + " / " + _rc.Board.Player.MaxSp;
+        _txt.text = _rc.Board.Player.Armor + " / " + _rc.Board.Player.MaxArmor;
     }
 }

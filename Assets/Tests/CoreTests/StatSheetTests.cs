@@ -35,19 +35,27 @@ public class StatSheetTests
     public void KillXPCalculated() {
         var ss = new StatSheet(10, 10, 0);
 
-        MonsterCollectionResult res = ss.CollectKilledMonsters(7);
+        CollectionResult res = ss.CollectKilledMonsters(7);
 
         Assert.AreEqual(res.Collected, 7);
-        Assert.AreEqual(res.XPEarned, 7);
-        Assert.AreEqual(res.BonusXPRollCount, 4);
-        Assert.AreEqual(res.BonusXPGained, res.SuccessfulBonusXPRollCount);
+        Assert.AreEqual(res.Earned, 7);
+        Assert.AreEqual(res.BonusRollCount, 4);
+        Assert.AreEqual(res.BonusGained, res.SuccessfulBonusRollCount);
     }
 
     [Test]
     public void BonusXpChanceCalculated() {
         var ss = new StatSheet(10, 10, 0);
-
         Assert.AreEqual(ss.BonusXpChance(), 20);
+        // when better able to set abritrary, +STR affect this?
+    }
+
+    [Test]
+    public void BonusCoinChanceCalculated() {
+        var ss = new StatSheet(10, 10, 0);
+
+        Assert.AreEqual(ss.BonusCoinChance(), 20);
+        // when better able to set abritrary, +LUC affect this?
     }
 
     //REQUIRES MOCKING TO PROVE THAT ROLLS EVALUATED CORRECTLY

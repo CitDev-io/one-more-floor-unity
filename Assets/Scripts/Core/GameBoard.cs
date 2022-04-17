@@ -98,15 +98,6 @@ public class GameBoard
         }
     }
 
-    void ApplyPoisonChanged(int changeAmount) {
-        Player.ApplySP(changeAmount);
-    }
-
-    void ApplyArmorChange(int changeAmount)
-    {
-        Player.ApplySP(changeAmount);
-    }
-
     void DoPhase_Collection() {
         CollectTiles();
 
@@ -170,24 +161,13 @@ public class GameBoard
         int damageReceived = monsters.Sum((o) => o.CurrentMonster.Strength);
         
         if (damageReceived == 0) return;
+
+        Player.TakeDamage(damageReceived);
         OnMonstersAttack?.Invoke(damageReceived);
         foreach(Tile monster in monsters) {
             monster.DoAttack();
         }
 
-        if (Player.Sp >= damageReceived)
-        {
-            ApplyArmorChange(-damageReceived);
-            return;
-        }
-
-        int remainingDmg = damageReceived - Player.Sp;
-        if (Player.Sp > 0)
-        {
-            ApplyArmorChange(-Player.Sp);
-        }
-
-        ApplyHpChange(-remainingDmg);
     }
 
     void AgeAllMonsters() {
@@ -251,18 +231,7 @@ public class GameBoard
     {
         MovesMade += 1;
 
-        int healthGained = selection
-            .Where((o) => o.tileType == TileType.Potion)
-            .ToList().Count;
-
-        int armorGained = selection
-            .Where((o) => o.tileType == TileType.Shield)
-            .ToList().Count;
-
-        int poisonGained = selection
-            .Where((o) => o.tileType == TileType.Poison)
-            .ToList().Count;
-
+        //  COINS
         List<Tile> coinsCollected = selection.Where((o) => o.tileType == TileType.Coin).ToList();
 
         int coinGained = selection
@@ -270,70 +239,70 @@ public class GameBoard
             .ToList().Count;
 
         if (coinGained > 0) {
-            int newCoinTotal = Player.CollectCoins(coinGained);
-            OnCoinCollected?.Invoke(coinGained);
+            CollectionResult cr = Player.CollectCoins(coinGained);
+            OnCoinCollected?.Invoke(cr.Earned + cr.BonusGained);
             if (Player.HasReachedCoinGoal()) {
                 OnGoldGoalReached?.Invoke();
                 Player.SpendDownCoins();
             }
         }
 
+        // POTIONS
+        int potionsCollected = selection
+            .Where((o) => o.tileType == TileType.Potion)
+            .ToList().Count;
+
+        if (potionsCollected != 0)
+        {
+            CollectionResult cr = Player.CollectPotions(potionsCollected);
+            OnPotionsCollected?.Invoke(cr.Earned + cr.BonusGained);
+        }
+
+
+        // SWORDS ENEMIES AND ARMOR
+        int shieldsCollected = selection
+            .Where((o) => o.tileType == TileType.Shield)
+            .ToList().Count;
         int swordsCollected = selection
             .Where((o) => o.tileType == TileType.Sword)
             .ToList().Count;
         
         if (swordsCollected > 0) {
-            Player.ApplySwords(swordsCollected);
-        }
-
-        List<Tile> enemies = selection
-            .Where((o) => o.tileType == TileType.Monster).ToList();
-
-        if (healthGained != 0)
-        {
-            ApplyHpChange(healthGained);
-            OnPotionsCollected?.Invoke(healthGained);
-        }
-        if (poisonGained != 0) {
-            ApplyPoisonChanged(poisonGained);
-            OnPoisonCollected?.Invoke(poisonGained);
-        }
-
-        if (swordsCollected > 0)
-        {
             OnSwordsCollected?.Invoke(swordsCollected);
         }
+        
+        List<Tile> enemiesInSelection = selection
+            .Where((o) => o.tileType == TileType.Monster).ToList();
 
-        if (armorGained != 0 && enemies.Count == 0)
+        if (shieldsCollected != 0 && enemiesInSelection.Count == 0)
         {
-            ApplyArmorChange(armorGained);
-            OnShieldsCollected?.Invoke(armorGained);
+            CollectionResult result = Player.CollectShields(shieldsCollected);
+            OnShieldsCollected?.Invoke(result.Earned + result.BonusGained);
             if (Player.HasReachedDefenseGoal()) {
                 OnDefenseGoalReached?.Invoke();
                 Player.SpendDownDefensePoints();
             }
         }
     
-        if (enemies.Count > 0 && armorGained > 0) {
+        if (enemiesInSelection.Count > 0 && shieldsCollected > 0) {
             OnEnemyStunned?.Invoke();
         }
 
         int damageDealt = Player.CalcDamageDone(swordsCollected);
 
-        foreach (Tile monster in enemies)
+        foreach (Tile monster in enemiesInSelection)
         {
             monster.TakeDamage(damageDealt, DamageSource.SwordAttack);
-            if (armorGained > 0) {
+            if (shieldsCollected > 0) {
                 monster.Stun();
             }
-            //CheckIfMonsterDied(monster);
         }
 
-        int killCount = enemies.Where((o) => !o.isAlive()).Count();
+        int killCount = enemiesInSelection.Where((o) => !o.isAlive()).Count();
         if (killCount > 0) {
             OnMonsterKillsEarned?.Invoke(killCount);
-            MonsterCollectionResult result = Player.CollectKilledMonsters(killCount);
-            OnExperienceGained?.Invoke(result.XPEarned + result.BonusXPGained);
+            CollectionResult result = Player.CollectKilledMonsters(killCount);
+            OnExperienceGained?.Invoke(result.Earned + result.BonusGained);
         }
 
         OnPlayerCollectedTiles?.Invoke(selection);

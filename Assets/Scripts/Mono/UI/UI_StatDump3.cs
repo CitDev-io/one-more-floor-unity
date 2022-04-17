@@ -15,6 +15,7 @@ public class UI_StatDump3 : MonoBehaviour
         if (_rc.Board == null) return;
 
         var ss = _rc.Board.Player;
-        _txt.text = $"%BonusXP={ss.BonusXpChance()}";
+        _txt.text = $"%BonusXP={ss.BonusXpChance()}, %BonusGP={ss.BonusCoinChance()}," +
+        $"%BonusHP={ss.BonusHpChance()}, %BonusAP={ss.BonusShieldChance()}";
     }
 }
