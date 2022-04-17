@@ -57,7 +57,7 @@ public class GameBoard
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = new StatSheet(40, 6, 0);
+        Player = new StatSheet(6, 0);
     }
 
     public void UserStartSelection(Tile tile)
@@ -88,16 +88,6 @@ public class GameBoard
 
     */
 
-    void ApplyHpChange(int changeAmount)
-    {
-        Player.ApplyHP(changeAmount);
-
-        if (Player.Hp == 0)
-        {
-            OnLose?.Invoke(Player);
-        }
-    }
-
     void DoPhase_Collection() {
         CollectTiles();
 
@@ -106,7 +96,6 @@ public class GameBoard
 
     void DoPhase_Post() {
         CheckXPLevelUp();
-
         DoPhase_Monsters();
     }
 
@@ -138,6 +127,11 @@ public class GameBoard
     }
 
     void DoPhase_Cleanup() {
+        if (!Player.isAlive()) {
+            OnLose?.Invoke(Player);
+            BoardComplete = true;
+            return;
+        }
         ClearTiles(selection);
         AwaitingRoundChange = true;
         OnReadyForNextTurn?.Invoke();

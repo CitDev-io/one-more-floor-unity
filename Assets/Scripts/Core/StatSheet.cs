@@ -8,27 +8,31 @@ public class StatSheet
         public int Unapplied;
     }
 
-    public StatSheet(int maxHp, int maxSp, int coins)
+    public StatSheet(int maxSp, int coins)
     {
-        MaxHp = maxHp;
-        Hp = maxHp;
+        Hp = CalcMaxHp();
         MaxArmor = maxSp;
         Gold = coins;
     }
     public RandomRoller roller = new RandomRoller();
 
+    int BASE_HP = 35;
     int BASE_Damage = 2;
     int BASE_BonusXPChance = 15;
     int BASE_BonusHPChance = 15;
     int BASE_BonusAPChance = 15;
     int BASE_BonusCoinChance = 15;
-    int PERSTRENGTH_BonusXPChance = 5;
+    int PERDEXTERITY_BonusShieldChance = 5;
+    int PERDEXTERITY_ShieldArmorPoints = 1;
     int PERLUCK_BonusCoinChance = 5;
     int PERLUCK_PotionHealingPoints = 1;
+    int PERSTRENGTH_BonusXPChance = 5;
+    int PERSTRENGTH_BaseDamage = 1;
+    int PERVITALITY_BonusPotionChance = 5;
+    int PERVITALITY_MaxHitPoints = 5;
     int PERROLL_BonusXP = 1;
 
     public int Hp { get; private set; }
-    public int MaxHp { get; private set; }
     public int Armor { get; private set; }
     public int MaxArmor { get; private set; }
     public int Gold { get; private set; }
@@ -51,6 +55,9 @@ public class StatSheet
     public int ExperienceGoal = 12;
     public int MonstersKilled { get; private set; }
 
+    public bool isAlive() {
+        return Hp > 0;
+    }
 
     public int CalcHealingDone(int potions) {
         return CalcHealPerPotion() * potions;
@@ -65,7 +72,7 @@ public class StatSheet
     }
 
     public int CalcArmorGained(int shields) {
-        return shields * 1;
+        return shields * PERDEXTERITY_ShieldArmorPoints;
     }
 
     public int CalcHealPerPotion() {
@@ -73,7 +80,11 @@ public class StatSheet
     }
 
     public int CalcBaseDamage() {
-        return Strength + BASE_Damage;
+        return (Strength * PERSTRENGTH_BaseDamage) + BASE_Damage;
+    }
+
+    public int CalcMaxHp() {
+        return BASE_HP + (PERVITALITY_MaxHitPoints * Vitality);
     }
 
     public bool HasReachedExperienceGoal() {
@@ -100,22 +111,9 @@ public class StatSheet
         Hp -= remainingDmg;
     }
 
-    // TODO: SHOULD BE MADE PRIVATE
-    public StatAppliedResult ApplyHP(int amt) {
-        int overheal = Math.Max((Hp + amt) - MaxHp, 0);
-
-        Hp = Math.Max(Math.Min(Hp + amt, MaxHp), 0);
-
-        return new StatAppliedResult(){
-            Amount = amt,
-            Unapplied = overheal,
-            Applied = amt - overheal
-        };
-    }
-
     public CollectionResult CollectShields(int shieldsCollected) {
         int bonusShieldRollCount = Math.Max(shieldsCollected - 3, 0);
-        int bonusShields = doBonusShieldRolls(bonusShieldRollCount);
+        int bonusShields = doBonusRollsAgainstChance(bonusShieldRollCount, BonusShieldChance());
         
         int armorEarned = CalcArmorGained(shieldsCollected);
         int bonusGained = CalcArmorGained(bonusShields);
@@ -140,7 +138,7 @@ public class StatSheet
         int coinsEarned = collected;
         int bonusCoinRollCount = Math.Max(collected - 3, 0);
 
-        int successfulCoinBonuses = doBonusCoinRolls(bonusCoinRollCount);
+        int successfulCoinBonuses = doBonusRollsAgainstChance(bonusCoinRollCount, BonusCoinChance());
         int bonusCoins = successfulCoinBonuses;
 
         Gold += CalcGoldGained(coinsEarned + bonusCoins);
@@ -159,10 +157,14 @@ public class StatSheet
         int healingEarned = CalcHealingDone(collected);
         int bonusPotionRollCount = Math.Max(collected - 3, 0);
 
-        int successfulPotionBonuses = doBonusPotionRolls(bonusPotionRollCount);
+        int successfulPotionBonuses = doBonusRollsAgainstChance(bonusPotionRollCount, BonusHpChance());
         int bonusHealGained = CalcHealingDone(successfulPotionBonuses);
 
-        ApplyHP(healingEarned + bonusHealGained);
+        
+        int totalHealing = healingEarned + bonusHealGained;
+        int overheal = Math.Max((Hp + totalHealing) - CalcMaxHp(), 0);
+
+        Hp = Math.Max(Math.Min(Hp + totalHealing, CalcMaxHp()), 0);
 
         return new CollectionResult() {
             Collected = collected,
@@ -180,7 +182,7 @@ public class StatSheet
 
         int bonusExperienceRollCount = Math.Max(amt - 3, 0);
         
-        int successfulXpBonuses = doBonusExperienceRolls(bonusExperienceRollCount);
+        int successfulXpBonuses = doBonusRollsAgainstChance(bonusExperienceRollCount, BonusXpChance());
         int bonusXp = successfulXpBonuses * PERROLL_BonusXP;
         ExperiencePoints += experienceEarned + bonusXp;
         
@@ -219,53 +221,20 @@ public class StatSheet
     }
 
     public int BonusHpChance() {
-        return BASE_BonusHPChance;
+        return BASE_BonusHPChance + (PERVITALITY_BonusPotionChance * Vitality);
     }
     
     public int BonusShieldChance() {
-        return BASE_BonusAPChance;
+        return BASE_BonusAPChance + (PERDEXTERITY_BonusShieldChance * Dexterity);
     }
 
     /*
         INTERNAL
     */
 
-    int doBonusPotionRolls(int bonusRolls) {
+    int doBonusRollsAgainstChance(int bonusRolls, int bonusChance) {
         var successfulRolls = 0;
-        int percentChancePerRoll = BonusHpChance();
-        for(var i=0; i<bonusRolls; i++) {
-            int roll = roller.Roll();
-
-            if (roll <= percentChancePerRoll) successfulRolls +=1;
-        }
-        return successfulRolls;
-    }
-
-    int doBonusExperienceRolls(int bonusRolls) {
-        var successfulRolls = 0;
-        int percentChancePerRoll = BonusXpChance();
-        for(var i=0; i<bonusRolls; i++) {
-            int roll = roller.Roll();
-
-            if (roll <= percentChancePerRoll) successfulRolls +=1;
-        }
-        return successfulRolls;
-    }
-
-    int doBonusCoinRolls(int bonusRolls) {
-        var successfulRolls = 0;
-        int percentChancePerRoll = BonusCoinChance();
-        for(var i=0; i<bonusRolls; i++) {
-            int roll = roller.Roll();
-
-            if (roll <= percentChancePerRoll) successfulRolls +=1;
-        }
-        return successfulRolls;
-    }
-
-    int doBonusShieldRolls(int bonusRolls) {
-        var successfulRolls = 0;
-        int percentChancePerRoll = BonusShieldChance();
+        int percentChancePerRoll = bonusChance;
         for(var i=0; i<bonusRolls; i++) {
             int roll = roller.Roll();
 
