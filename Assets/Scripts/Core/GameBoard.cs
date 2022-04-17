@@ -58,7 +58,7 @@ public class GameBoard
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = new StatSheet(6, 0);
+        Player = new StatSheet();
     }
 
     public void UserStartSelection(Tile tile)
@@ -157,7 +157,8 @@ public class GameBoard
         
         if (damageReceived == 0) return;
 
-        DamageResult result = Player.TakeDamage(damageReceived);
+        var badGuyArmorPiercingAgainstMe = 0; // Consider that if we do pass armor piercing, it'll have to be by-source. that changes the signature anyway
+        DamageResult result = Player.TakeDamage(damageReceived, badGuyArmorPiercingAgainstMe);
         OnMonstersAttack?.Invoke(result);
         foreach(Tile monster in monsters) {
             monster.DoAttack();

@@ -2,40 +2,33 @@ using System;
 
 public class StatSheet
 {
-    public class StatAppliedResult {
-        public int Amount;
-        public int Applied;
-        public int Unapplied;
-    }
 
-    public StatSheet(int maxSp, int coins)
+    public StatSheet()
     {
         Hp = CalcMaxHp();
-        MaxArmor = maxSp;
-        Gold = coins;
     }
     public RandomRoller roller = new RandomRoller();
 
-    int BASE_HP = 35;
-    int BASE_Damage = 2;
-    int BASE_BonusXPChance = 15;
-    int BASE_BonusHPChance = 15;
-    int BASE_BonusAPChance = 15;
-    int BASE_BonusCoinChance = 15;
-    int PERDEXTERITY_BonusShieldChance = 5;
+    public int BASE_HP = 35;
+    public int BASE_Damage = 2;
     int PERDEXTERITY_ShieldArmorPoints = 1;
-    int PERLUCK_BonusCoinChance = 5;
     int PERLUCK_PotionHealingPoints = 1;
-    int PERSTRENGTH_BonusXPChance = 5;
     int PERSTRENGTH_BaseDamage = 1;
-    int PERVITALITY_BonusPotionChance = 5;
     int PERVITALITY_MaxHitPoints = 5;
+
+
+    int PERVITALITY_BonusPotionChance = 5;
+    public int BASE_BonusXPChance = 15;
+    public int BASE_BonusHPChance = 15;
+    public int BASE_BonusAPChance = 15;
+    public int BASE_BonusCoinChance = 15;
+    int PERDEXTERITY_BonusShieldChance = 5;
+    int PERLUCK_BonusCoinChance = 5;
+    int PERSTRENGTH_BonusXPChance = 5;
     int PERROLL_BonusXP = 1;
 
     public int Hp { get; private set; }
     public int Armor { get; private set; }
-    public int MaxArmor { get; private set; }
-    public int Gold { get; private set; }
 
 
     public int Strength { get; private set; } = 1;
@@ -45,18 +38,25 @@ public class StatSheet
     public int WeaponDamage { get; private set; } = 1;
     public int ArmorPiercing { get; private set; } = 50;
     public int ArmorDurability { get; private set; } = 50;
-    public int Defense { get; private set; } = 1;
+    public int Defense { get; private set; } = 4;
 
 
-    public int DefensePoints { get; private set; }
-    public int ExperiencePoints { get; private set; }
+    public int Gold { get; private set; }
     public int GoldGoal = 15;
-    public int DefenseGoal = 15;
+    public int GearPoints { get; private set; }
+    public int GearGoal = 15;
+    public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 12;
+
+    
     public int MonstersKilled { get; private set; }
 
     public bool isAlive() {
         return Hp > 0;
+    }
+
+    public int CalcMaxArmor() {
+        return Defense;
     }
 
     public int CalcHealingDone(int potions) {
@@ -96,34 +96,32 @@ public class StatSheet
     }
 
     public bool HasReachedDefenseGoal() {
-        return DefensePoints >= DefenseGoal;
+        return GearPoints >= GearGoal;
     }
 
-    public DamageResult TakeDamage(int damageReceived) {
+    public DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {
         int assignedToArmor = 0;
         int assignedToHealth = 0;
         int actualArmorDamage = 0;
-        int actualHPDamage = 0;
 
-        if (Armor >= damageReceived)
-        {
-            assignedToArmor = damageReceived;
-            actualArmorDamage = doDamageOnShieldChecks(damageReceived);
-        } else {
-            actualArmorDamage = doDamageOnShieldChecks(Armor);
-
-            int remainingDmg = damageReceived - Armor;
-            assignedToArmor = Armor;
-            assignedToHealth = remainingDmg;
-            Hp -= remainingDmg;
-        }
-
+        assignedToArmor = Math.Min(damageReceived, Armor);
+        assignedToHealth = Math.Max(damageReceived - Armor, 0);
+        
+        int countOfPiercedShields = doPiercingOnShieldChecks(assignedToArmor, attackerArmorPiercing);
+        assignedToArmor -= countOfPiercedShields;
+        assignedToHealth += countOfPiercedShields;
+        
+        actualArmorDamage = doDamageOnShieldChecks(assignedToArmor);
+        Armor -= actualArmorDamage;
+        Hp -= assignedToHealth;
+    
         return new DamageResult(){
             Attempted = damageReceived,
             AssignedToArmor = assignedToArmor,
             AssignedToHitPoints = assignedToHealth,
             ArmorRemoved = actualArmorDamage,
-            HitPointsRemoved = actualHPDamage
+            HitPointsRemoved = assignedToHealth,
+            ArmorPierced = countOfPiercedShields
         };
     }
 
@@ -135,10 +133,10 @@ public class StatSheet
         int bonusGained = CalcArmorGained(bonusShields);
         int armorToApply = armorEarned + bonusGained;
 
-        int overheal = Math.Max((Armor + armorToApply) - MaxArmor, 0);
+        int overheal = Math.Max((Armor + armorToApply) - CalcMaxArmor(), 0);
     
-        Armor = Math.Max(Math.Min(Armor + armorToApply, MaxArmor), 0);
-        DefensePoints += overheal;
+        Armor = Math.Max(Math.Min(Armor + armorToApply, CalcMaxArmor()), 0);
+        GearPoints += overheal;
 
         return new CollectionResult() {
             Collected = shieldsCollected,
@@ -222,7 +220,7 @@ public class StatSheet
     }
 
     public int SpendDownDefensePoints() {
-        return DefensePoints -= DefenseGoal;
+        return GearPoints -= GearGoal;
     }
 
 
@@ -248,12 +246,14 @@ public class StatSheet
         INTERNAL
     */
 
+    int doPiercingOnShieldChecks(int checks, int attackerArmorPiercing) {
+        int shieldsPierced = doRollsAgainstChance(checks, attackerArmorPiercing);
+        return shieldsPierced;
+    }
 
     int doDamageOnShieldChecks(int checks) {
         int shieldSaves = doRollsAgainstChance(checks, ArmorDurability);
         int lostShields = checks - shieldSaves;
-
-        Armor -= lostShields;
 
         return lostShields;
     }

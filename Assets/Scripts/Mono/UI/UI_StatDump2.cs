@@ -16,6 +16,6 @@ public class UI_StatDump2 : MonoBehaviour
 
         var ss = _rc.Board.Player;
         _txt.text = $"XP={ss.ExperiencePoints}/{ss.ExperienceGoal}, " +
-        $"DEF={ss.DefensePoints}/{ss.DefenseGoal}, COIN={ss.Gold}/{ss.GoldGoal}";
+        $"GEAR={ss.GearPoints}/{ss.GearGoal}, COIN={ss.Gold}/{ss.GoldGoal}";
     }
 }
