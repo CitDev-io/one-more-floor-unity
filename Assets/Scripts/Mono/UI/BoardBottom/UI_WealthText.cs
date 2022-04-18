@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_StatDump2 : MonoBehaviour
+public class UI_WealthText : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
@@ -11,11 +11,9 @@ public class UI_StatDump2 : MonoBehaviour
         _rc = GameObject.FindObjectOfType<GridGameManager>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
-    private void OnGUI() {
+    private void OnGUI()
+    {
         if (_rc.Board == null) return;
-
-        var ss = _rc.Board.Player;
-        _txt.text = $"XP={ss.ExperiencePoints}/{ss.ExperienceGoal}, " +
-        $"GEAR={ss.GearPoints}/{ss.GearGoal}, COIN={ss.Gold}/{ss.GoldGoal}";
+        _txt.text = _rc.Board.Player.Gold + " / " + _rc.Board.Player.GoldGoal;
     }
 }

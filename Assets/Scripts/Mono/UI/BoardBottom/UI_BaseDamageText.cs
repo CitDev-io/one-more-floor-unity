@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_AttackTicker : MonoBehaviour
+public class UI_BaseDamageText : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
@@ -14,6 +14,6 @@ public class UI_AttackTicker : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = "+" + _rc.Board.Player.WeaponDamage;
+        _txt.text = "+" + _rc.Board.Player.CalcBaseDamage();
     }
 }

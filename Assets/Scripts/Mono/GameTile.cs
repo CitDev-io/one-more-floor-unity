@@ -33,26 +33,19 @@ public class GameTile : MonoBehaviour
     }
 
     void HandleDamageTaken(int damage, DamageSource src) {
-       // Debug.Log("I should make some animated stuff to show that this tile took " + damage + " dmg from " + src);
     }
     void HandleUnstunned() {
-        MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle", true, 0f);
     }
 
     void HandleStunned() {
-        MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "stunned", true, 0f);
     }
 
     void HandleDoAttack() {
         if (_tile.isStunned()) return;
-
-        MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.SetAnimation(0, "attack", false);
-        MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.AddAnimation(0, "idle", true, 0f);
     }
 
     void HandlePositionChange() {
         if (_tile.row == 5) {
-            MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.SetAnimation(0, "idle", true);
             SnapToPosition(_tile.col, 7);
         }
     }
@@ -79,15 +72,15 @@ public class GameTile : MonoBehaviour
         label2.text = isMonster ? _tile.CurrentMonster.Armor + "" : "";
         label3.text = isMonster ? _tile.CurrentMonster.CalcBaseDamage() + "" : "";
         xoutlabel.gameObject.SetActive(isMonster && _tile.selectedAgainstDamage >= _tile.CurrentMonster.Hp);
+
+        if (isMonster && _tile.TurnsAlive == 1) {
+            sr.sprite = Resources.Load<Sprite>("Tiles/" + _tile.tileType + "2");
+        }
     }
 
     void SetTileType()
     {
         sr.sprite = Resources.Load<Sprite>("Tiles/" + _tile.tileType + "1");
-
-        bool isAMonster = _tile.tileType == TileType.Monster;
-        MonsterFace.SetActive(isAMonster);
-        sr.enabled = !isAMonster;
     }
 
     void Update()

@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_StatDump : MonoBehaviour
+public class UI_TurnText : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
@@ -14,9 +14,7 @@ public class UI_StatDump : MonoBehaviour
     private void OnGUI() {
         if (_rc.Board == null) return;
 
-        var ss = _rc.Board.Player;
-        _txt.text = $"STR={ss.Strength}, DEX={ss.Dexterity}, VIT={ss.Vitality}," +
-        $" LCK={ss.Luck}, WDMG={ss.WeaponDamage}, APRC={ss.ArmorPiercing}, ADUR={ss.ArmorDurability}," +
-        $" DEF={ss.Defense} LEVEL={ss.Level}";
+        var b = _rc.Board;
+        _txt.text = $"TURN {b.MovesMade + 1}";
     }
 }

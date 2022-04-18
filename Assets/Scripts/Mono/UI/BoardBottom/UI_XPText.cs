@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_StatDump3 : MonoBehaviour
+public class UI_XPText : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
@@ -11,11 +11,9 @@ public class UI_StatDump3 : MonoBehaviour
         _rc = GameObject.FindObjectOfType<GridGameManager>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
-    private void OnGUI() {
+    private void OnGUI()
+    {
         if (_rc.Board == null) return;
-
-        var ss = _rc.Board.Player;
-        _txt.text = $"%BonusXP={ss.BonusXpChance()}, %BonusGP={ss.BonusCoinChance()}," +
-        $"%BonusHP={ss.BonusHpChance()}, %BonusAP={ss.BonusShieldChance()}";
+        _txt.text = _rc.Board.Player.ExperiencePoints + " / " + _rc.Board.Player.ExperienceGoal;
     }
 }

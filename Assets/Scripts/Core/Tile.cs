@@ -12,7 +12,7 @@ public class Tile
 
     public StatSheet CurrentMonster = new StatSheet();
     int StunnedRounds = 0;
-    int TurnsAlive = 0;
+    public int TurnsAlive { get; private set; } = 0;
     public bool IsBeingCollected = false;
     public int selectedAgainstDamage = 0;
 
