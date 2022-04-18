@@ -10,13 +10,13 @@ public class Tile
     public SourcedDamageDelegate OnDamageTaken;
     public TileType tileType { get; private set; }
 
-    public EnemyStatSheet CurrentMonster = new EnemyStatSheet();
+    public StatSheet CurrentMonster = new StatSheet();
     int StunnedRounds = 0;
     int TurnsAlive = 0;
     public bool IsBeingCollected = false;
     public int selectedAgainstDamage = 0;
 
-    public Tile(int x, int y, EnemyStatSheet enemy, TileType tt)
+    public Tile(int x, int y, StatSheet enemy, TileType tt)
     {
         CurrentMonster = enemy;
 
@@ -61,13 +61,13 @@ public class Tile
         );
     }
 
-    public void TakeDamage(int dmg, DamageSource src) {
-        CurrentMonster.Vitality -= dmg;
+    public void TakeDamage(int dmg, int armorPiercing, DamageSource src) {
+        CurrentMonster.TakeDamage(dmg, armorPiercing);
         OnDamageTaken?.Invoke(dmg, src);
     }
 
     public bool isAlive() {
-        return CurrentMonster.Vitality > 0;
+        return CurrentMonster.isAlive();
     }
 
     public bool isStunned() {
@@ -100,7 +100,6 @@ public class Tile
     }
 
     void Reset() {
-        CurrentMonster.Vitality = 2;
         TurnsAlive = 0;
         StunnedRounds = 0;
         IsBeingCollected = false;

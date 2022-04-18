@@ -2,19 +2,14 @@ using System;
 
 public class StatSheet
 {
-
-    public StatSheet()
-    {
-        Hp = CalcMaxHp();
-    }
     public RandomRoller roller = new RandomRoller();
 
-    public int BASE_HP = 35;
-    public int BASE_Damage = 2;
+    public int BASE_HP = 0;
+    public int BASE_Damage = 0;
     public int PERDEXTERITY_ShieldArmorPoints = 1;
     public int PERLUCK_PotionHealingPoints = 1;
     public int PERSTRENGTH_BaseDamage = 1;
-    public int PERVITALITY_MaxHitPoints = 5;
+    public int PERVITALITY_MaxHitPoints = 1;
 
 
 

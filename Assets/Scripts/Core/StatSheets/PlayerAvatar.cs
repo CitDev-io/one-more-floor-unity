@@ -17,6 +17,7 @@ public class PlayerAvatar: StatSheet {
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 12;
     public int MonstersKilled { get; private set; }
+    public int Level { get; private set; } = 1;
     
     public bool HasReachedExperienceGoal() {
         return ExperiencePoints >= ExperienceGoal;
@@ -136,6 +137,7 @@ public class PlayerAvatar: StatSheet {
     }
 
     public int SpendDownExp() {
+        Level++;
         return ExperiencePoints -= ExperienceGoal;
     }
 

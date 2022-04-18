@@ -17,6 +17,6 @@ public class UI_StatDump : MonoBehaviour
         var ss = _rc.Board.Player;
         _txt.text = $"STR={ss.Strength}, DEX={ss.Dexterity}, VIT={ss.Vitality}," +
         $" LCK={ss.Luck}, WDMG={ss.WeaponDamage}, APRC={ss.ArmorPiercing}, ADUR={ss.ArmorDurability}," +
-        $" DEF={ss.Defense}";
+        $" DEF={ss.Defense} LEVEL={ss.Level}";
     }
 }

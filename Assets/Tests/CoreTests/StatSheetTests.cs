@@ -6,11 +6,11 @@ public class StatSheetTests
     public void StartingStatsUsed()
     {
         var ss = new StatSheet() {
-            Strength = 3,
+            Strength = 5,
             
         };
         
-        Assert.AreEqual(ss.Strength, 1);
+        Assert.AreEqual(ss.Strength, 5);
         Assert.AreEqual(ss.Dexterity, 1);
         Assert.AreEqual(ss.Vitality, 1);
         Assert.AreEqual(ss.Luck, 1);

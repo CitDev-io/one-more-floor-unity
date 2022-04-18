@@ -30,15 +30,23 @@ public class GameBoard
     List<Tile> selection = new List<Tile>();
 
     TileSelector tileSelector;
+    MonsterSelector monsterSelector;
     ChainValidator chainValidator;
 
     public GameBoard() {
+        Player = new PlayerAvatar(){
+            BASE_HP = 35,
+            BASE_Damage = 2,
+            PERVITALITY_MaxHitPoints = 5,
+            Hp = 40
+        };
         tileSelector = new TileSelector(new List<TileType> {
             TileType.Shield,
             TileType.Sword,
             TileType.Potion,
             TileType.Coin
         });
+        monsterSelector = new MonsterSelector();
 
         int COUNT_ROWS = 6;
         int COUNT_COLS = 6;
@@ -48,17 +56,13 @@ public class GameBoard
                 Tile t = new Tile(
                     colid,
                     rowid,
-                    new EnemyStatSheet(){
-                        Vitality = 3,
-                        Strength = 2
-                    },
+                    monsterSelector.NextMonster(Player.Level),
                     tileSelector.GetNextTile()
                 );
                 Tiles.Add(t);
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
-        Player = new PlayerAvatar();
     }
 
     public void UserStartSelection(Tile tile)
@@ -288,7 +292,7 @@ public class GameBoard
 
         foreach (Tile monster in enemiesInSelection)
         {
-            monster.TakeDamage(damageDealt, DamageSource.SwordAttack);
+            monster.TakeDamage(damageDealt, Player.ArmorPiercing, DamageSource.SwordAttack);
             if (shieldsCollected > 0) {
                 monster.Stun();
             }
@@ -324,6 +328,9 @@ public class GameBoard
             t.Dropdown();
         }
 
-        tile.ClearAndDropTileAs(tileSelector.GetNextTile());
+        TileType newTileType = tileSelector.GetNextTile();
+        tile.CurrentMonster = monsterSelector.NextMonster(Player.Level);
+
+        tile.ClearAndDropTileAs(newTileType);
     }
 }
