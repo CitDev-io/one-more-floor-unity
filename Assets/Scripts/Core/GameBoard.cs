@@ -7,7 +7,7 @@ public delegate void IntDelegate(int i);
 public delegate void NoParamDelegate();
 public delegate void StatSheetDelegate(StatSheet statSheet);
 public delegate void DamageDelegate(DamageResult result);
-public delegate void SourcedDamageDelegate(int damage, DamageSource source);
+public delegate void SourcedDamageDelegate(int damage);
 
 public class GameBoard
 {
@@ -18,10 +18,9 @@ public class GameBoard
     public IntDelegate OnMonsterKillsEarned, OnExperienceGained;
     public NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
     public NoParamDelegate OnExperienceGoalReached, OnReadyForNextTurn;
-
     public DamageDelegate OnMonstersAttack;
-    public List<Tile> Tiles = new List<Tile>();
     public StatSheetDelegate OnLose;
+    public List<Tile> Tiles = new List<Tile>();
     public PlayerAvatar Player;
     public int MovesMade = 0;
     bool BoardComplete = false;
@@ -34,12 +33,9 @@ public class GameBoard
     ChainValidator chainValidator;
 
     public GameBoard() {
-        Player = new PlayerAvatar(){
-            BASE_HP = 35,
-            BASE_Damage = 2,
-            PERVITALITY_MaxHitPoints = 5,
-            Hp = 40
-        };
+        Player = new PlayerAvatar(
+            StatMatrix.BASE_PLAYER()
+        );
         tileSelector = new TileSelector(new List<TileType> {
             TileType.Shield,
             TileType.Sword,
@@ -104,20 +100,6 @@ public class GameBoard
         DoPhase_Monsters();
     }
 
-    void CheckXPLevelUp() {
-        if (Player.HasReachedExperienceGoal()) {
-            OnExperienceGoalReached?.Invoke();
-            Player.SpendDownExp();
-        }
-    }
-
-    public void RoundProceed()
-    {
-        if (!AwaitingRoundChange) return;
-        DoPhase_Populate();
-        AwaitingRoundChange = false;
-    }
-
     void DoPhase_Monsters() {
 
         var monsters = Tiles.Where((o) => o.tileType == TileType.Monster
@@ -141,6 +123,24 @@ public class GameBoard
         AwaitingRoundChange = true;
         OnReadyForNextTurn?.Invoke();
     }
+    
+    void CheckXPLevelUp() {
+        if (Player.HasReachedExperienceGoal()) {
+            OnExperienceGoalReached?.Invoke();
+            Player.SpendDownExp();
+        }
+    }
+
+    public void RoundProceed()
+    {
+        if (!AwaitingRoundChange) return;
+        DoPhase_Populate();
+        AwaitingRoundChange = false;
+    }
+
+
+
+
 
     void DoPhase_Populate() {
         var tilesToRepop = Tiles.Where((o) => o.IsBeingCollected || !o.isAlive()).OrderByDescending(o => o.row);
@@ -157,7 +157,7 @@ public class GameBoard
     void MonstersAttack(List<Tile> monsters) {
         if (BoardComplete) return;
 
-        int damageReceived = monsters.Sum((o) => o.CurrentMonster.Strength);
+        int damageReceived = monsters.Sum((o) => o.CurrentMonster.TotalStats.Strength);
         
         if (damageReceived == 0) return;
 
@@ -292,7 +292,7 @@ public class GameBoard
 
         foreach (Tile monster in enemiesInSelection)
         {
-            monster.TakeDamage(damageDealt, Player.ArmorPiercing, DamageSource.SwordAttack);
+            monster.TakeDamage(damageDealt, Player.TotalStats.ArmorPiercing);
             if (shieldsCollected > 0) {
                 monster.Stun();
             }

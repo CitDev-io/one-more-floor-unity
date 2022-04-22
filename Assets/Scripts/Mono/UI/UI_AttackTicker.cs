@@ -14,6 +14,6 @@ public class UI_AttackTicker : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = "+" + _rc.Board.Player.WeaponDamage;
+        _txt.text = "+" + _rc.Board.Player.TotalStats.WeaponDamage;
     }
 }

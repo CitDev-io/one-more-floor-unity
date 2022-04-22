@@ -32,7 +32,7 @@ public class GameTile : MonoBehaviour
         SetTileType();
     }
 
-    void HandleDamageTaken(int damage, DamageSource src) {
+    void HandleDamageTaken(int damage) {
     }
     void HandleUnstunned() {
     }

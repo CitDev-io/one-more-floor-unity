@@ -76,15 +76,10 @@ public class MonsterSelector
             break;
         }
 
-        return new StatSheet(){
-            Vitality = Vitality,
-            Strength = Strength,
-            Defense = Defense,
-            PERVITALITY_MaxHitPoints = 1,
-            PERSTRENGTH_BaseDamage = 1,
-            BASE_Damage = 0,
-            BASE_HP = 0,
-            Hp = Vitality
-        };
+        return new StatSheet(new StatMatrix(){
+                Vitality = Vitality,
+                Strength = Strength,
+                Defense = Defense
+            });
     }
 }

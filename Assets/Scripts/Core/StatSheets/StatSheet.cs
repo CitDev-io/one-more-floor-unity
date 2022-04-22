@@ -1,7 +1,20 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class StatSheet
 {
+    public StatSheet(params StatMatrix[] _startingStats) {
+        initWith(_startingStats);
+    }
+
+    protected void initWith(StatMatrix[] stats) {
+        var total = StatMatrix.Reduce(stats);
+        StarterStats = total;
+        TotalStats = total;
+        ResetTotalStats();
+        Hp = CalcMaxHp();
+    }
     public RandomRoller roller = new RandomRoller();
 
     public int BASE_HP = 0;
@@ -11,27 +24,29 @@ public class StatSheet
     public int PERSTRENGTH_BaseDamage = 1;
     public int PERVITALITY_MaxHitPoints = 1;
 
+    public StatMatrix StarterStats;
+    public StatMatrix TotalStats { get; protected set; }
+    Dictionary<ItemSlot, PlayerItem> Inventory = new Dictionary<ItemSlot, PlayerItem>();
 
+    public void AddItemToInventory(ItemSlot slot, PlayerItem item) {
+        Inventory.Add(slot, item);
+        ResetTotalStats();
+    }
+
+    public PlayerItem GetItemInInventorySlot(ItemSlot slot) {
+        return Inventory[slot];
+    }
 
     public int Hp = 0;
-    public int Armor;
-    public int Gold;
-    public int Strength = 1;
-    public int Dexterity = 1;
-    public int Vitality = 1;
-    public int Luck = 1;
-    public int WeaponDamage = 1;
-    public int Defense = 4;
-    public int ArmorPiercing = 50;
-    public int ArmorDurability = 50;
-
+    public int Armor { get; protected set; } = 0;
+    public int Gold { get; protected set; } = 0;
 
     public bool isAlive() {
         return Hp > 0;
     }
 
     public int CalcMaxArmor() {
-        return Defense;
+        return TotalStats.Defense;
     }
 
     public int CalcHealingDone(int potions) {
@@ -39,7 +54,7 @@ public class StatSheet
     }
 
     public int CalcDamageDone(int swords) {
-        return CalcBaseDamage() + (swords * WeaponDamage);
+        return CalcBaseDamage() + (swords * TotalStats.WeaponDamage);
     }
 
     public int CalcGoldGained(int coins) {
@@ -51,15 +66,15 @@ public class StatSheet
     }
 
     public int CalcHealPerPotion() {
-        return Luck * PERLUCK_PotionHealingPoints;
+        return TotalStats.Luck * PERLUCK_PotionHealingPoints;
     }
 
     public int CalcBaseDamage() {
-        return (Strength * PERSTRENGTH_BaseDamage) + BASE_Damage;
+        return (TotalStats.Strength * PERSTRENGTH_BaseDamage) + BASE_Damage;
     }
 
     public int CalcMaxHp() {
-        return BASE_HP + (PERVITALITY_MaxHitPoints * Vitality);
+        return BASE_HP + (PERVITALITY_MaxHitPoints * TotalStats.Vitality);
     }
 
     public DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {
@@ -88,7 +103,6 @@ public class StatSheet
         };
     }
 
-
     /*
         INTERNAL
     */
@@ -99,7 +113,7 @@ public class StatSheet
     }
 
     int doDamageOnShieldChecks(int checks) {
-        int shieldSaves = doRollsAgainstChance(checks, ArmorDurability);
+        int shieldSaves = doRollsAgainstChance(checks, TotalStats.ArmorDurability);
         int lostShields = checks - shieldSaves;
 
         return lostShields;
@@ -114,5 +128,14 @@ public class StatSheet
             if (roll <= percentChancePerRoll) successfulRolls +=1;
         }
         return successfulRolls;
+    }
+
+    protected void ResetTotalStats() {
+        StatMatrix[] allStats = Inventory
+            .Select(z => (StatMatrix) z.Value)
+            .Append(StarterStats)
+            .ToArray();
+
+        TotalStats = StatMatrix.Reduce(allStats);
     }
 }

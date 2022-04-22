@@ -1,6 +1,13 @@
 using System;
 
 public class PlayerAvatar: StatSheet {
+
+    public PlayerAvatar(params StatMatrix[] _startingStats) : base(_startingStats) {
+        BASE_HP = 35;
+        BASE_Damage = 2;
+        PERVITALITY_MaxHitPoints = 5;
+        initWith(_startingStats);
+    }
     int PERVITALITY_BonusPotionChance = 5;
     public int BASE_BonusXPChance = 15;
     public int BASE_BonusHPChance = 15;
@@ -117,19 +124,19 @@ public class PlayerAvatar: StatSheet {
     }
 
     public int BonusXpChance() {
-        return BASE_BonusXPChance + (PERSTRENGTH_BonusXPChance * Strength);
+        return BASE_BonusXPChance + (PERSTRENGTH_BonusXPChance * TotalStats.Strength);
     }
 
     public int BonusCoinChance() {
-        return BASE_BonusCoinChance + (PERLUCK_BonusCoinChance * Luck);
+        return BASE_BonusCoinChance + (PERLUCK_BonusCoinChance * TotalStats.Luck);
     }
 
     public int BonusHpChance() {
-        return BASE_BonusHPChance + (PERVITALITY_BonusPotionChance * Vitality);
+        return BASE_BonusHPChance + (PERVITALITY_BonusPotionChance * TotalStats.Vitality);
     }
     
     public int BonusShieldChance() {
-        return BASE_BonusAPChance + (PERDEXTERITY_BonusShieldChance * Dexterity);
+        return BASE_BonusAPChance + (PERDEXTERITY_BonusShieldChance * TotalStats.Dexterity);
     }
 
     public int SpendDownCoins() {
