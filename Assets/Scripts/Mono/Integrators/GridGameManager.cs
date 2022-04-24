@@ -25,6 +25,11 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] GameObject floaterParent;
     [SerializeField] Transform floaterPositionRef;
     [SerializeField] Transform SelectionCountDoodad;
+    [SerializeField] GameObject ItemShopMenu;
+
+    public void SelectItemShopAtIndex(int index) {
+        Board.ItemShopPurchase(index);
+    }
 
     void FloatExp(int xp) {
         var go = Instantiate(
@@ -149,7 +154,7 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleGoldGoalReached() {
-      //  Debug.Log("DID IT!");
+      ItemShopMenu.SetActive(true);
     }
 
     void HandleDefenseGoalReached() {
