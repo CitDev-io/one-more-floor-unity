@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// generic behavior file, could use rename
 public class DOODAD_SelectionCount : MonoBehaviour
 {
     [SerializeField] TextMeshPro txt;

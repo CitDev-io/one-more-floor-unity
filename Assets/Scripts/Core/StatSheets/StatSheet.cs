@@ -8,8 +8,11 @@ public class StatSheet
         initWith(_startingStats);
     }
 
-    protected void initWith(StatMatrix[] stats) {
+    protected void initWith(StatMatrix[] stats, Dictionary<ItemSlot, PlayerItem> _inventory = null) {
         var total = StatMatrix.Reduce(stats);
+        if (_inventory != null) {
+            Inventory = _inventory;
+        }
         StarterStats = total;
         TotalStats = total;
         ResetTotalStats();
@@ -28,8 +31,8 @@ public class StatSheet
     public StatMatrix TotalStats { get; protected set; }
     Dictionary<ItemSlot, PlayerItem> Inventory = new Dictionary<ItemSlot, PlayerItem>();
 
-    public void AddItemToInventory(ItemSlot slot, PlayerItem item) {
-        Inventory.Add(slot, item);
+    public void AddItemToInventory(PlayerItem item) {
+        Inventory[item.Slot] = item;
         ResetTotalStats();
     }
 

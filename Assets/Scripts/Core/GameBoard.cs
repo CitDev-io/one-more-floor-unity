@@ -31,6 +31,7 @@ public class GameBoard
     TileSelector tileSelector;
     MonsterSelector monsterSelector;
     ChainValidator chainValidator;
+    public PlayerItem[] ItemShopOptions { get; private set; }
 
     public GameBoard() {
         Player = new PlayerAvatar(
@@ -59,6 +60,38 @@ public class GameBoard
             }
         }
         chainValidator = new StandardChainValidator(Tiles, selection);
+
+        ItemShopOptions = new PlayerItem[]{
+            new PlayerItem(){
+                Slot = ItemSlot.CHEST,
+                Name = "Smelly Jerkin",
+                Description = "Defend yourself with the power of odor",
+                WeaponDamage = 2
+            },
+            new PlayerItem(){
+                Slot = ItemSlot.WEAPON,
+                Name = "Less Moldy Sword",
+                Description = "It's still wooden and moldy... but less so",
+                WeaponDamage = 2
+            },
+            new PlayerItem(){
+                Slot = ItemSlot.SHIELD,
+                Name = "Wooden Shield",
+                Description = "At least its something",
+                Defense = 2
+            }
+        };
+    }
+
+// public faces the implementor, in our case UNITY
+// internal faces our fellow CORE scripts only
+    public void ItemShopPurchase(int index) {
+        PlayerItem ItemPurchased = ItemShopOptions[index];
+        Player.AddItemToInventory(ItemPurchased);
+
+        // recycle item shop options here
+
+        //advance the PHASE when that's a thing
     }
 
     public void UserStartSelection(Tile tile)

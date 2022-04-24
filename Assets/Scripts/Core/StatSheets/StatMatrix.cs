@@ -54,4 +54,8 @@ public class StatMatrix
 
         return result;
     }
+
+    public string SummaryStats() {
+        return $"{WeaponDamage}, OTHR ?";
+    }
 }

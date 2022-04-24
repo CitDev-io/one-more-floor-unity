@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public class PlayerAvatar: StatSheet {
 
@@ -6,7 +7,26 @@ public class PlayerAvatar: StatSheet {
         BASE_HP = 35;
         BASE_Damage = 2;
         PERVITALITY_MaxHitPoints = 5;
-        initWith(_startingStats);
+        initWith(_startingStats, new Dictionary<ItemSlot, PlayerItem>() {
+            { ItemSlot.WEAPON, new PlayerItem(){
+                Slot = ItemSlot.WEAPON,
+                Name = "Moldy Wooden Sword",
+                Description = "Ew... It's kinda slimy",
+                WeaponDamage = 1
+            } },
+            { ItemSlot.CHEST, new PlayerItem(){
+                Slot = ItemSlot.CHEST,
+                Name = "Worn Cloth Tunic",
+                Description = "It's not very warm",
+                ArmorDurability = 2
+            } },
+            { ItemSlot.SHIELD, new PlayerItem(){
+                Slot = ItemSlot.SHIELD,
+                Name = "Chipped Round Shield",
+                Description = "Minimal Protection",
+                Defense = 1
+            } }
+        });
     }
     int PERVITALITY_BonusPotionChance = 5;
     public int BASE_BonusXPChance = 15;
