@@ -18,7 +18,7 @@ public class PlayerAvatar: StatSheet {
                 Slot = ItemSlot.CHEST,
                 Name = "Worn Cloth Tunic",
                 Description = "It's not very warm",
-                ArmorDurability = 2
+                Defense = 1
             } },
             { ItemSlot.SHIELD, new PlayerItem(){
                 Slot = ItemSlot.SHIELD,

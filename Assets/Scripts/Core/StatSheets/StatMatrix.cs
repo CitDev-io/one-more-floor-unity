@@ -32,8 +32,8 @@ public class StatMatrix
             Dexterity = 1,
             Vitality = 1,
             Luck = 1,
-            WeaponDamage = 1,
-            Defense = 4,
+            WeaponDamage = 0,
+            Defense = 2,
             ArmorDurability = 50,
             ArmorPiercing = 50
         };
@@ -56,6 +56,16 @@ public class StatMatrix
     }
 
     public string SummaryStats() {
-        return $"{WeaponDamage}, OTHR ?";
+        string s = "";
+        if (Strength > 0) s += $"STR {Strength} ";
+        if (Dexterity > 0) s += $"DEX {Dexterity} ";
+        if (Vitality > 0) s += $"VIT {Vitality} ";
+        if (Luck > 0) s += $"LUC {Luck} ";
+        if (WeaponDamage > 0) s += $"DMG {WeaponDamage} ";
+        if (Defense > 0) s += $"DEF {Defense} ";
+        if (ArmorDurability > 0) s += $"DUR {ArmorDurability} ";
+        if (ArmorPiercing > 0) s += $"PRC {ArmorPiercing} ";
+
+        return s;
     }
 }

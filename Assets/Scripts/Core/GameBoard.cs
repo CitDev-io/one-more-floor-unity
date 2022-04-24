@@ -66,7 +66,7 @@ public class GameBoard
                 Slot = ItemSlot.CHEST,
                 Name = "Smelly Jerkin",
                 Description = "Defend yourself with the power of odor",
-                WeaponDamage = 2
+                Defense = 2
             },
             new PlayerItem(){
                 Slot = ItemSlot.WEAPON,
