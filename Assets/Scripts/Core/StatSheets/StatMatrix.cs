@@ -8,6 +8,7 @@ public class StatMatrix
     public int Defense = 0;
     public int ArmorPiercing = 0;
     public int ArmorDurability = 0;
+    public int HitPoints = 0;
 
     public StatMatrix Clone() {
         return Reduce(this);
@@ -22,7 +23,8 @@ public class StatMatrix
             WeaponDamage = 0,
             Defense = 0,
             ArmorDurability = 50,
-            ArmorPiercing = 0
+            ArmorPiercing = 0,
+            HitPoints = 0
         };
     }
 
@@ -33,9 +35,10 @@ public class StatMatrix
             Vitality = 1,
             Luck = 1,
             WeaponDamage = 0,
-            Defense = 2,
+            Defense = 1,
             ArmorDurability = 50,
-            ArmorPiercing = 50
+            ArmorPiercing = 50,
+            HitPoints = 0
         };
     }
     public static StatMatrix Reduce(params StatMatrix[] args) {
@@ -50,6 +53,7 @@ public class StatMatrix
             result.Defense += m.Defense;
             result.ArmorPiercing += m.ArmorPiercing;
             result.ArmorDurability += m.ArmorDurability;
+            result.HitPoints += m.HitPoints;
         }
 
         return result;
@@ -65,7 +69,7 @@ public class StatMatrix
         if (Defense > 0) s += $"DEF {Defense} ";
         if (ArmorDurability > 0) s += $"DUR {ArmorDurability} ";
         if (ArmorPiercing > 0) s += $"PRC {ArmorPiercing} ";
-
+        if (HitPoints > 0) s += $"HP {HitPoints} ";
         return s;
     }
 }

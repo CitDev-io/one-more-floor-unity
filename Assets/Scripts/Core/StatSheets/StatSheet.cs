@@ -77,7 +77,7 @@ public class StatSheet
     }
 
     public int CalcMaxHp() {
-        return BASE_HP + (PERVITALITY_MaxHitPoints * TotalStats.Vitality);
+        return BASE_HP + TotalStats.HitPoints + (PERVITALITY_MaxHitPoints * TotalStats.Vitality);
     }
 
     public DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {

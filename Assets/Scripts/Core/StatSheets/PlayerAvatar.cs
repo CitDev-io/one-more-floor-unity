@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class PlayerAvatar: StatSheet {
 
     public PlayerAvatar(params StatMatrix[] _startingStats) : base(_startingStats) {
-        BASE_HP = 35;
+        BASE_HP = 25;
         BASE_Damage = 2;
         PERVITALITY_MaxHitPoints = 5;
         initWith(_startingStats, new Dictionary<ItemSlot, PlayerItem>() {
@@ -12,19 +12,31 @@ public class PlayerAvatar: StatSheet {
                 Slot = ItemSlot.WEAPON,
                 Name = "Moldy Wooden Sword",
                 Description = "Ew... It's kinda slimy",
-                WeaponDamage = 1
+                WeaponDamage = 2
             } },
             { ItemSlot.CHEST, new PlayerItem(){
                 Slot = ItemSlot.CHEST,
                 Name = "Worn Cloth Tunic",
                 Description = "It's not very warm",
-                Defense = 1
+                Defense = 2
             } },
             { ItemSlot.SHIELD, new PlayerItem(){
                 Slot = ItemSlot.SHIELD,
                 Name = "Chipped Round Shield",
                 Description = "Minimal Protection",
                 Defense = 1
+            } },
+            { ItemSlot.HELMET, new PlayerItem(){
+                Slot = ItemSlot.HELMET,
+                Name = "Grimy Leather Cap",
+                Description = "Discarded long ago",
+                Defense = 1
+            } },
+            { ItemSlot.POTION, new PlayerItem(){
+                Slot = ItemSlot.POTION,
+                Name = "Periapt of Fortitude",
+                Description = "Gleaming golden elephant",
+                HitPoints = 10
             } }
         });
     }
@@ -38,7 +50,7 @@ public class PlayerAvatar: StatSheet {
     int PERSTRENGTH_BonusXPChance = 5;
     int PERROLL_BonusXP = 1;
 
-    public int GoldGoal = 15;
+    public int GoldGoal = 100;
     public int GearPoints { get; private set; }
     public int GearGoal = 15;
     public int ExperiencePoints { get; private set; }
