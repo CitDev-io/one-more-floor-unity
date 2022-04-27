@@ -52,7 +52,7 @@ public class PlayerAvatar: StatSheet {
 
     public int GoldGoal = 100;
     public int GearPoints { get; private set; }
-    public int GearGoal = 15;
+    public int GearGoal = 50;
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 12;
     public int MonstersKilled { get; private set; }

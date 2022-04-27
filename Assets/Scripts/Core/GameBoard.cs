@@ -32,6 +32,7 @@ public class GameBoard
     MonsterSelector monsterSelector;
     ChainValidator chainValidator;
     public PlayerItem[] ItemShopOptions { get; private set; }
+    public PlayerItem[] EnchantmentShopOptions { get; private set; }
 
     public GameBoard() {
         Player = new PlayerAvatar(
@@ -81,6 +82,33 @@ public class GameBoard
                 Defense = 2
             }
         };
+
+        EnchantmentShopOptions = new PlayerItem[] {
+            new PlayerItem() {
+                Name = "Defender",
+                Description = "Add 1 Defense",
+                Slot = ItemSlot.CHEST,
+                Defense = 1
+            },
+            new PlayerItem() {
+                Name = "Guiding",
+                Description = "Add 1 Weapon Damage",
+                Slot = ItemSlot.WEAPON,
+                WeaponDamage = 1
+            },
+            new PlayerItem() {
+                Name = "Blocking",
+                Description = "Add 5% Armor Durability",
+                Slot = ItemSlot.SHIELD,
+                ArmorDurability = 5
+            },
+            new PlayerItem() {
+                Name = "Gracefulness",
+                Description = "Add 1 Luck",
+                Slot = ItemSlot.HELMET,
+                Luck = 1
+            },
+        };
     }
 
 // public faces the implementor, in our case UNITY
@@ -89,7 +117,17 @@ public class GameBoard
         PlayerItem ItemPurchased = ItemShopOptions[index];
         Player.AddItemToInventory(ItemPurchased);
 
+        // validate that player can afford and charge them
         // recycle item shop options here
+
+        //advance the PHASE when that's a thing
+    }
+
+    public void EnchantmentShopPurchase(int index) {
+        PlayerItem EnchantmentPurchased = EnchantmentShopOptions[index];
+        Player.AddEnchantmentToItemInSameSlot(EnchantmentPurchased);
+        // validate that player can afford and charge them
+        // recycle shop options here
 
         //advance the PHASE when that's a thing
     }

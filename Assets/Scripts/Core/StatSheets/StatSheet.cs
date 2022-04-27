@@ -31,11 +31,6 @@ public class StatSheet
     public StatMatrix TotalStats { get; protected set; }
     Dictionary<ItemSlot, PlayerItem> Inventory = new Dictionary<ItemSlot, PlayerItem>();
 
-    public void AddItemToInventory(PlayerItem item) {
-        Inventory[item.Slot] = item;
-        ResetTotalStats();
-    }
-
     public PlayerItem GetItemInInventorySlot(ItemSlot slot) {
         return Inventory[slot];
     }
@@ -80,7 +75,25 @@ public class StatSheet
         return BASE_HP + TotalStats.HitPoints + (PERVITALITY_MaxHitPoints * TotalStats.Vitality);
     }
 
-    public DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {
+
+/*
+        INTERNAL
+*/
+
+    // TODO: probably more cleanly handled on a VIRTUAL method
+    internal void AddEnchantmentToItemInSameSlot(PlayerItem enchantment) {
+        ItemSlot affectedSlot = enchantment.Slot;
+        PlayerItem oldItem = GetItemInInventorySlot(affectedSlot);
+        Inventory[affectedSlot] = PlayerItem.Reduce(enchantment, oldItem);
+        ResetTotalStats();
+    }
+
+    internal void AddItemToInventory(PlayerItem item) {
+        Inventory[item.Slot] = item;
+        ResetTotalStats();
+    }
+
+    internal DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {
         int assignedToArmor = 0;
         int assignedToHealth = 0;
         int actualArmorDamage = 0;
@@ -107,7 +120,7 @@ public class StatSheet
     }
 
     /*
-        INTERNAL
+        private
     */
 
     int doPiercingOnShieldChecks(int checks, int attackerArmorPiercing) {

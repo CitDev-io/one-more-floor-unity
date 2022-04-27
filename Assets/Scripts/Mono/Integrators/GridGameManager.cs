@@ -26,9 +26,14 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] Transform floaterPositionRef;
     [SerializeField] Transform SelectionCountDoodad;
     [SerializeField] GameObject ItemShopMenu;
+    [SerializeField] GameObject EnchantmentShopMenu;
 
     public void SelectItemShopAtIndex(int index) {
         Board.ItemShopPurchase(index);
+    }
+
+    public void SelectionEnchantmentShopOptionAtIndex(int index) {
+        Board.EnchantmentShopPurchase(index);
     }
 
     void FloatExp(int xp) {
@@ -154,11 +159,11 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleGoldGoalReached() {
-      ItemShopMenu.SetActive(true);
+        ItemShopMenu.SetActive(true);
     }
 
     void HandleDefenseGoalReached() {
-//        Debug.Log("Did the defense thing");
+        EnchantmentShopMenu.SetActive(true);
     }
 
 
