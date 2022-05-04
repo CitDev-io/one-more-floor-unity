@@ -22,7 +22,7 @@ public class UI_ItemShop : MonoBehaviour
         }
     }
 
-    void Start() {
+    void OnEnable() {
         if (_rc.Board.ItemShopOptions != null && _rc.Board.ItemShopOptions.Length == 3) {
             Option1.setDisplayItem(_rc.Board.ItemShopOptions[0]);
             Option2.setDisplayItem(_rc.Board.ItemShopOptions[1]);

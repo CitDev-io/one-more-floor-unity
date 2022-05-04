@@ -20,7 +20,7 @@ public class UI_EnchantmentShop : MonoBehaviour
         }
     }
 
-    void Start() {
+    void OnEnable() {
         if (_rc.Board.EnchantmentShopOptions != null && _rc.Board.EnchantmentShopOptions.Length == 4) {
             Option1.setDisplayItem(_rc.Board.EnchantmentShopOptions[0]);
             Option2.setDisplayItem(_rc.Board.EnchantmentShopOptions[1]);

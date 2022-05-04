@@ -13,7 +13,7 @@ public class Tile
     public StatSheet CurrentMonster { get; internal set; } = new StatSheet();
     int StunnedRounds = 0;
     public int TurnsAlive { get; private set; } = 0;
-    internal bool IsBeingCollected = false;
+    public bool IsBeingCollected { get; internal set; } = false;
     public int selectedAgainstDamage { get; internal set; } = 0;
 
     public Tile(int x, int y, StatSheet enemy, TileType tt)

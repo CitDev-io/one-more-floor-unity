@@ -29,10 +29,12 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] GameObject EnchantmentShopMenu;
 
     public void SelectItemShopAtIndex(int index) {
+        Debug.Log("ITEM");
         Board.ItemShopPurchase(index);
     }
 
     public void SelectionEnchantmentShopOptionAtIndex(int index) {
+        Debug.Log("ENCHANTMENT");
         Board.EnchantmentShopPurchase(index);
     }
 
@@ -119,13 +121,14 @@ public class GridGameManager : MonoBehaviour
         Board.OnMonsterKillsEarned += HandleMonsterKillEarned;
         Board.OnExperienceGained += HandleExperienceGained;
         Board.OnLose += HandleLose;
-        Board.OnReadyForNextTurn += HandleReadyForNextTurn;
+        Board.OnPhaseChange += HandlePhaseChange;
         _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
         _gim.OnUserStartSelection += Board.UserStartSelection;
         _gim.OnUserEndSelection += Board.UserEndSelection;
         Board.OnGoldGoalReached += HandleGoldGoalReached;
         Board.OnDefenseGoalReached += HandleDefenseGoalReached;
         Board.OnExperienceGoalReached += HandleExperienceGoalReached;
+        Board.OnDebugLog += HandleDebugLog;
     }
 
     void OnDestroy() {
@@ -143,10 +146,19 @@ public class GridGameManager : MonoBehaviour
         Board.OnMonsterKillsEarned -= HandleMonsterKillEarned;
         Board.OnExperienceGained -= HandleExperienceGained;
         Board.OnLose -= HandleLose;
-        Board.OnReadyForNextTurn -= HandleReadyForNextTurn;
+        Board.OnPhaseChange -= HandlePhaseChange;
         Board.OnGoldGoalReached -= HandleGoldGoalReached;
         Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
         Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
+        Board.OnDebugLog -= HandleDebugLog;
+    }
+
+    void HandleDebugLog(string msg) {
+        Debug.Log($">CORE< {msg}");
+    }
+
+    void HandlePhaseChange(BoardPhase phase) {
+        Debug.Log($"PHASE NOW {phase.ToString()}");
     }
 
     void HandleExperienceGained(int exp) {
@@ -155,7 +167,7 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleExperienceGoalReached() {
-      //  Debug.Log("HIT XP GOAL");
+        Board.LevelUpPurchase();
     }
 
     void HandleGoldGoalReached() {
@@ -170,19 +182,6 @@ public class GridGameManager : MonoBehaviour
     bool isActingRightNow() {
         return false;
     }
-
-    IEnumerator StartNextRoundWhenDoneActing() {
-        while (isActingRightNow()) {
-            yield return new WaitForSeconds(0.2f);
-        }
-        
-        Board.RoundProceed();
-    }
-
-    void HandleReadyForNextTurn() {
-        StartCoroutine("StartNextRoundWhenDoneActing");
-    }
-
     void HandlePlayerCollectedTiles(List<Tile> tiles) {
 
     }

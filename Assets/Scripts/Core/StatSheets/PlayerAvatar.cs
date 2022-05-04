@@ -54,7 +54,7 @@ public class PlayerAvatar: StatSheet {
     public int GearPoints { get; private set; }
     public int GearGoal = 50;
     public int ExperiencePoints { get; private set; }
-    public int ExperienceGoal = 12;
+    public int ExperienceGoal = 25;
     public int MonstersKilled { get; private set; }
     public int Level { get; private set; } = 1;
     
@@ -70,7 +70,7 @@ public class PlayerAvatar: StatSheet {
         return GearPoints >= GearGoal;
     }
 
-    public CollectionResult CollectShields(int shieldsCollected) {
+    internal CollectionResult CollectShields(int shieldsCollected) {
         int bonusShieldRollCount = Math.Max(shieldsCollected - 3, 0);
         int bonusShields = doRollsAgainstChance(bonusShieldRollCount, BonusShieldChance());
         
@@ -93,7 +93,7 @@ public class PlayerAvatar: StatSheet {
         };
     }
 
-    public CollectionResult CollectCoins(int collected) {
+    internal CollectionResult CollectCoins(int collected) {
         int coinsEarned = collected;
         int bonusCoinRollCount = Math.Max(collected - 3, 0);
 
@@ -112,7 +112,7 @@ public class PlayerAvatar: StatSheet {
         };
     }
 
-    public CollectionResult CollectPotions(int collected) {
+    internal CollectionResult CollectPotions(int collected) {
         int healingEarned = CalcHealingDone(collected);
         int bonusPotionRollCount = Math.Max(collected - 3, 0);
 
@@ -135,7 +135,7 @@ public class PlayerAvatar: StatSheet {
         };
     }
 
-    public CollectionResult CollectKilledMonsters(int amt) {
+    internal CollectionResult CollectKilledMonsters(int amt) {
         int experienceEarned = amt;
         MonstersKilled += amt;
 
@@ -171,16 +171,16 @@ public class PlayerAvatar: StatSheet {
         return BASE_BonusAPChance + (PERDEXTERITY_BonusShieldChance * TotalStats.Dexterity);
     }
 
-    public int SpendDownCoins() {
+    internal int SpendDownCoins() {
         return Gold -= GoldGoal;
     }
 
-    public int SpendDownExp() {
+    internal int SpendDownExp() {
         Level++;
         return ExperiencePoints -= ExperienceGoal;
     }
 
-    public int SpendDownDefensePoints() {
+    internal int SpendDownDefensePoints() {
         return GearPoints -= GearGoal;
     }
 }

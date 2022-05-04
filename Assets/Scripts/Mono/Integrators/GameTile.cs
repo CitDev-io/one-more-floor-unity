@@ -68,7 +68,7 @@ public class GameTile : MonoBehaviour
         if (_tile == null) return;
 
         bool isMonster = _tile.tileType == TileType.Monster;
-        label1.text = isMonster ? _tile.CurrentMonster.Hp + "" : "";
+        label1.text = isMonster ? _tile.IsBeingCollected ? "C" : _tile.CurrentMonster.Hp + "" : "";
         label2.text = isMonster ? _tile.CurrentMonster.Armor + "" : "";
         label3.text = isMonster ? _tile.CurrentMonster.CalcBaseDamage() + "" : "";
         xoutlabel.gameObject.SetActive(isMonster && _tile.selectedAgainstDamage >= _tile.CurrentMonster.Hp);
