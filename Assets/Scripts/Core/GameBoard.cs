@@ -35,9 +35,11 @@ public class GameBoard
 
     public PlayerItem[] ItemShopOptions { get; private set; }
     public PlayerItem[] EnchantmentShopOptions { get; private set; }
+    public PlayerSkillup[] XPShopOptions { get; private set; }
     TileSelector tileSelector;
     MonsterSelector monsterSelector;
     ItemSelector itemSelector;
+    XPOptionSelector xpOptionSelector;
     EnchantmentSelector enchantmentSelector;
     ChainValidator chainValidator;
 
@@ -54,6 +56,7 @@ public class GameBoard
         monsterSelector = new MonsterSelector();
         itemSelector = new ItemSelector();
         enchantmentSelector = new EnchantmentSelector();
+        xpOptionSelector = new XPOptionSelector();
 
         int COUNT_ROWS = 6;
         int COUNT_COLS = 6;
@@ -73,7 +76,7 @@ public class GameBoard
         chainValidator = new StandardChainValidator(Tiles, selection);
         ItemShopOptions = itemSelector.GetShopItemsForPlayer(Player);
         EnchantmentShopOptions = enchantmentSelector.GetEnchantmentItemsForPlayer(Player);
-
+        XPShopOptions = xpOptionSelector.GetXpOptionsForPlayer(Player);
         Trip();
     }
 
@@ -90,6 +93,7 @@ public class GameBoard
 
         if (Player.HasReachedExperienceGoal()) {
             SetPhase(BoardPhase.LEVELUP);
+            XPShopOptions = xpOptionSelector.GetXpOptionsForPlayer(Player);
             OnExperienceGoalReached?.Invoke();
             return;
         }
@@ -116,11 +120,13 @@ public class GameBoard
         SetPhase(BoardPhase.PLAYERTURN);
     }
 
-    public void LevelUpPurchase() {
+    public void LevelUpPurchase(List<int> indexes) {
         if (Phase != BoardPhase.LEVELUP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE LEVELUP");
 
+        List<PlayerSkillup> skillupsPurchased = indexes.Select(o => XPShopOptions[o]).ToList();
+        Player.AddSkillupsToInventory(skillupsPurchased);
         Player.SpendDownExp();
-        // TODO: Purchase powerups
+        XPShopOptions = null;
 
         Trip();
     }

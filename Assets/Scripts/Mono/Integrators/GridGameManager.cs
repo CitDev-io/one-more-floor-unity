@@ -27,6 +27,7 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] Transform SelectionCountDoodad;
     [SerializeField] GameObject ItemShopMenu;
     [SerializeField] GameObject EnchantmentShopMenu;
+    [SerializeField] GameObject XPShopMenu;
 
     public void SelectItemShopAtIndex(int index) {
         Debug.Log("ITEM");
@@ -36,6 +37,11 @@ public class GridGameManager : MonoBehaviour
     public void SelectionEnchantmentShopOptionAtIndex(int index) {
         Debug.Log("ENCHANTMENT");
         Board.EnchantmentShopPurchase(index);
+    }
+
+    public void SelectionXPShopOptionsAtIndexes(List<int> indexes) {
+        Debug.Log("XP STUFF");
+        Board.LevelUpPurchase(indexes);
     }
 
     void FloatExp(int xp) {
@@ -167,7 +173,7 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleExperienceGoalReached() {
-        Board.LevelUpPurchase();
+        XPShopMenu.SetActive(true);
     }
 
     void HandleGoldGoalReached() {

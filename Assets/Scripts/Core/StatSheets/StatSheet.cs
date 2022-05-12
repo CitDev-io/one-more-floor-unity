@@ -21,7 +21,6 @@ public class StatSheet
     public RandomRoller roller = new RandomRoller();
 
     public int BASE_HP = 0;
-    public int BASE_Damage = 0;
     public int PERDEXTERITY_ShieldArmorPoints = 1;
     public int PERLUCK_PotionHealingPoints = 1;
     public int PERSTRENGTH_BaseDamage = 1;
@@ -30,6 +29,7 @@ public class StatSheet
     public StatMatrix StarterStats;
     public StatMatrix TotalStats { get; protected set; }
     Dictionary<ItemSlot, PlayerItem> Inventory = new Dictionary<ItemSlot, PlayerItem>();
+    public List<PlayerSkillup> Skillups { get; protected set; } = new List<PlayerSkillup>();
 
     public PlayerItem GetItemInInventorySlot(ItemSlot slot) {
         return Inventory[slot];
@@ -68,7 +68,7 @@ public class StatSheet
     }
 
     public int CalcBaseDamage() {
-        return (TotalStats.Strength * PERSTRENGTH_BaseDamage) + BASE_Damage;
+        return (TotalStats.Strength * PERSTRENGTH_BaseDamage) + TotalStats.BaseDamage;
     }
 
     public int CalcMaxHp() {
@@ -90,6 +90,11 @@ public class StatSheet
 
     internal void AddItemToInventory(PlayerItem item) {
         Inventory[item.Slot] = item;
+        ResetTotalStats();
+    }
+
+    internal void AddSkillupsToInventory(List<PlayerSkillup> skillups) {
+        Skillups.AddRange(skillups);
         ResetTotalStats();
     }
 
@@ -150,6 +155,7 @@ public class StatSheet
         StatMatrix[] allStats = Inventory
             .Select(z => (StatMatrix) z.Value)
             .Append(StarterStats)
+            .Concat(Skillups)
             .ToArray();
 
         TotalStats = StatMatrix.Reduce(allStats);

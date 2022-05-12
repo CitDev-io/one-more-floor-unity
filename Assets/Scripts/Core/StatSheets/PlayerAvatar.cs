@@ -5,7 +5,6 @@ public class PlayerAvatar: StatSheet {
 
     public PlayerAvatar(params StatMatrix[] _startingStats) : base(_startingStats) {
         BASE_HP = 25;
-        BASE_Damage = 2;
         PERVITALITY_MaxHitPoints = 5;
         initWith(_startingStats, new Dictionary<ItemSlot, PlayerItem>() {
             { ItemSlot.WEAPON, new PlayerItem(){
@@ -54,7 +53,7 @@ public class PlayerAvatar: StatSheet {
     public int GearPoints { get; private set; }
     public int GearGoal = 50;
     public int ExperiencePoints { get; private set; }
-    public int ExperienceGoal = 25;
+    public int ExperienceGoal = 50;
     public int MonstersKilled { get; private set; }
     public int Level { get; private set; } = 1;
     
