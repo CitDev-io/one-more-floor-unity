@@ -41,5 +41,6 @@ public class UI_EnchantmentShop : MonoBehaviour
 
     public void ClickItemShopConfirm(){
         _rc.SelectionEnchantmentShopOptionAtIndex(selectedItemIndex);
+        selectedItemIndex = -1;
     }
 }

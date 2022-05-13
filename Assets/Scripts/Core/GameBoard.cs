@@ -283,10 +283,14 @@ public class GameBoard
     }
 
     void SelectionChanged() {
-        int dmgSelected = Player.CalcDamageDone(selection.Where((t) => t.tileType == TileType.Sword).Count());
+        var dmgSelected = 0;
+        if (chainValidator.isSelectionFinishable()) {
+            dmgSelected = Player.CalcDamageDone(selection.Where((t) => t.tileType == TileType.Sword).Count());
+        }
         foreach(Tile t in Tiles) {
             t.selectedAgainstDamage = selection.Contains(t) ? dmgSelected : 0;
         }
+
         OnSelectionChange?.Invoke(selection);
     }
 

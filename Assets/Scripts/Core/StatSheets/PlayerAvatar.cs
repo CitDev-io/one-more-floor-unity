@@ -49,7 +49,7 @@ public class PlayerAvatar: StatSheet {
     int PERSTRENGTH_BonusXPChance = 5;
     int PERROLL_BonusXP = 1;
 
-    public int GoldGoal = 100;
+    public int GoldGoal = 2;
     public int GearPoints { get; private set; }
     public int GearGoal = 50;
     public int ExperiencePoints { get; private set; }

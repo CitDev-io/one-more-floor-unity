@@ -44,5 +44,6 @@ public class UI_XPShop : MonoBehaviour
 
     public void ClickXPShopConfirm(){
         _rc.SelectionXPShopOptionsAtIndexes(selectedItemIndexes);
+        selectedItemIndexes.Clear();
     }
 }

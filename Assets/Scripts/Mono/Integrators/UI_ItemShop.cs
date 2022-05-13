@@ -43,5 +43,6 @@ public class UI_ItemShop : MonoBehaviour
 
     public void ClickItemShopConfirm(){
         _rc.SelectItemShopAtIndex(selectedItemIndex);
+        selectedItemIndex = -1;
     }
 }
