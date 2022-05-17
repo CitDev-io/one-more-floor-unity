@@ -15,6 +15,5 @@ public class UI_ItemShopOptionTxter : MonoBehaviour
         ItemDescTxt.text = i.Description;
         ItemStatTxt.text = i.SummaryStats();
         ItemIcon.sprite = Resources.Load<Sprite>($"Gear/{i.Slot.ToString().ToUpper()}X");
-
     }
 }

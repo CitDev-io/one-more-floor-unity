@@ -80,21 +80,31 @@ public class StatSheet
         INTERNAL
 */
 
-    // TODO: probably more cleanly handled on a VIRTUAL method
+
     internal void AddEnchantmentToItemInSameSlot(PlayerItem enchantment) {
         ItemSlot affectedSlot = enchantment.Slot;
-        PlayerItem oldItem = GetItemInInventorySlot(affectedSlot);
-        Inventory[affectedSlot] = PlayerItem.Reduce(enchantment, oldItem);
+        PlayerItem unenchantedItem = GetItemInInventorySlot(affectedSlot);
+        Inventory[affectedSlot] = PlayerItem.Reduce(enchantment, unenchantedItem);
+        addHpWithoutNegative(enchantment.HitPoints);
+
         ResetTotalStats();
     }
 
-    internal void AddItemToInventory(PlayerItem item) {
-        Inventory[item.Slot] = item;
+    internal void AddItemToInventory(PlayerItem newItem) {
+        ItemSlot affectedSlot = newItem.Slot;
+        PlayerItem oldItem = GetItemInInventorySlot(affectedSlot);
+        Inventory[affectedSlot] = newItem;
+        int hpDiff = newItem.HitPoints - oldItem.HitPoints;
+        addHpWithoutNegative(hpDiff);
+
         ResetTotalStats();
     }
 
     internal void AddSkillupsToInventory(List<PlayerSkillup> skillups) {
         Skillups.AddRange(skillups);
+        PlayerSkillup combinedSkillup = PlayerSkillup.Reduce(skillups.ToArray());
+        addHpWithoutNegative(combinedSkillup.HitPoints);
+
         ResetTotalStats();
     }
 
@@ -127,6 +137,11 @@ public class StatSheet
     /*
         private
     */
+
+    void addHpWithoutNegative(int hp) {
+        int modifier = Math.Max(hp, 0);
+        Hp = Math.Clamp(Hp + modifier, 0, CalcMaxHp());
+    }
 
     int doPiercingOnShieldChecks(int checks, int attackerArmorPiercing) {
         int shieldsPierced = doRollsAgainstChance(checks, attackerArmorPiercing);
