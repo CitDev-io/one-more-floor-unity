@@ -9,18 +9,16 @@ public class Tile
     public NoParamDelegate OnDoAttack;
     public SourcedDamageDelegate OnDamageTaken;
     public TileType tileType { get; private set; }
-    public int HitPoints { get; private set; } = 2;
-    public int MaxHitPoints { get; private set; } = 2;
-    public int Damage { get; private set; } = 2;
-    int StunnedRounds = 0;
-    int TurnsAlive = 0;
-    public bool IsBeingCollected = false;
 
-    public Tile(int x, int y, int HP, int DMG, TileType tt)
+    public StatSheet CurrentMonster { get; internal set; } = new StatSheet();
+    int StunnedRounds = 0;
+    public int TurnsAlive { get; private set; } = 0;
+    public bool IsBeingCollected { get; internal set; } = false;
+    public int selectedAgainstDamage { get; internal set; } = 0;
+
+    public Tile(int x, int y, StatSheet enemy, TileType tt)
     {
-        HitPoints = HP;
-        MaxHitPoints = HP;
-        Damage = DMG;
+        CurrentMonster = enemy;
 
         col = x;
         row = y;
@@ -29,24 +27,29 @@ public class Tile
     public int row { get; private set; } = 5; // Y Y Y Y Y Y 
     public int col { get; private set; } = 5; // X X X X X X
 
-    public void ClearAndDropTileAs(TileType tileType) {
+    /*
+        internal controls for board
+    */
+
+
+    internal void ClearAndDropTileAs(TileType tileType) {
         Reset();
         AssignPosition(col, 5);
         SetTileType(tileType);
     }
 
-    public void SetTileType(TileType tt)
+    internal void SetTileType(TileType tt)
     {
         tileType = tt;
         OnTileTypeChange?.Invoke();
     }
 
-    public void Stun() {
+    internal void Stun() {
         StunnedRounds = 3;
         OnStunned?.Invoke();
     }
 
-    public void AgeUp() {
+    internal void AgeUp() {
         TurnsAlive += 1;
         StunnedRounds -= 1;
 
@@ -54,6 +57,23 @@ public class Tile
             OnUnstunned?.Invoke();
         }
     }
+
+    internal void TakeDamage(int dmg, int armorPiercing) {
+        CurrentMonster.TakeDamage(dmg, armorPiercing);
+        OnDamageTaken?.Invoke(dmg);
+    }
+
+    internal void Dropdown(){
+        AssignPosition(col, row - 1);
+    }
+
+    internal void DoAttack() {
+        OnDoAttack?.Invoke();
+    }
+
+    /*
+        public info fetches
+    */
 
     public Vector3 GridPosition() {
         return new Vector3(
@@ -63,13 +83,8 @@ public class Tile
         );
     }
 
-    public void TakeDamage(int dmg, DamageSource src) {
-        HitPoints -= dmg;
-        OnDamageTaken?.Invoke(dmg, src);
-    }
-
     public bool isAlive() {
-        return HitPoints > 0;
+        return CurrentMonster.isAlive();
     }
 
     public bool isStunned() {
@@ -80,13 +95,6 @@ public class Tile
         return TurnsAlive > 0;
     }
 
-    public void Dropdown(){
-        AssignPosition(col, row - 1);
-    }
-
-    public void DoAttack() {
-        OnDoAttack?.Invoke();
-    }
 
     /**
 
@@ -102,9 +110,9 @@ public class Tile
     }
 
     void Reset() {
-        HitPoints = MaxHitPoints;
         TurnsAlive = 0;
         StunnedRounds = 0;
         IsBeingCollected = false;
+        selectedAgainstDamage = 0;
     }
 }

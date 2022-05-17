@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 
 public delegate void TilesDelegate(List<Tile> t);
@@ -7,107 +6,178 @@ public delegate void TileDelegate(Tile t);
 public delegate void IntDelegate(int i);
 public delegate void NoParamDelegate();
 public delegate void StatSheetDelegate(StatSheet statSheet);
-public delegate void SourcedDamageDelegate(int damage, DamageSource source);
+public delegate void DamageDelegate(DamageResult result);
+public delegate void SourcedDamageDelegate(int damage);
+public delegate void PhaseDelegate(BoardPhase phase);
+public delegate void StringDelegate(string str);
 
 public class GameBoard
 {
-    public TilesDelegate OnPlayerCollectedTiles;
+    public TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
     public TileDelegate OnTileAddedToSelection;
-    public TilesDelegate OnSelectionChange;
-    public IntDelegate OnMonstersAttack;
-    public IntDelegate OnCoinCollected;
-    public IntDelegate OnHeartsCollected;
-    public IntDelegate OnShieldsCollected;
-    public IntDelegate OnPoisonCollected;
-    public IntDelegate OnSwordsCollected;
-    public NoParamDelegate OnEnemyStunned;
-    public NoParamDelegate OnMonsterKillEarned;
-    public StatSheetDelegate OnWin;
+    public IntDelegate OnCoinCollected, OnPotionsCollected;
+    public IntDelegate OnShieldsCollected, OnPoisonCollected, OnSwordsCollected;
+    public IntDelegate OnMonsterKillsEarned, OnExperienceGained;
+    public NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
+    public NoParamDelegate OnExperienceGoalReached;
+    public PhaseDelegate OnPhaseChange;
+    public DamageDelegate OnMonstersAttack;
     public StatSheetDelegate OnLose;
-    public NoParamDelegate OnReadyForNextTurn;
-    public List<Tile> Tiles = new List<Tile>();
-    BoardContext ctx;
-    public StatSheet Player;
-    public int Kills { get; private set; } = 0;
-    public int MovesMade = 0;
-    bool BoardComplete = false;
-    bool AwaitingRoundChange = false;
+    public StringDelegate OnDebugLog;
 
+    public List<Tile> Tiles = new List<Tile>();
+    public PlayerAvatar Player;
     List<Tile> selection = new List<Tile>();
-    public int GetKillRequirement() {
-        return ctx.Stage.KillRequirement();
-    }
+
+    public int MovesMade { get; private set; } = 0;
+    public BoardPhase Phase { get; private set; } = BoardPhase.READY;
+    private bool PlayersTurn = true;
+
+    public PlayerItem[] ItemShopOptions { get; private set; }
+    public PlayerItem[] EnchantmentShopOptions { get; private set; }
+    public PlayerSkillup[] XPShopOptions { get; private set; }
     TileSelector tileSelector;
+    MonsterSelector monsterSelector;
+    ItemSelector itemSelector;
+    XPOptionSelector xpOptionSelector;
+    EnchantmentSelector enchantmentSelector;
     ChainValidator chainValidator;
 
-    public GameBoard(BoardContext bctx) {
-        ctx = bctx;
-        tileSelector = new TileSelector(bctx.PC.TileOptions);
+    public GameBoard() {
+        Player = new PlayerAvatar(
+            StatMatrix.BASE_PLAYER()
+        );
+        tileSelector = new TileSelector(new List<TileType> {
+            TileType.Shield,
+            TileType.Sword,
+            TileType.Potion,
+            TileType.Coin
+        });
+        monsterSelector = new MonsterSelector();
+        itemSelector = new ItemSelector();
+        enchantmentSelector = new EnchantmentSelector();
+        xpOptionSelector = new XPOptionSelector();
 
         int COUNT_ROWS = 6;
         int COUNT_COLS = 6;
-
+        // board builder
         for (var rowid = 0; rowid < COUNT_ROWS; rowid++) {
             for (var colid = 0; colid < COUNT_COLS; colid++) {
                 Tile t = new Tile(
                     colid,
                     rowid,
-                    ctx.Stage.EnemyHp(),
-                    ctx.Stage.EnemyDmg(),
+                    monsterSelector.NextMonster(Player.Level),
                     tileSelector.GetNextTile()
                 );
                 Tiles.Add(t);
             }
         }
 
-        switch(CurrentCharacterType()) {
-            case CharacterType.Warrior:
-                chainValidator = new WarriorChainValidator(
-                    Tiles,
-                    selection
-                );
-                break;
-            case CharacterType.Rogue:
-                chainValidator = new RogueChainValidator(
-                    Tiles,
-                    selection
-                );
-                break;
-            default:
-                Debug.Log("NOT ESTABLISHED WHAT CLASS YOU ARE");
-                break;
-        }
-        Player = bctx.PC.GetStatSheet();
+        chainValidator = new StandardChainValidator(Tiles, selection);
+        ItemShopOptions = itemSelector.GetShopItemsForPlayer(Player);
+        EnchantmentShopOptions = enchantmentSelector.GetEnchantmentItemsForPlayer(Player);
+        XPShopOptions = xpOptionSelector.GetXpOptionsForPlayer(Player);
+        Trip();
     }
 
-    public CharacterType CurrentCharacterType() {
-        switch(ctx.PC.Name.ToLower()) {
-            case "warrior":
-                return CharacterType.Warrior;
-            case "rogue":
-                return CharacterType.Rogue;
-            default:
-                return CharacterType.Warrior;
+    void Trip() {
+        if (Phase == BoardPhase.GAMEOVER) {
+            return;
         }
+
+        if (!Player.isAlive()) {
+            OnLose?.Invoke(Player);
+            SetPhase(BoardPhase.GAMEOVER);
+            return;
+        }
+
+        if (Player.HasReachedExperienceGoal()) {
+            SetPhase(BoardPhase.LEVELUP);
+            XPShopOptions = xpOptionSelector.GetXpOptionsForPlayer(Player);
+            OnExperienceGoalReached?.Invoke();
+            return;
+        }
+        if (Player.HasReachedCoinGoal()) {
+            SetPhase(BoardPhase.ITEMSHOP);
+            ItemShopOptions = itemSelector.GetShopItemsForPlayer(Player);
+            OnGoldGoalReached?.Invoke();
+            return;
+        }
+        if (Player.HasReachedDefenseGoal()) {
+            SetPhase(BoardPhase.ENCHANTMENTSHOP);
+            EnchantmentShopOptions = enchantmentSelector.GetEnchantmentItemsForPlayer(Player);
+            OnDefenseGoalReached?.Invoke();
+            return;
+        }
+        
+        if (!PlayersTurn) {
+            SetPhase(BoardPhase.MONSTERTURN);
+            DoPhase_MonstersAttack();
+            return;
+        }
+
+        DoPhase_Populate();
+        SetPhase(BoardPhase.PLAYERTURN);
     }
+
+    public void LevelUpPurchase(List<int> indexes) {
+        if (Phase != BoardPhase.LEVELUP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE LEVELUP");
+
+        List<PlayerSkillup> skillupsPurchased = indexes.Select(o => XPShopOptions[o]).ToList();
+        Player.AddSkillupsToInventory(skillupsPurchased);
+        Player.SpendDownExp();
+        XPShopOptions = null;
+
+        Trip();
+    }
+
+    public void ItemShopPurchase(int index) {
+        if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
+
+        PlayerItem ItemPurchased = ItemShopOptions[index];
+        Player.AddItemToInventory(ItemPurchased);
+        Player.SpendDownCoins();
+        ItemShopOptions = null;
+        
+        Trip();
+    }
+
+    public void EnchantmentShopPurchase(int index) {
+        if (Phase != BoardPhase.ENCHANTMENTSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE SHOPPING");
+
+        PlayerItem EnchantmentPurchased = EnchantmentShopOptions[index];
+        Player.AddEnchantmentToItemInSameSlot(EnchantmentPurchased);
+        Player.SpendDownDefensePoints();
+        EnchantmentShopOptions = null;
+        
+        Trip();
+    }
+
     public void UserStartSelection(Tile tile)
     {
+        if (Phase != BoardPhase.PLAYERTURN) return;
+
         ClearSelection();
         DoUserIndicatingTile(tile);
     }
 
     public void UserEndSelection()
     {
-        if (chainValidator.isSelectionFinishable())
+        if (Phase != BoardPhase.PLAYERTURN) return;
+
+        if (!chainValidator.isSelectionFinishable())
         {
-            DoPhase_Collection();
+            ClearSelection();
+            return;
         }
 
-        ClearSelection();
+        DoPhase_Collection();
     }
 
     public void UserIndicatingTile(Tile tile)
     {
+        if (Phase != BoardPhase.PLAYERTURN) return;
+
         DoUserIndicatingTile(tile);
     }
 
@@ -118,77 +188,9 @@ public class GameBoard
 
     */
 
-    void ApplyHpChange(int changeAmount)
-    {
-        Player.ApplyHP(changeAmount);
-
-        if (Player.Hp == 0)
-        {
-            OnLose?.Invoke(Player);
-        }
-    }
-
-    void ApplyPoisonChanged(int changeAmount) {
-        Player.ApplySP(changeAmount);
-    }
-
-    void ApplyArmorChange(int changeAmount)
-    {
-        Player.ApplySP(changeAmount);
-    }
-
-    void DoPhase_Collection() {
-        CollectTiles();
-
-        DoPhase_Post();
-    }
-
-    void DoPhase_Post() {
-        var monsters = Tiles.Where((o) => o.tileType == TileType.Monster && o.isAlive());
-        if (ctx.PC.Name.ToLower() == "rogue" && Player.Sp > 0 && monsters.Any()) {
-            int sprayCount = Player.Sp;
-
-            var spraysDone = 0;
-            for(var i = 0; i < sprayCount; i++) {
-                if (monsters.Count() == 0) continue;
-
-                int indexChosen = Random.Range(0, monsters.Count());
-                var monster = monsters.ElementAt(indexChosen);
-
-                monster.TakeDamage(2, DamageSource.PoisonDart);
-                CheckIfMonsterDied(monster);
-                spraysDone++;
-            }
-            Player.ApplySP(-spraysDone);
-        }
-
-        DoPhase_Monsters();
-    }
-
-    public void RoundProceed()
-    {
-        if (!AwaitingRoundChange) return;
-        DoPhase_Populate();
-        AwaitingRoundChange = false;
-    }
-
-    void DoPhase_Monsters() {
-
-        var monsters = Tiles.Where((o) => o.tileType == TileType.Monster
-            && o.wasAliveBeforeLastUserAction()
-            && !o.isStunned()
-            && o.isAlive()
-        ).ToList();
-        MonstersAttack(monsters);
-        
-        AgeAllMonsters();
-        DoPhase_Cleanup();
-    }
-
-    void DoPhase_Cleanup() {
-        ClearTiles(selection);
-        AwaitingRoundChange = true;
-        OnReadyForNextTurn?.Invoke();
+    void SetPhase(BoardPhase p) {
+        Phase = p;
+        OnPhaseChange?.Invoke(p);
     }
 
     void DoPhase_Populate() {
@@ -196,40 +198,40 @@ public class GameBoard
         foreach(Tile t in tilesToRepop) {
             RecascadeTile(t);
         }
-        DoPhase_PrePhase();
     }
 
-    void DoPhase_PrePhase() {
+    void DoPhase_MonstersAttack() {
+        var monsters = Tiles.Where((o) => o.tileType == TileType.Monster
+            && o.wasAliveBeforeLastUserAction()
+            && !o.isStunned()
+            && o.isAlive()
+        ).ToList();
+        MonstersAttack(monsters);
+        AgeAllMonsters();
+        PlayersTurn = true;
 
+        Trip();
     }
 
+    void DoPhase_Collection() {
+        CollectTiles();
+        PlayersTurn = false;
+        TagTilesForCollection(selection);
+        ClearSelection();
+
+        Trip();
+    }
+    
     void MonstersAttack(List<Tile> monsters) {
-        if (BoardComplete) return;
-
-        int damageReceived = monsters.Sum((o) => o.Damage);
+        int damageReceived = monsters.Sum((o) => o.CurrentMonster.TotalStats.Strength);
         
         if (damageReceived == 0) return;
-        OnMonstersAttack?.Invoke(damageReceived);
+
+        var badGuyArmorPiercingAgainstMe = 0; // Consider that if we do pass armor piercing, it'll have to be by-source. that changes the signature anyway
+        DamageResult result = Player.TakeDamage(damageReceived, badGuyArmorPiercingAgainstMe);
+        OnMonstersAttack?.Invoke(result);
         foreach(Tile monster in monsters) {
             monster.DoAttack();
-        }
-        
-        if (CurrentCharacterType() == CharacterType.Warrior) {
-            if (Player.Sp >= damageReceived)
-            {
-                ApplyArmorChange(-damageReceived);
-                return;
-            }
-
-            int remainingDmg = damageReceived - Player.Sp;
-            if (Player.Sp > 0)
-            {
-                ApplyArmorChange(-Player.Sp);
-            }
-
-            ApplyHpChange(-remainingDmg);
-        } else {
-            ApplyHpChange(-damageReceived);
         }
     }
 
@@ -243,13 +245,11 @@ public class GameBoard
     void ClearSelection()
     {
         selection.Clear();
-        OnSelectionChange?.Invoke(selection);
+        SelectionChanged();
     }
 
     void DoUserIndicatingTile(Tile tile)
-    {
-        if (BoardComplete) return;
-    
+    {   
         bool AlreadySelected = selection.Contains(tile);
 
         if (AlreadySelected)
@@ -265,8 +265,9 @@ public class GameBoard
         if (chainValidator.isEligibleToAddToSelection(tile))
         {
             selection.Add(tile);
+            foreach(Tile t in selection) { t.selectedAgainstDamage = 1; }
             OnTileAddedToSelection?.Invoke(tile);
-            OnSelectionChange?.Invoke(selection);
+            SelectionChanged();
         }
     }
 
@@ -277,104 +278,92 @@ public class GameBoard
         foreach (Tile t in tilesToUnhighlight)
         {
             selection.Remove(t);
-            OnSelectionChange?.Invoke(selection);
+            SelectionChanged();
         }
+    }
+
+    void SelectionChanged() {
+        var dmgSelected = 0;
+        if (chainValidator.isSelectionFinishable()) {
+            dmgSelected = Player.CalcDamageDone(selection.Where((t) => t.tileType == TileType.Sword).Count());
+        }
+        foreach(Tile t in Tiles) {
+            t.selectedAgainstDamage = selection.Contains(t) ? dmgSelected : 0;
+        }
+
+        OnSelectionChange?.Invoke(selection);
     }
 
     void CollectTiles()
     {
         MovesMade += 1;
 
-        int healthGained = selection
-            .Where((o) => o.tileType == TileType.Heart)
-            .ToList().Count;
-
-        int armorGained = selection
-            .Where((o) => o.tileType == TileType.Shield)
-            .ToList().Count;
-
-        int poisonGained = selection
-            .Where((o) => o.tileType == TileType.Poison)
-            .ToList().Count;
-
+        //  COINS
         List<Tile> coinsCollected = selection.Where((o) => o.tileType == TileType.Coin).ToList();
 
         int coinGained = selection
             .Where((o) => o.tileType == TileType.Coin)
-            .ToList().Count * 10;
+            .ToList().Count;
 
-        if (coinGained > 0)
-        {
-            OnCoinCollected?.Invoke(coinGained);
+        if (coinGained > 0) {
+            CollectionResult cr = Player.CollectCoins(coinGained);
+            OnCoinCollected?.Invoke(cr.Earned + cr.BonusGained);
         }
 
+        // POTIONS
+        int potionsCollected = selection
+            .Where((o) => o.tileType == TileType.Potion)
+            .ToList().Count;
+
+        if (potionsCollected != 0)
+        {
+            CollectionResult cr = Player.CollectPotions(potionsCollected);
+            OnPotionsCollected?.Invoke(cr.Earned + cr.BonusGained);
+        }
+
+        // SWORDS ENEMIES AND ARMOR
+        int shieldsCollected = selection
+            .Where((o) => o.tileType == TileType.Shield)
+            .ToList().Count;
         int swordsCollected = selection
             .Where((o) => o.tileType == TileType.Sword)
             .ToList().Count;
         
         if (swordsCollected > 0) {
-            Player.ApplySwords(swordsCollected);
-        }
-
-        List<Tile> enemies = selection
-            .Where((o) => o.tileType == TileType.Monster).ToList();
-
-        if (healthGained != 0)
-        {
-            ApplyHpChange(healthGained);
-            OnHeartsCollected?.Invoke(healthGained);
-        }
-        if (poisonGained != 0) {
-            ApplyPoisonChanged(poisonGained);
-            OnPoisonCollected?.Invoke(poisonGained);
-        }
-
-        if (swordsCollected > 0)
-        {
             OnSwordsCollected?.Invoke(swordsCollected);
         }
+        
+        List<Tile> enemiesInSelection = selection
+            .Where((o) => o.tileType == TileType.Monster).ToList();
 
-        if (armorGained != 0 && enemies.Count == 0)
+        if (shieldsCollected != 0 && enemiesInSelection.Count == 0)
         {
-            ApplyArmorChange(armorGained);
-            OnShieldsCollected?.Invoke(armorGained);
+            CollectionResult result = Player.CollectShields(shieldsCollected);
+            OnShieldsCollected?.Invoke(result.Earned + result.BonusGained);
         }
     
-        if (enemies.Count > 0 && armorGained > 0) {
+        if (enemiesInSelection.Count > 0 && shieldsCollected > 0) {
             OnEnemyStunned?.Invoke();
         }
 
-        int damageDealt = swordsCollected * Player.Damage;
+        int damageDealt = Player.CalcDamageDone(swordsCollected);
 
-        foreach (Tile monster in enemies)
+        foreach (Tile monster in enemiesInSelection)
         {
-            monster.TakeDamage(damageDealt, DamageSource.SwordAttack);
-            if (armorGained > 0) {
-                monster.Stun();
-            }
-            CheckIfMonsterDied(monster);
+            monster.TakeDamage(damageDealt, Player.TotalStats.ArmorPiercing);
+        }
+
+        int killCount = enemiesInSelection.Where((o) => !o.isAlive()).Count();
+        if (killCount > 0) {
+            OnMonsterKillsEarned?.Invoke(killCount);
+            CollectionResult result = Player.CollectKilledMonsters(killCount);
+            OnExperienceGained?.Invoke(result.Earned + result.BonusGained);
         }
 
         OnPlayerCollectedTiles?.Invoke(selection);
     }
 
-    void CheckIfMonsterDied(Tile monster) {
-        if (!monster.isAlive()) {
-            OnMonsterKill();
-        }
-    }
-    void OnMonsterKill()
-    {
-        Kills += 1;
-        OnMonsterKillEarned?.Invoke();
-        if (Kills >= ctx.Stage.KillRequirement())
-        {
-            BoardComplete = true;
-            OnWin?.Invoke(Player);
-        }
-    }
-
-    void ClearTiles(List<Tile> clearedTiles)
+    void TagTilesForCollection(List<Tile> clearedTiles)
     {
         foreach(Tile t in clearedTiles)
         {
@@ -394,6 +383,9 @@ public class GameBoard
             t.Dropdown();
         }
 
-        tile.ClearAndDropTileAs(tileSelector.GetNextTile());
+        TileType newTileType = tileSelector.GetNextTile();
+        tile.CurrentMonster = monsterSelector.NextMonster(Player.Level);
+
+        tile.ClearAndDropTileAs(newTileType);
     }
 }
