@@ -85,9 +85,9 @@ public class StatSheet
         ItemSlot affectedSlot = enchantment.Slot;
         PlayerItem unenchantedItem = GetItemInInventorySlot(affectedSlot);
         Inventory[affectedSlot] = PlayerItem.Reduce(enchantment, unenchantedItem);
-        addHpWithoutNegative(enchantment.HitPoints);
 
         ResetTotalStats();
+        addHpWithoutNegative(enchantment.HitPoints);
     }
 
     internal void AddItemToInventory(PlayerItem newItem) {
@@ -95,17 +95,17 @@ public class StatSheet
         PlayerItem oldItem = GetItemInInventorySlot(affectedSlot);
         Inventory[affectedSlot] = newItem;
         int hpDiff = newItem.HitPoints - oldItem.HitPoints;
-        addHpWithoutNegative(hpDiff);
 
         ResetTotalStats();
+        addHpWithoutNegative(hpDiff);
     }
 
     internal void AddSkillupsToInventory(List<PlayerSkillup> skillups) {
         Skillups.AddRange(skillups);
         PlayerSkillup combinedSkillup = PlayerSkillup.Reduce(skillups.ToArray());
-        addHpWithoutNegative(combinedSkillup.HitPoints);
 
         ResetTotalStats();
+        addHpWithoutNegative(combinedSkillup.HitPoints);
     }
 
     internal DamageResult TakeDamage(int damageReceived, int attackerArmorPiercing = 0) {
