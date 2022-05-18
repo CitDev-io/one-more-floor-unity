@@ -50,7 +50,7 @@ jobs:
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: webgl
-          ITCH_GAME: untitled-game-01
+          ITCH_GAME: one-more-floor
           ITCH_USER: citizendevelopers
           PACKAGE: build
       - name: Get current date
@@ -61,7 +61,7 @@ jobs:
         with:
           url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ/messages/957827084439396422
           method: PATCH
-          payload: '{"content": ":spider_web: **WEBGL BUILD**\nLast update: ${{ steps.date.outputs.date }}\n\nLatest internal version on Itch at https://citizendevelopers.itch.io/untitled-game-01\n\n-"}'
+          payload: '{"content": ":spider_web: **WEBGL BUILD**\nLast update: ${{ steps.date.outputs.date }}\n\nLatest internal version on Itch at https://citizendevelopers.itch.io/one-more-floor\n\n-"}'
       
       - name: Chirp Discord, Specific Thread
         uses: satak/webrequest-action@master
