@@ -14,6 +14,6 @@ public class UI_GearPointText : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = $"{_rc.Board.Player.GearPoints} / {_rc.Board.Player.GearGoal}";
+        _txt.text = $"{_rc.Board.State.Player.GearPoints} / {_rc.Board.State.Player.GearGoal}";
     }
 }

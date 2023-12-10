@@ -10,7 +10,6 @@ public class GridInputManager : MonoBehaviour
     bool Dragging = false;
     List<GameTile> subbedTiles = new List<GameTile>();
 
-
     public void AttachTileToGrid(GameTile tile) {
         tile.OnTileClick += HandleTileClick;
         tile.OnTileHoverEnter += HandleTileHoverEnter;

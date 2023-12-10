@@ -15,7 +15,7 @@ public class GridGameManager : MonoBehaviour
     GridInputManager _gim;
 
     bool RoundHasEnded = false;
-    public GameBoard Board;
+    public TileGame Board;
 
     [SerializeField] GameObject dmgPrefab;
     [SerializeField] GameObject hpPrefab;
@@ -25,24 +25,24 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] GameObject floaterParent;
     [SerializeField] Transform floaterPositionRef;
     [SerializeField] Transform SelectionCountDoodad;
-    [SerializeField] GameObject ItemShopMenu;
-    [SerializeField] GameObject EnchantmentShopMenu;
-    [SerializeField] GameObject XPShopMenu;
+    // [SerializeField] GameObject ItemShopMenu;
+    // [SerializeField] GameObject EnchantmentShopMenu;
+    // [SerializeField] GameObject XPShopMenu;
 
-    public void SelectItemShopAtIndex(int index) {
-        Debug.Log("ITEM");
-        Board.ItemShopPurchase(index);
-    }
+    // public void SelectItemShopAtIndex(int index) {
+    //     Debug.Log("ITEM");
+    //     Board.ItemShopPurchase(index);
+    // }
 
-    public void SelectionEnchantmentShopOptionAtIndex(int index) {
-        Debug.Log("ENCHANTMENT");
-        Board.EnchantmentShopPurchase(index);
-    }
+    // public void SelectionEnchantmentShopOptionAtIndex(int index) {
+    //     Debug.Log("ENCHANTMENT");
+    //     Board.EnchantmentShopPurchase(index);
+    // }
 
-    public void SelectionXPShopOptionsAtIndexes(List<int> indexes) {
-        Debug.Log("XP STUFF");
-        Board.LevelUpPurchase(indexes);
-    }
+    // public void SelectionXPShopOptionsAtIndexes(List<int> indexes) {
+    //     Debug.Log("XP STUFF");
+    //     Board.LevelUpPurchase(indexes);
+    // }
 
     void FloatExp(int xp) {
         var go = Instantiate(
@@ -102,9 +102,20 @@ public class GridGameManager : MonoBehaviour
     {
         _gc = FindObjectOfType<GameController_DDOL>();
         _gim = gameObject.GetComponent<GridInputManager>();
-        Board = new GameBoard();
+        // Board = new TileGame();
 
-        foreach (Tile tile in Board.Tiles) {
+        // GameObject boardMakerPrefab = Resources.Load<GameObject>("Prefabs/BoardMaker");
+        // GameObject go = Instantiate(
+        //     boardMakerPrefab
+        // );
+        // _brdMaker = go.GetComponent<BoardMaker>();
+        // uiTileRef = _brdMaker.CreateBoard(Board.State.Tiles.TileList, 6, 6);
+        // foreach (UITile uitile in uiTileRef) {
+        //     _gim.AttachUITile(uitile);
+        // }
+        Board = new TileGame();
+
+        foreach (Tile tile in Board.State.Tiles.TileList) {
             GameObject tilePrefab = Resources.Load<GameObject>("Prefabs/Tile");
             GameObject go = Instantiate(
                 tilePrefab,
@@ -115,48 +126,48 @@ public class GridGameManager : MonoBehaviour
             gt.AttachToTile(tile);
             _gim.AttachTileToGrid(gt);
         }
-        Board.OnPlayerCollectedTiles += HandlePlayerCollectedTiles;
-        Board.OnTileAddedToSelection += HandleTileAddedToSelection;
-        Board.OnSelectionChange += HandleSelectionChange;
-        Board.OnMonstersAttack += HandleMonstersAttack;
-        Board.OnCoinCollected += HandleCoinCollected;
-        Board.OnPotionsCollected += HandlePotionsCollected;
-        Board.OnShieldsCollected += HandleShieldsCollected;
-        Board.OnSwordsCollected += HandleSwordsCollected;
-        Board.OnEnemyStunned += HandleMonsterStunned;
-        Board.OnMonsterKillsEarned += HandleMonsterKillEarned;
-        Board.OnExperienceGained += HandleExperienceGained;
-        Board.OnLose += HandleLose;
-        Board.OnPhaseChange += HandlePhaseChange;
-        _gim.OnUserDragIndicatingTile += Board.UserIndicatingTile;
-        _gim.OnUserStartSelection += Board.UserStartSelection;
-        _gim.OnUserEndSelection += Board.UserEndSelection;
-        Board.OnGoldGoalReached += HandleGoldGoalReached;
-        Board.OnDefenseGoalReached += HandleDefenseGoalReached;
-        Board.OnExperienceGoalReached += HandleExperienceGoalReached;
-        Board.OnDebugLog += HandleDebugLog;
+        Board.Events.OnPlayerCollectedTiles += HandlePlayerCollectedTiles;
+        Board.Events.OnTileAddedToSelection += HandleTileAddedToSelection;
+        Board.Events.OnSelectionChange += HandleSelectionChange;
+        Board.Events.OnMonstersAttack += HandleMonstersAttack;
+        Board.Events.OnCoinCollected += HandleCoinCollected;
+        Board.Events.OnPotionsCollected += HandlePotionsCollected;
+        Board.Events.OnShieldsCollected += HandleShieldsCollected;
+        Board.Events.OnSwordsCollected += HandleSwordsCollected;
+        Board.Events.OnEnemyStunned += HandleMonsterStunned;
+        Board.Events.OnMonsterKillsEarned += HandleMonsterKillEarned;
+        Board.Events.OnExperienceGained += HandleExperienceGained;
+        Board.Events.OnLose += HandleLose;
+        Board.Events.OnPhaseChange += HandlePhaseChange;
+        _gim.OnUserDragIndicatingTile += Board.Input.UserIndicatingTile;
+        _gim.OnUserStartSelection += Board.Input.UserStartSelection;
+        _gim.OnUserEndSelection += Board.Input.UserEndSelection;
+        // Board.OnGoldGoalReached += HandleGoldGoalReached;
+        // Board.OnDefenseGoalReached += HandleDefenseGoalReached;
+        // Board.OnExperienceGoalReached += HandleExperienceGoalReached;
+        Board.Events.OnDebugLog += HandleDebugLog;
     }
 
     void OnDestroy() {
         if (Board == null) return;
         
-        Board.OnPlayerCollectedTiles -= HandlePlayerCollectedTiles;
-        Board.OnTileAddedToSelection -= HandleTileAddedToSelection;
-        Board.OnSelectionChange -= HandleSelectionChange;
-        Board.OnMonstersAttack -= HandleMonstersAttack;
-        Board.OnCoinCollected -= HandleCoinCollected;
-        Board.OnPotionsCollected -= HandlePotionsCollected;
-        Board.OnShieldsCollected -= HandleShieldsCollected;
-        Board.OnSwordsCollected -= HandleSwordsCollected;
-        Board.OnEnemyStunned -= HandleMonsterStunned;
-        Board.OnMonsterKillsEarned -= HandleMonsterKillEarned;
-        Board.OnExperienceGained -= HandleExperienceGained;
-        Board.OnLose -= HandleLose;
-        Board.OnPhaseChange -= HandlePhaseChange;
-        Board.OnGoldGoalReached -= HandleGoldGoalReached;
-        Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
-        Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
-        Board.OnDebugLog -= HandleDebugLog;
+        Board.Events.OnPlayerCollectedTiles -= HandlePlayerCollectedTiles;
+        Board.Events.OnTileAddedToSelection -= HandleTileAddedToSelection;
+        Board.Events.OnSelectionChange -= HandleSelectionChange;
+        Board.Events.OnMonstersAttack -= HandleMonstersAttack;
+        Board.Events.OnCoinCollected -= HandleCoinCollected;
+        Board.Events.OnPotionsCollected -= HandlePotionsCollected;
+        Board.Events.OnShieldsCollected -= HandleShieldsCollected;
+        Board.Events.OnSwordsCollected -= HandleSwordsCollected;
+        Board.Events.OnEnemyStunned -= HandleMonsterStunned;
+        Board.Events.OnMonsterKillsEarned -= HandleMonsterKillEarned;
+        Board.Events.OnExperienceGained -= HandleExperienceGained;
+        Board.Events.OnLose -= HandleLose;
+        Board.Events.OnPhaseChange -= HandlePhaseChange;
+        // Board.OnGoldGoalReached -= HandleGoldGoalReached;
+        // Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
+        // Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
+        Board.Events.OnDebugLog -= HandleDebugLog;
     }
 
     void HandleDebugLog(string msg) {
@@ -173,15 +184,15 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleExperienceGoalReached() {
-        XPShopMenu.SetActive(true);
+        // XPShopMenu.SetActive(true);
     }
 
     void HandleGoldGoalReached() {
-        ItemShopMenu.SetActive(true);
+        // ItemShopMenu.SetActive(true);
     }
 
     void HandleDefenseGoalReached() {
-        EnchantmentShopMenu.SetActive(true);
+        // EnchantmentShopMenu.SetActive(true);
     }
 
 
@@ -201,9 +212,10 @@ public class GridGameManager : MonoBehaviour
 
     void HandleSelectionChange(List<Tile> selection) {
         _lr.positionCount = selection.Count;
-        _lr.SetPositions(
-            selection.Select((o) => o.GridPosition()).ToArray()
-        );
+        
+        List<Vector3> positionList = selection.Select(o => new Vector3(o.col, o.row, 0f)).ToList();
+        _lr.SetPositions(positionList.ToArray());
+
 
         if (selection.Count == 0) {
             SelectionCountDoodad.gameObject.SetActive(false);
@@ -218,15 +230,15 @@ public class GridGameManager : MonoBehaviour
             int shieldCount = selection.Where((o) => o.tileType == TileType.Shield).ToList().Count;
 
             if (swordCount > 0) {
-                circleText = $"{Board.Player.CalcDamageDone(swordCount)}D";
+                circleText = $"{Board.State.Player.CalcDamageDone(swordCount)}D";
             }
 
             if (potionCount > 0) {
-                circleText = $"{Board.Player.CalcHealingDone(potionCount)}H";
+                circleText = $"{Board.State.Player.CalcHealingDone(potionCount)}H";
             }
 
             if (shieldCount > 0) {
-                circleText = $"{Board.Player.CalcArmorGained(shieldCount)}A";
+                circleText = $"{Board.State.Player.CalcArmorGained(shieldCount)}A";
             }
             
             SelectionCountDoodad.GetComponent<DOODAD_SelectionCount>().SetText(circleText);
@@ -290,7 +302,7 @@ public class GridGameManager : MonoBehaviour
 
     IEnumerator LoseRoutine()
     {
-        _gc.PreviousRoundMoves = Board.MovesMade;
+        _gc.PreviousRoundMoves = Board.State.MovesMade;
         yield return new WaitForSeconds(0.2f);
         _gc.ChangeScene("GameOver");
     }

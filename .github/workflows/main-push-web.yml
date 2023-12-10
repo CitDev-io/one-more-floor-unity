@@ -24,20 +24,26 @@ jobs:
           restore-keys: |
             Library-
 
-      # Test
-     #- name: Run tests
-     #   uses: game-ci/unity-test-runner@v2
-     #   env:
-     #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-     #   with:
-     #     githubToken: ${{ secrets.GITHUB_TOKEN }}
-      # Build
-      - name: Build and Transpile to Javascript for WebGL Build
+    # Notification 1
+      - name: Discord Notify Start
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: https://discord.com/api/webhooks/1183465356099080316/YwzEopsgWpM1FVcEWwTJ-Cvc9AhXOCRwtuEihuqox1VhcOuZ8KvlMXuItviIulaEOC92
+          content: ":wrench: **Building WebGL Commit** A new WebGL build started on `main` branch for the `one-more-floor` project. I'll let you know how it goes!"
+
+      - name: Build and Transpile to WebGL
         uses: game-ci/unity-builder@v2
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           targetPlatform: WebGL
+
+      - name: Fail Notification
+        if: ${{ failure() }}
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: https://discord.com/api/webhooks/1183465356099080316/YwzEopsgWpM1FVcEWwTJ-Cvc9AhXOCRwtuEihuqox1VhcOuZ8KvlMXuItviIulaEOC92
+          content: ":x: **WebGL build failed** Failed. hmmm. Maybe some god forsaken circles got in there and messed everything up."
 
       # Output
       - uses: actions/upload-artifact@v2
@@ -53,19 +59,9 @@ jobs:
           ITCH_GAME: one-more-floor
           ITCH_USER: citizendevelopers
           PACKAGE: build
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - name: Chirp Discord Build Channel
-        uses: satak/webrequest-action@master
+      # Notification 2
+      - name: Discord Notify Complete
+        uses: tsickert/discord-webhook@v5.3.0
         with:
-          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ/messages/957827084439396422
-          method: PATCH
-          payload: '{"content": ":spider_web: **WEBGL BUILD**\nLast update: ${{ steps.date.outputs.date }}\n\nLatest internal version on Itch at https://citizendevelopers.itch.io/one-more-floor\n\n-"}'
-      
-      - name: Chirp Discord, Specific Thread
-        uses: satak/webrequest-action@master
-        with:
-          url: https://discord.com/api/webhooks/957785581411254272/agK5qWeU1jjOwmNs63ilT57iaESsre7KgE6mlRNaTeej6ImfXs3rNkawUNpqsr5ce_QZ?thread_id=957830908470231071
-          method: POST
-          payload: '{"content": "`${{ github.event.commits[0].author.username }}` created `main` branch commit\n${{ github.event.commits[0].url }}\n\n*updating on webgl build now*"}'
+          webhook-url: https://discord.com/api/webhooks/1183465356099080316/YwzEopsgWpM1FVcEWwTJ-Cvc9AhXOCRwtuEihuqox1VhcOuZ8KvlMXuItviIulaEOC92
+          content: ":white_check_mark: **WebGL build complete** a new build is available at https://citizendevelopers.itch.io/one-more-floor"

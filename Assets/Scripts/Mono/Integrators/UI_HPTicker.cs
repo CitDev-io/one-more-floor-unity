@@ -14,6 +14,6 @@ public class UI_HPTicker : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = _rc.Board.Player.Hp + " / " + _rc.Board.Player.CalcMaxHp();
+        _txt.text = _rc.Board.State.Player.Hp + " / " + _rc.Board.State.Player.CalcMaxHp();
     }
 }

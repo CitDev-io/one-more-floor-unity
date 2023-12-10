@@ -8,10 +8,10 @@ public abstract class ChainValidator
     protected List<Tile> Selection;
 
 
-    protected abstract bool moreIsSelectionFinishable();
+    protected abstract bool moreIsChainFinishable();
     protected abstract bool moreIsChainable(Tile first, Tile next);
 
-    public bool isSelectionFinishable()
+    public bool isChainFinishable()
     {
         if (Selection.Count < 3) return false;
 
@@ -19,10 +19,10 @@ public abstract class ChainValidator
             return false;
         }
         
-        return moreIsSelectionFinishable();
+        return moreIsChainFinishable();
     }
 
-    public bool isEligibleToAddToSelection(Tile tile)
+    public bool isEligibleToAddToChain(Tile tile)
     {
         if (Selection.Count == 0)
         {
@@ -92,12 +92,21 @@ public abstract class ChainValidator
     bool isChainable(Tile first, Tile next)
     {
         TileType[] attackChainTiles = new TileType[] { TileType.Sword, TileType.Monster };
+        TileType[] goldChainTiles = new TileType[] { TileType.Coin, TileType.Treasure };
         if (first.tileType == next.tileType) return true;
 
         if (
             attackChainTiles.Contains(first.tileType)
             && attackChainTiles.Contains(next.tileType)
             && Selection.All((o) => attackChainTiles.Contains(o.tileType))
+        ) {
+            return true;
+        }
+
+        if (
+            goldChainTiles.Contains(first.tileType)
+            && goldChainTiles.Contains(next.tileType)
+            && Selection.All((o) => goldChainTiles.Contains(o.tileType))
         ) {
             return true;
         }

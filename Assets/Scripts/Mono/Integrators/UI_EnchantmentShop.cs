@@ -21,12 +21,12 @@ public class UI_EnchantmentShop : MonoBehaviour
     }
 
     void OnEnable() {
-        if (_rc.Board.EnchantmentShopOptions != null && _rc.Board.EnchantmentShopOptions.Length == 4) {
-            Option1.setDisplayItem(_rc.Board.EnchantmentShopOptions[0]);
-            Option2.setDisplayItem(_rc.Board.EnchantmentShopOptions[1]);
-            Option3.setDisplayItem(_rc.Board.EnchantmentShopOptions[2]);
-            Option4.setDisplayItem(_rc.Board.EnchantmentShopOptions[3]);
-        }
+        // // if (_rc.Board.EnchantmentShopOptions != null && _rc.Board.EnchantmentShopOptions.Length == 4) {
+        //     Option1.setDisplayItem(_rc.Board.EnchantmentShopOptions[0]);
+        //     Option2.setDisplayItem(_rc.Board.EnchantmentShopOptions[1]);
+        //     Option3.setDisplayItem(_rc.Board.EnchantmentShopOptions[2]);
+        //     Option4.setDisplayItem(_rc.Board.EnchantmentShopOptions[3]);
+        // }
     }
 
     private void Awake()
@@ -40,7 +40,7 @@ public class UI_EnchantmentShop : MonoBehaviour
     }
 
     public void ClickItemShopConfirm(){
-        _rc.SelectionEnchantmentShopOptionAtIndex(selectedItemIndex);
+        // _rc.SelectionEnchantmentShopOptionAtIndex(selectedItemIndex);
         selectedItemIndex = -1;
     }
 }

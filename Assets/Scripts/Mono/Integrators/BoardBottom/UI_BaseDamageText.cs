@@ -14,6 +14,6 @@ public class UI_BaseDamageText : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = "+" + _rc.Board.Player.CalcBaseDamage();
+        _txt.text = "+" + _rc.Board.State.Player.CalcBaseDamage();
     }
 }

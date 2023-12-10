@@ -27,7 +27,7 @@ public class UI_GearInspector : MonoBehaviour
 
     public void InspectInventoryAtSlot(string slot) {
         ItemSlot affectedSlot = Enum.Parse<ItemSlot>(slot);
-        PlayerItem item = _rc.Board.Player.GetItemInInventorySlot(affectedSlot);
+        PlayerItem item = _rc.Board.State.Player.GetItemInInventorySlot(affectedSlot);
         ItemTitle.text = item.Name.ToUpper();
         ItemDesc.text = item.Description.ToUpper();
         ItemStats.text = item.SummaryStats();

@@ -8,13 +8,15 @@ public class Tile
     public NoParamDelegate OnUnstunned;
     public NoParamDelegate OnDoAttack;
     public SourcedDamageDelegate OnDamageTaken;
+    public IntDelegate OnSelectionChange;
+    public IntDelegate OnSurvivedRound;
     public TileType tileType { get; private set; }
 
     public StatSheet CurrentMonster { get; internal set; } = new StatSheet();
     int StunnedRounds = 0;
     public int TurnsAlive { get; private set; } = 0;
     public bool IsBeingCollected { get; internal set; } = false;
-    public int selectedAgainstDamage { get; internal set; } = 0;
+    public int selectedAgainstDamage { get; private set; } = 0;
 
     public Tile(int x, int y, StatSheet enemy, TileType tt)
     {
@@ -51,6 +53,7 @@ public class Tile
 
     internal void AgeUp() {
         TurnsAlive += 1;
+        OnSurvivedRound?.Invoke(TurnsAlive);
         StunnedRounds -= 1;
 
         if (StunnedRounds == 0) {
@@ -69,6 +72,11 @@ public class Tile
 
     internal void DoAttack() {
         OnDoAttack?.Invoke();
+    }
+
+    internal void SetSelectedDmg(int dmg) {
+        selectedAgainstDamage = dmg;
+        OnSelectionChange?.Invoke(dmg);
     }
 
     /*
@@ -92,7 +100,7 @@ public class Tile
     }
 
     public bool wasAliveBeforeLastUserAction() {
-        return TurnsAlive > 0;
+        return TurnsAlive > 1;
     }
 
 

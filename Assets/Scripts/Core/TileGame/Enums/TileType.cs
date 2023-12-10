@@ -5,5 +5,6 @@ public enum TileType
     Shield,
     Sword,
     Monster,
-    Poison
+    Poison,
+    Treasure
 }

@@ -69,11 +69,11 @@ public class GameTile : MonoBehaviour
 
         bool isMonster = _tile.tileType == TileType.Monster;
         label1.text = isMonster ? _tile.IsBeingCollected ? "C" : _tile.CurrentMonster.Hp + "" : "";
-        label2.text = isMonster ? _tile.CurrentMonster.Armor + "" : "";
+        label2.text = isMonster ? _tile.TurnsAlive + "" : "";
         label3.text = isMonster ? _tile.CurrentMonster.CalcBaseDamage() + "" : "";
         xoutlabel.gameObject.SetActive(isMonster && _tile.selectedAgainstDamage >= _tile.CurrentMonster.Hp);
 
-        if (isMonster && _tile.TurnsAlive == 1) {
+        if (isMonster && _tile.TurnsAlive > 1) {
             sr.sprite = Resources.Load<Sprite>("Tiles/" + _tile.tileType + "2");
         }
     }

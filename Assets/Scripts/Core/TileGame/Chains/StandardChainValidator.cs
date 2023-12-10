@@ -3,11 +3,11 @@ using System.Linq;
 
 public class StandardChainValidator : ChainValidator
 {
-    public StandardChainValidator(List<Tile> tiles, List<Tile> selection) {
-        Tiles = tiles;
+    public StandardChainValidator(ITileGridProvider tgp, List<Tile> selection) {
+        Tiles = tgp.GetTiles().TileList;
         Selection = selection;
     }
-    protected override bool moreIsSelectionFinishable() {
+    protected override bool moreIsChainFinishable() {
         return true;
     }
     protected override bool moreIsChainable(Tile first, Tile next) {

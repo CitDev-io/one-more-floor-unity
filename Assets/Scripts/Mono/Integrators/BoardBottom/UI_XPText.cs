@@ -14,6 +14,6 @@ public class UI_XPText : MonoBehaviour
     private void OnGUI()
     {
         if (_rc.Board == null) return;
-        _txt.text = _rc.Board.Player.ExperiencePoints + " / " + _rc.Board.Player.ExperienceGoal;
+        _txt.text = _rc.Board.State.Player.ExperiencePoints + " / " + _rc.Board.State.Player.ExperienceGoal;
     }
 }

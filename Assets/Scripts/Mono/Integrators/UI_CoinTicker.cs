@@ -13,6 +13,6 @@ public class UI_CoinTicker : MonoBehaviour
     }
     private void OnGUI() {
         if (_rc.Board == null) return;
-        _txt.text = _rc.Board.Player.Gold + " / " + _rc.Board.Player.GoldGoal;
+        _txt.text = _rc.Board.State.Player.Gold + " / " + _rc.Board.State.Player.GoldGoal;
     }
 }

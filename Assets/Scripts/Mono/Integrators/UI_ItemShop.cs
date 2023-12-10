@@ -18,16 +18,16 @@ public class UI_ItemShop : MonoBehaviour
             selectedItemIndex = -1;
         } else {
             selectedItemIndex = index;
-            Replaces1.setDisplayItem(_rc.Board.Player.GetItemInInventorySlot(_rc.Board.ItemShopOptions[index].Slot));
+            // Replaces1.setDisplayItem(_rc.Board.Player.GetItemInInventorySlot(_rc.Board.ItemShopOptions[index].Slot));
         }
     }
 
     void OnEnable() {
-        if (_rc.Board.ItemShopOptions != null && _rc.Board.ItemShopOptions.Length == 3) {
-            Option1.setDisplayItem(_rc.Board.ItemShopOptions[0]);
-            Option2.setDisplayItem(_rc.Board.ItemShopOptions[1]);
-            Option3.setDisplayItem(_rc.Board.ItemShopOptions[2]);
-        }
+        // if (_rc.Board.ItemShopOptions != null && _rc.Board.ItemShopOptions.Length == 3) {
+        //     Option1.setDisplayItem(_rc.Board.ItemShopOptions[0]);
+        //     Option2.setDisplayItem(_rc.Board.ItemShopOptions[1]);
+        //     Option3.setDisplayItem(_rc.Board.ItemShopOptions[2]);
+        // }
     }
 
     private void Awake()
@@ -42,7 +42,7 @@ public class UI_ItemShop : MonoBehaviour
     }
 
     public void ClickItemShopConfirm(){
-        _rc.SelectItemShopAtIndex(selectedItemIndex);
+        // _rc.SelectItemShopAtIndex(selectedItemIndex);
         selectedItemIndex = -1;
     }
 }

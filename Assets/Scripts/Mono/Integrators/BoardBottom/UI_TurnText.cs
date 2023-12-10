@@ -15,6 +15,6 @@ public class UI_TurnText : MonoBehaviour
         if (_rc.Board == null) return;
 
         var b = _rc.Board;
-        _txt.text = $"TURN {b.MovesMade + 1}";
+        _txt.text = $"TURN {b.State.MovesMade + 1}";
     }
 }

@@ -23,13 +23,13 @@ public class UI_XPShop : MonoBehaviour
     }
 
     void OnEnable() {
-        if (_rc.Board.XPShopOptions != null && _rc.Board.XPShopOptions.Length == 4) {
-            selectedItemIndexes.Clear();
-            Options[0].setDisplayOption(_rc.Board.XPShopOptions[0]);
-            Options[1].setDisplayOption(_rc.Board.XPShopOptions[1]);
-            Options[2].setDisplayOption(_rc.Board.XPShopOptions[2]);
-            Options[3].setDisplayOption(_rc.Board.XPShopOptions[3]);
-        }
+        // if (_rc.Board.XPShopOptions != null && _rc.Board.XPShopOptions.Length == 4) {
+        //     selectedItemIndexes.Clear();
+        //     Options[0].setDisplayOption(_rc.Board.XPShopOptions[0]);
+        //     Options[1].setDisplayOption(_rc.Board.XPShopOptions[1]);
+        //     Options[2].setDisplayOption(_rc.Board.XPShopOptions[2]);
+        //     Options[3].setDisplayOption(_rc.Board.XPShopOptions[3]);
+        // }
     }
 
     private void Awake()
@@ -43,7 +43,7 @@ public class UI_XPShop : MonoBehaviour
     }
 
     public void ClickXPShopConfirm(){
-        _rc.SelectionXPShopOptionsAtIndexes(selectedItemIndexes);
+        // _rc.SelectionXPShopOptionsAtIndexes(selectedItemIndexes);
         selectedItemIndexes.Clear();
     }
 }
