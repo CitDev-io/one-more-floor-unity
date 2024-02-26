@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Spine.Unity;
+using UnityEngine.EventSystems;
 
 public delegate void ActingTileDelegate(GameTile tile);
 
@@ -12,10 +13,10 @@ public class GameTile : MonoBehaviour
 
     [Header("Plumbing")]
     [SerializeField] SpriteRenderer sr;
-    [SerializeField] public TextMeshProUGUI label1;
-    [SerializeField] public TextMeshProUGUI label2;
-    [SerializeField] public TextMeshProUGUI label3;
-    [SerializeField] public TextMeshProUGUI xoutlabel;
+    [SerializeField] public TextMeshPro label1;
+    [SerializeField] public TextMeshPro label2;
+    [SerializeField] public TextMeshPro label3;
+    [SerializeField] public TextMeshPro xoutlabel;
     [SerializeField] GameObject MonsterFace;
 
     [Space(25)]
@@ -110,6 +111,9 @@ public class GameTile : MonoBehaviour
 
     void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) {
+            return;
+        }
         OnTileClick?.Invoke(this);
     }
     void OnMouseEnter()

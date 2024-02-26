@@ -1,5 +1,33 @@
 # WILO
 
+### 2-25-24
+ok, worth noting: any time the user is taking some action against game state, we should be
+getting that through the inputmanager. the plumbing is good if we keep these all together.
+
+onchainstart, onchainend, selectPurchaseItem etc etc
+
+
+
+### 2-19-24
+Game is in the mental buffer for the first time in 6 months.
+
+Looks like i did a pretty good job stripping it down to the metal.
+
+- SurfaceEvents vs DomainEvents aren't super obvious. I suspect DE's need to fire in order and SE's are just for UI purposes, but I wonder if DE's skipping the line is what we truly want.
+
+- In a recent game, i had events fire EARLY, execute, LATE and i don't think i used it. Might come up here, worth remembering.
+
+- Chicken and the Egg game is on full display with dependency mapping in the TileGame. I think everything is well done here, though.
+
+- Really dunno what to make of DomainEvents ngl
+
+- I think this is in a good place to start in on.
+
+- Phase resolution needs love. it's a bit of a domino system and doesn't leave obvious room for variation.
+
+- First thing's first: Get the upgrade windows firing and adjusting the stat sheet!
+
+
 - Adventurer, Ranger, Druid, Rogue, Paladin, Wizard/Mage, Warlock, Cleric/Priest
 
 ### 8-13-23

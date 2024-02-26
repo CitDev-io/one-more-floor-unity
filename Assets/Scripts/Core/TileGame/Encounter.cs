@@ -16,8 +16,7 @@ public class Encounter
             TileType.Shield,
             TileType.Sword,
             TileType.Potion,
-            TileType.Coin,
-            TileType.Treasure
+            TileType.Coin
         });
         this.monsterSelector = new MonsterSelector();
     }

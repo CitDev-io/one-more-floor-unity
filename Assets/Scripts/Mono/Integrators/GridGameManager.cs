@@ -139,9 +139,11 @@ public class GridGameManager : MonoBehaviour
         Board.Events.OnExperienceGained += HandleExperienceGained;
         Board.Events.OnLose += HandleLose;
         Board.Events.OnPhaseChange += HandlePhaseChange;
-        _gim.OnUserDragIndicatingTile += Board.Input.UserIndicatingTile;
-        _gim.OnUserStartSelection += Board.Input.UserStartSelection;
-        _gim.OnUserEndSelection += Board.Input.UserEndSelection;
+
+        // even if its a simple call through, ALWAYS wrap this in a local handler
+        _gim.OnUserDragIndicatingTile += HandleUserIndicatingTile;
+        _gim.OnUserStartSelection += HandleUserStartSelection;
+        _gim.OnUserEndSelection += HandleUserEndSelection;
         // Board.OnGoldGoalReached += HandleGoldGoalReached;
         // Board.OnDefenseGoalReached += HandleDefenseGoalReached;
         // Board.OnExperienceGoalReached += HandleExperienceGoalReached;
@@ -169,6 +171,19 @@ public class GridGameManager : MonoBehaviour
         // Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
         Board.Events.OnDebugLog -= HandleDebugLog;
     }
+
+    void HandleUserIndicatingTile(Tile tile) {
+        Board.Input.UserIndicatingTile(tile);
+    }
+    
+    void HandleUserStartSelection(Tile tile) {
+        Board.Input.UserStartSelection(tile);
+    }
+
+    void HandleUserEndSelection() {
+        Board.Input.UserEndSelection();
+    }
+    
 
     void HandleDebugLog(string msg) {
         Debug.Log($">CORE< {msg}");
