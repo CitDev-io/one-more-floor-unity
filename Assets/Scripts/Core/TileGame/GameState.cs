@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 public class GameState : ITileGridProvider, IEventInvoker {
@@ -77,6 +78,19 @@ public class GameState : ITileGridProvider, IEventInvoker {
         //     new PhaseChangeEvent(p)
         // );
     }
+
+    public void ItemShopPurchase(int index) {
+        if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
+
+        // PlayerItem ItemPurchased = ItemShopOptions[index];
+        // Player.AddItemToInventory(ItemPurchased);
+        // Player.SpendDownCoins();
+        // ItemShopOptions = null;
+        
+        // Trip();
+        // Debug.("PURCHASE");
+        UnityEngine.Debug.Log("PURCHASE");
+    }
 }
 
 
@@ -93,16 +107,7 @@ public class GameState : ITileGridProvider, IEventInvoker {
     //     Trip();
     // }
 
-    // public void ItemShopPurchase(int index) {
-    //     if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
 
-    //     PlayerItem ItemPurchased = ItemShopOptions[index];
-    //     Player.AddItemToInventory(ItemPurchased);
-    //     Player.SpendDownCoins();
-    //     ItemShopOptions = null;
-        
-    //     Trip();
-    // }
 
     // public void EnchantmentShopPurchase(int index) {
     //     if (Phase != BoardPhase.ENCHANTMENTSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE SHOPPING");

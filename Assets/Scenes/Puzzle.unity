@@ -1696,6 +1696,7 @@ MonoBehaviour:
   floaterParent: {fileID: 2039224253}
   floaterPositionRef: {fileID: 258896607}
   SelectionCountDoodad: {fileID: 1458359901}
+  ItemShopMenu: {fileID: 0}
 --- !u!120 &185434371
 LineRenderer:
   serializedVersion: 2

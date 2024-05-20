@@ -25,14 +25,14 @@ public class GridGameManager : MonoBehaviour
     [SerializeField] GameObject floaterParent;
     [SerializeField] Transform floaterPositionRef;
     [SerializeField] Transform SelectionCountDoodad;
-    // [SerializeField] GameObject ItemShopMenu;
+    [SerializeField] GameObject ItemShopMenu;
     // [SerializeField] GameObject EnchantmentShopMenu;
     // [SerializeField] GameObject XPShopMenu;
 
-    // public void SelectItemShopAtIndex(int index) {
-    //     Debug.Log("ITEM");
-    //     Board.ItemShopPurchase(index);
-    // }
+    public void SelectItemShopAtIndex(int index) {
+        Debug.Log("ITEM");
+        Board.State.ItemShopPurchase(index);
+    }
 
     // public void SelectionEnchantmentShopOptionAtIndex(int index) {
     //     Debug.Log("ENCHANTMENT");
@@ -166,7 +166,7 @@ public class GridGameManager : MonoBehaviour
         Board.Events.OnExperienceGained -= HandleExperienceGained;
         Board.Events.OnLose -= HandleLose;
         Board.Events.OnPhaseChange -= HandlePhaseChange;
-        // Board.OnGoldGoalReached -= HandleGoldGoalReached;
+        Board.Events.OnGoldGoalReached -= HandleGoldGoalReached;
         // Board.OnDefenseGoalReached -= HandleDefenseGoalReached;
         // Board.OnExperienceGoalReached -= HandleExperienceGoalReached;
         Board.Events.OnDebugLog -= HandleDebugLog;
@@ -203,7 +203,7 @@ public class GridGameManager : MonoBehaviour
     }
 
     void HandleGoldGoalReached() {
-        // ItemShopMenu.SetActive(true);
+        ItemShopMenu.SetActive(true);
     }
 
     void HandleDefenseGoalReached() {
