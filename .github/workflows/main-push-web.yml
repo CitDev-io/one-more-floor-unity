@@ -12,12 +12,12 @@ jobs:
     steps:
       # Checkout
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           lfs: true
 
       # Cache
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
@@ -46,13 +46,13 @@ jobs:
           content: ":x: **WebGL build failed** Failed. hmmm. Maybe some god forsaken circles got in there and messed everything up."
 
       # Output
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Build
           path: build
 
       - name: Push WebGL Build to Itch.io
-        uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+        uses: josephbmanley/butler-publish-itchio-action@vmaster
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: webgl
