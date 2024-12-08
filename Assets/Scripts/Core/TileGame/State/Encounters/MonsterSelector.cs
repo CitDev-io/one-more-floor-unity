@@ -12,7 +12,7 @@ public class MonsterSelector
 
         int tier = 1;
         if (context != null) {
-            tier = context.MovesMade / 16;
+            tier = context.MovesMade / 50;
         }
         switch(tier) {
             case 1:
