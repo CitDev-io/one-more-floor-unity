@@ -11,6 +11,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
     {
         List<TileGameEvent> outputEvents = new ();
         currentState.MovesMade += 1;
+        // currentState.TilesCleared += Chain.Count;
 
         var tilesCollectedCountByType = Chain
             .GroupBy((o) => o.tileType)
@@ -104,7 +105,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
 
         currentState.PlayersTurn = false;
         currentState.Tiles.TagCollectibleTiles(Chain);
-        currentState.Tiles.FlushCollectedAndDeadTiles();
+        currentState.Tiles.FlushCollectedAndDeadTiles((ITileCollectorContext)currentState);
         currentState.SetPhase(BoardPhase.PLAYERTURN);
 
         outputEvents.Add(

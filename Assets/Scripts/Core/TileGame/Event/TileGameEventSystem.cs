@@ -11,6 +11,8 @@ public delegate void SourcedDamageDelegate(int damage);
 public delegate void PhaseDelegate(BoardPhase phase);
 public delegate void StringDelegate(string str);
 
+public delegate void TileGameDelegate(TileGameEvent gameEvent);
+
 public class TileGameEventSystem : IEventInvoker
 {
     public event TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
@@ -24,8 +26,10 @@ public class TileGameEventSystem : IEventInvoker
     public event DamageDelegate OnMonstersAttack;
     public event StatSheetDelegate OnLose;
     public event StringDelegate OnDebugLog;
+    public event TileGameDelegate OnRawEvent;
 
     public void Invoke(TileGameEvent gameEvent) {
+        OnRawEvent?.Invoke(gameEvent);
         switch(gameEvent) {
             case PlayerCollectedTilesEvent playerCollectedTilesEvent:
                 OnPlayerCollectedTiles?.Invoke(playerCollectedTilesEvent.Tiles);

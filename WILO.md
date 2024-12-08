@@ -1,5 +1,66 @@
 # WILO
 
+### 9-14
+let's get a level going and we can build out the layer above and between floors. Don't refactor early. Just build it:
+- Monster HP/DMG scale on a curve from 1 turn made to 220 turns made
+- 3 scheduled mini-bosses.
+- final boss
+- portals drop
+- player needs to scale
+
+
+### 9-4 
+- wrote a cool thing with chat that moves a rectTransform from A to B over time T. Can add archHeight A and offset angle of the arch O. if archheight is 0, no wasted calculations. This is a whole ass coroutine built into a single call. MoveTo(B, T, A) that can be yielded... this literally should be on the RectTransform class. no?
+- or could just be an outside actor, pass it a RectTransform and puppeteer it around. 
+- then the actor can't store and own the B/T/A numbers
+- if its owned on the actor, it could keep a list of pre-determined moves or accept a target at runtime. i like that best.
+- don't refactor too soon. move on.
+- need to consider a better apparatus for screen shake but its awesome, deal with the impl
+- BTA defined in public variables, also default values there... now my weights that i NEED to keep are being stored in the scene and not the code anywhere. that's a bitch. look into this and consider ScriptableObject for permanency during tweak sessions
+- thought; you could define enemy waves as a curve and modify in the editor
+- ok not done with the performmonstersattack.
+  - fade the shield when it doesn't get to bonk
+  - fade the attacker when it gets rejected
+  - time to get the bottom labels synced with the actors
+  - nearly finished. next to consider the collection performances and the attack performance
+  - maybe fade background for the monsters attack phase?
+- get the in-editor weights safely out of the scene
+- we have some reusable scripts, `MoveRectTransformAlongArch` and `Drift`
+- we cracked some eggs, a lot to clean up
+- refactors include:
+  - moving performance ienumerators in GGM into a more isolated, obvious file
+  - inheritable mono with `MoveRectTransformAlongArch` and `Drift`
+  - better interface with screen shake. love effect, hate impl
+  - BTAs in MRTAA should probably be serialized better
+  - Stage Roster orchestrator!! (parental layers for canvas rip)
+
+
+
+### 9-2 WILO
+- Back in the buffer
+- Working on `PerformMonstersAttack` Performance Coroutine currently living in GGM.
+- Monsters pop their numbers, its totalled
+- The armor shows up with accurate count
+- After delay the Armor Left and Dmg-to-HP values are showing
+
+- Need to do a bonk, chg numbers at bonk
+- flying armor result text to the left of shield, pierced, total shield rolls
+    - x 5 SHIELD
+    - x 2 BROKEN SHIELD
+    - x 1 REPAIR SHIELD
+- the bonk should get a reaction:
+    - if 0 dmg left, it stops quickly and rolls off and falls off screen
+    - if dmg left, bounce off and slam the HP bar, bouncing off screen
+- ** if no shields, should bonk from the top rope, skip bonking armor. maybe armor fades trying to move in the way of the dmg but is gone before it arrives
+
+
+THOUGHT: all movements could be animations as long as we know the bounds, root, and have mountable bones to attach UI elements like text boxes
+
+
+### Hello from 9-1-2024
+first draft readme to help with brain buffer next time..
+
+
 ### 2-25-24
 ok, worth noting: any time the user is taking some action against game state, we should be
 getting that through the inputmanager. the plumbing is good if we keep these all together.

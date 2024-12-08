@@ -39,7 +39,8 @@ public class MonsterTurnEvent : TileGameEvent, IDomainEvent {
         }
 
         currentState.PlayersTurn = true;
-        currentState.Tiles.FlushCollectedAndDeadTiles();
+        // if this wasn't an obvious red flag for refactoring **** REFACTOR THIS!
+        currentState.Tiles.FlushCollectedAndDeadTiles((ITileCollectorContext)currentState);
         currentState.SetPhase(BoardPhase.PLAYERTURN);
 
         return outputEvents;
