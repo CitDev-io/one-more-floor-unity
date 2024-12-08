@@ -29,12 +29,14 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: https://discord.com/api/webhooks/1183465356099080316/YwzEopsgWpM1FVcEWwTJ-Cvc9AhXOCRwtuEihuqox1VhcOuZ8KvlMXuItviIulaEOC92
-          content: ":wrench: **Building WebGL Commit** A new WebGL build started on `main` branch for the `one-more-floor` project. I'll let you know how it goes!"
+          content: ":wrench: **Building WebGL Commit** A new WebGL build started on `main` branch for the `one-more-floor` project. I'll let you know how it goes! I'm told we're celebrating `${{ github.event.head_commit.message}}`"
 
       - name: Build and Transpile to WebGL
-        uses: game-ci/unity-builder@v2
+        uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
 
@@ -64,4 +66,4 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: https://discord.com/api/webhooks/1183465356099080316/YwzEopsgWpM1FVcEWwTJ-Cvc9AhXOCRwtuEihuqox1VhcOuZ8KvlMXuItviIulaEOC92
-          content: ":white_check_mark: **WebGL build complete** a new build is available at https://citizendevelopers.itch.io/one-more-floor"
+          content: ":white_check_mark: **WebGL build complete** a new build is available at https://citizendevelopers.itch.io/one-more-floor . I hereby decree `${{ github.event.head_commit_message}}`!"
