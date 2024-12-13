@@ -193,7 +193,7 @@ public class GridGameManager : MonoBehaviour
         
         float msBetweenAttacks = 0.08f;
         foreach (GameTile tile in GameTiles) {
-            if (tile._tile.tileType == TileType.Monster && tile._tile.TurnsAlive > 2) {
+            if (tile._tile.tileType == TileType.Monster && tile._tile.TurnsAlive > 1) {
                 yield return StartCoroutine(tile.DoAttackAnimation(() => {
                     Vector2 tilePositionOnCanvas = Camera.main.WorldToScreenPoint(tile.transform.position);
                     int dmgDealt = tile._tile.CurrentMonster.CalcBaseDamage();

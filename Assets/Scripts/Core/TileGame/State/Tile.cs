@@ -118,6 +118,7 @@ public class Tile
     }
 
     void Reset() {
+        Debug.Log("Resetting tile");
         TurnsAlive = 0;
         StunnedRounds = 0;
         IsBeingCollected = false;

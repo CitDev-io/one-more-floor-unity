@@ -5,7 +5,7 @@ using UnityEngine;
 public class UI_HealthBar : MonoBehaviour
 {
     GridGameManager _rc;
-    int fullHeight = 50;
+    int fullWidth = 172;
 
     private void Awake()
     {
@@ -15,10 +15,9 @@ public class UI_HealthBar : MonoBehaviour
     {
         if (_rc.Board == null) return;
 
-        // assuming fullHeight is 50...
-        float newHeight = (float)(_rc.Board.State.Player.Hp / _rc.Board.State.Player.CalcMaxHp()) * 50;
+        float newWidth = ((float) _rc.Board.State.Player.Hp / _rc.Board.State.Player.CalcMaxHp()) * fullWidth;
 
         RectTransform rt = GetComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, newHeight);
+        rt.sizeDelta = new Vector2(newWidth, rt.sizeDelta.y);
     }
 }

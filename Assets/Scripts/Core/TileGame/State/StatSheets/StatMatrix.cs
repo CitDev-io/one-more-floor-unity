@@ -40,7 +40,7 @@ public class StatMatrix
             ArmorDurability = 50,
             ArmorPiercing = 50,
             HitPoints = 0,
-            BaseDamage = 2
+            BaseDamage = 1
         };
     }
     public static StatMatrix Reduce(params StatMatrix[] args) {

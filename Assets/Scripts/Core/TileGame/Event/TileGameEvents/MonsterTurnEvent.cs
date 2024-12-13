@@ -33,7 +33,6 @@ public class MonsterTurnEvent : TileGameEvent, IDomainEvent {
 
         // AgeAllMonsters() :
         var allMonsters = currentState.GetTiles().TileList.Where((o) => o.tileType == TileType.Monster);
-        outputEvents.Add(new DebugLogEvent(allMonsters.Count() + " Monsters age up"));
         foreach(Tile monster in allMonsters) {
             monster.AgeUp();
         }

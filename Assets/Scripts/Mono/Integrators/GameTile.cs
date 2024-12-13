@@ -44,11 +44,11 @@ public class GameTile : MonoBehaviour
 
     */
     public IEnumerator DoAttackAnimation(Action orchestratorHitCallback) {
-        var anim = MonsterFace.GetComponent<SkeletonAnimation>();
-        anim.AnimationState.SetAnimation(0, "attack", false);
+        // var anim = MonsterFace.GetComponent<SkeletonAnimation>();
+        // anim.AnimationState.SetAnimation(0, "attack", false);
         yield return new WaitForSeconds(0.25f);
         orchestratorHitCallback();
-        anim.AnimationState.AddAnimation(0, "idle", true, 0f);
+        // anim.AnimationState.AddAnimation(0, "idle", true, 0f);
     }
 
     public IEnumerator FadeToOpacity(float targetOpacity) {
@@ -101,9 +101,9 @@ public class GameTile : MonoBehaviour
     public void SetIconChildAlpha(float alpha) {
         var icon = transform.Find("Icon").GetComponent<SpriteRenderer>();
         icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, alpha);
-        if (MonsterFace.activeSelf) {
-            MonsterFace.GetComponent<SkeletonAnimation>().skeleton.A = alpha;
-        }
+        // if (MonsterFace.activeSelf) {
+        //     MonsterFace.GetComponent<SkeletonAnimation>().skeleton.A = alpha;
+        // }
     }
 
     void OnGUI() {
@@ -131,17 +131,17 @@ public class GameTile : MonoBehaviour
     void SetTileType()
     {
         bool isMonster = _tile.tileType == TileType.Monster;
-        MonsterFace.SetActive(isMonster);
-        sr.enabled = !isMonster;
+        // MonsterFace.SetActive(isMonster);
+        // sr.enabled = !isMonster;
         if (isMonster) {
-            MonsterFace.GetComponent<SkeletonAnimation>().skeleton.A = 1f;
+            // MonsterFace.GetComponent<SkeletonAnimation>().skeleton.A = 1f;
             // MonsterFace.GetComponent<SkeletonAnimation>().skeletonDataAsset = Resources.Load<SkeletonDataAsset>("Monsters/" + _tile.CurrentMonster.MonsterType);
             //MonsterFace.GetComponent<SkeletonAnimation>().Initialize(true);
-            MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.SetAnimation(0, "stunned", true);
+            // MonsterFace.GetComponent<SkeletonAnimation>().AnimationState.SetAnimation(0, "stunned", true);
         }
-        if (!isMonster) {
+        // if (!isMonster) {
             sr.sprite = Resources.Load<Sprite>("Tiles/" + _tile.tileType + "1");
-        }
+        // }
     }
 
     void Update()

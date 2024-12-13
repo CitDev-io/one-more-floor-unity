@@ -11,31 +11,27 @@ public class PlayerAvatar: StatSheet {
                 Slot = ItemSlot.WEAPON,
                 Name = "Moldy Wooden Sword",
                 Description = "Ew... It's kinda slimy",
-                WeaponDamage = 2
+                WeaponDamage = 1
             } },
             { ItemSlot.CHEST, new PlayerItem(){
                 Slot = ItemSlot.CHEST,
                 Name = "Worn Cloth Tunic",
-                Description = "It's not very warm",
-                Defense = 2
+                Description = "It's not very warm"
             } },
             { ItemSlot.SHIELD, new PlayerItem(){
                 Slot = ItemSlot.SHIELD,
                 Name = "Chipped Round Shield",
-                Description = "Minimal Protection",
-                Defense = 1
+                Description = "Minimal Protection"
             } },
             { ItemSlot.HELMET, new PlayerItem(){
                 Slot = ItemSlot.HELMET,
                 Name = "Grimy Leather Cap",
-                Description = "Discarded long ago",
-                Defense = 1
+                Description = "Discarded long ago"
             } },
             { ItemSlot.POTION, new PlayerItem(){
                 Slot = ItemSlot.POTION,
                 Name = "Periapt of Fortitude",
-                Description = "Gleaming golden elephant",
-                HitPoints = 10
+                Description = "Gleaming golden elephant"
             } }
         });
     }

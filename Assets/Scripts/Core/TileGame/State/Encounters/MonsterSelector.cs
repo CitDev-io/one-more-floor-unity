@@ -12,51 +12,59 @@ public class MonsterSelector
 
         int tier = 1;
         if (context != null) {
-            tier = context.MovesMade / 50;
+            tier = context.MovesMade / 26;
+            UnityEngine.Debug.Log("tier: " + tier);
+        } else {
+            UnityEngine.Debug.Log("What? No context?");
         }
         switch(tier) {
+            case 0:
+                Strength = 1;
+                Defense = 0;
+                Vitality = 2;
+            break;
             case 1:
                 Strength = 1;
                 Defense = 0;
                 Vitality = 4;
             break;
             case 2:
-                Strength = 1;
+                Strength = r.Next(1, 2);
                 Defense = r.Next(0, 1);
                 Vitality = 4;
             break;
             case 3:
-                Strength = 1;
+                Strength = r.Next(1, 2);
                 Defense = r.Next(1, 2);
                 Vitality = r.Next(4, 6);
             break;
             case 4:
-                Strength = r.Next(1, 2);
+                Strength = 2;
                 Defense = 2;
                 Vitality = r.Next(5, 7);
             break;
             case 5:
-                Strength = r.Next(1, 2);
+                Strength = r.Next(2, 3);
                 Defense = r.Next(2, 3);
                 Vitality = r.Next(6, 8);
             break;
             case 6:
-                Strength = 2;
+                Strength = r.Next(2, 3);
                 Defense = r.Next(2, 3);
                 Vitality = r.Next(6, 9);
             break;
             case 7:
-                Strength = r.Next(2, 3);
+                Strength = 3;
                 Defense = r.Next(3, 4);
                 Vitality = r.Next(8, 11);
             break;
             case 8:
-                Strength = r.Next(2, 3);
+                Strength = r.Next(2, 4);
                 Defense = r.Next(3, 5);
                 Vitality = r.Next(9, 13);
             break;
             case 9:
-                Strength = r.Next(2, 4);
+                Strength = 4;
                 Defense = r.Next(4, 6);
                 Vitality = r.Next(11, 15);
             break;

@@ -162,3 +162,14 @@ what all can we do with github actions?
 #3
 can we sidecar a test project for the CORE files?
 
+
+12-8-24
+thought: 
+scaling feels good at the base level. don't currently have player scaling, but can imagine its effect. increasing monster dmg scale. 
+time to introduce player scaling:
+- Experience Level Up
+- Gold Level Up
+- Armor Level Up
+
+wilo: sub-scene riffing. have a subscene bootstrapper for things like camera and eventsystem but what about building a UI directly into the menu scene to allow devs to manually set what is in the user's inventory? what the options are? what about manufacturing them on the spot? then they could maybe hit a button and save it as a SO. 
+i think building tools inside of the game for the dev is the move. we'll learn it quickly and it'll literally hand the game over to the team to balance and design.
