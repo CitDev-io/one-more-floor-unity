@@ -1,8 +1,65 @@
 using System;
 using System.Collections.Generic;
 
-public class PlayerAvatar: StatSheet {
+public enum PlayerAvatarStatType {
+    MAXHP,
+    HP,
+    XP,
+    COINS,
+    ARMOR,
+    MONSTERKILLS,
+    BOSSKILLS,
+    HPCURMAX,
+    GEARCURMAX,
+    GEARCUR,
+    GEARMAX,
+    COINSCURMAX,
+    COINSCUR,
+    COINSMAX,
+    XPCURMAX,
+    XPCUR,
+    XPMAX
+}
 
+public enum PlayerAvatarCurMaxType {
+    HP,
+    XP,
+    COINS,
+    ARMOR
+}
+
+public class PlayerAvatar: StatSheet {
+    public Tuple<int, int> GetCurMax(PlayerAvatarCurMaxType curMaxType) {
+        return curMaxType switch {
+            PlayerAvatarCurMaxType.HP => new Tuple<int, int>(Hp, CalcMaxHp()),
+            PlayerAvatarCurMaxType.XP => new Tuple<int, int>(ExperiencePoints, ExperienceGoal),
+            PlayerAvatarCurMaxType.COINS => new Tuple<int, int>(Gold, GoldGoal),
+            PlayerAvatarCurMaxType.ARMOR => new Tuple<int, int>(GearPoints, GearGoal),
+            _ => throw new NotImplementedException()
+        };
+    }
+    public String GetStat(PlayerAvatarStatType statType) {
+        return statType switch {
+            PlayerAvatarStatType.MAXHP => CalcMaxHp()+"",
+            PlayerAvatarStatType.HP => Hp+"",
+            PlayerAvatarStatType.XP => ExperiencePoints+"",
+            PlayerAvatarStatType.COINS => Gold+"",
+            PlayerAvatarStatType.ARMOR => Armor+"",
+            PlayerAvatarStatType.MONSTERKILLS => MonstersKilled+"",
+            PlayerAvatarStatType.BOSSKILLS => BossesKilled+"",
+            PlayerAvatarStatType.HPCURMAX => Hp + " / " + CalcMaxHp(),
+            PlayerAvatarStatType.GEARCURMAX => GearPoints + " / " + GearGoal,
+            PlayerAvatarStatType.GEARCUR => GearPoints + "",
+            PlayerAvatarStatType.GEARMAX => GearGoal + "",
+            PlayerAvatarStatType.COINSCURMAX => Gold + " / " + GoldGoal,
+            PlayerAvatarStatType.COINSCUR => Gold + "",
+            PlayerAvatarStatType.COINSMAX => GoldGoal + "",
+            PlayerAvatarStatType.XPCURMAX => ExperiencePoints + " / " + ExperienceGoal,
+            PlayerAvatarStatType.XPCUR => ExperiencePoints + "",
+            PlayerAvatarStatType.XPMAX => ExperienceGoal + "",
+            _ => throw new NotImplementedException()
+        };
+    }
     public PlayerAvatar(params StatMatrix[] _startingStats) : base(_startingStats) {
         BASE_HP = 25;
         PERVITALITY_MaxHitPoints = 5;
@@ -51,6 +108,7 @@ public class PlayerAvatar: StatSheet {
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 50;
     public int MonstersKilled { get; private set; }
+    public int BossesKilled { get; private set; }
     public int Level { get; private set; } = 1;
     
     public bool HasReachedExperienceGoal() {
