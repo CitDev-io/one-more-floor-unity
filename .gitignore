@@ -77,3 +77,6 @@ crashlytics-build.properties
 # Package addons
 Spine Examples/
 Spine Examples.meta
+
+# Ignore all .DS_Store files
+**/.DS_Store
