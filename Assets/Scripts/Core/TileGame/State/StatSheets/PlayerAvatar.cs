@@ -1,8 +1,29 @@
 using System;
 using System.Collections.Generic;
 
-public class PlayerAvatar: StatSheet {
+public enum PlayerAvatarStatType {
+    MAXHP,
+    HP,
+    XP,
+    COINS,
+    ARMOR,
+    MONSTERKILLS,
+    BOSSKILLS
+}
 
+public class PlayerAvatar: StatSheet {
+    public int GetStat(PlayerAvatarStatType statType) {
+        return statType switch {
+            PlayerAvatarStatType.MAXHP => CalcMaxHp(),
+            PlayerAvatarStatType.HP => Hp,
+            PlayerAvatarStatType.XP => ExperiencePoints,
+            PlayerAvatarStatType.COINS => Gold,
+            PlayerAvatarStatType.ARMOR => Armor,
+            PlayerAvatarStatType.MONSTERKILLS => MonstersKilled,
+            PlayerAvatarStatType.BOSSKILLS => BossesKilled,
+            _ => throw new NotImplementedException()
+        };
+    }
     public PlayerAvatar(params StatMatrix[] _startingStats) : base(_startingStats) {
         BASE_HP = 25;
         PERVITALITY_MaxHitPoints = 5;
@@ -51,6 +72,7 @@ public class PlayerAvatar: StatSheet {
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 50;
     public int MonstersKilled { get; private set; }
+    public int BossesKilled { get; private set; }
     public int Level { get; private set; } = 1;
     
     public bool HasReachedExperienceGoal() {

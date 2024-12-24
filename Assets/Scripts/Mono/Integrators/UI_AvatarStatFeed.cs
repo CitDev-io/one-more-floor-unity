@@ -1,10 +1,11 @@
 using UnityEngine;
 using TMPro;
 
-public class UI_ArmorTicker : MonoBehaviour
+public class UI_AvatarStatFeed : MonoBehaviour
 {
     GridGameManager _rc;
     TextMeshProUGUI _txt;
+    [SerializeField] PlayerAvatarStatType _statType;
 
     private void Awake()
     {
@@ -13,6 +14,6 @@ public class UI_ArmorTicker : MonoBehaviour
     }
     private void OnGUI() {
         if (_rc.Board == null) return;
-        _txt.text = _rc.Board.State.Player.Armor + ""; // + " / " + _rc.Board.State.Player.CalcMaxArmor();
+        _txt.text = _rc.Board.State.Player.GetStat(_statType) + "";
     }
 }
