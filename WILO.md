@@ -173,3 +173,18 @@ time to introduce player scaling:
 
 wilo: sub-scene riffing. have a subscene bootstrapper for things like camera and eventsystem but what about building a UI directly into the menu scene to allow devs to manually set what is in the user's inventory? what the options are? what about manufacturing them on the spot? then they could maybe hit a button and save it as a SO. 
 i think building tools inside of the game for the dev is the move. we'll learn it quickly and it'll literally hand the game over to the team to balance and design.
+
+
+12-24-24
+WILO: story 106 enables 105+
+
+we don't need to revamp the whole system. i kind of like Domain vs Game Events. it allows the event engine to double as the Processor.
+
+Domain Events can chain amongst themselves.
+
+What we need to bring in from our last couple of games is the idea of Action-Invoked State Updates (#106).  Instead of putting it on the "Events" as we know them from OMF, we're going to incorporate them into sub-systems of the event chain like `CollectionResult`. This has all of the information the UI could ever need to show a collection event. This is the perfect place to provide an Action hook to the actual state update.
+
+In the future, we'll have to consider that if we insist the UI commits state updates, there will need to be an auto-commit adapter for headless runs.
+
+
+###  12-26-24

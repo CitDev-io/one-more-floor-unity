@@ -10,6 +10,7 @@ public delegate void DamageDelegate(DamageResult result);
 public delegate void SourcedDamageDelegate(int damage);
 public delegate void PhaseDelegate(BoardPhase phase);
 public delegate void StringDelegate(string str);
+public delegate void CollectionResultDelegate(CollectionResult cr);
 
 public delegate void TileGameDelegate(TileGameEvent gameEvent);
 
@@ -17,10 +18,11 @@ public class TileGameEventSystem : IEventInvoker
 {
     public event TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
     public event TileDelegate OnTileAddedToSelection;
-    public event IntDelegate OnCoinCollected, OnPotionsCollected;
-    public event IntDelegate OnShieldsCollected, OnPoisonCollected, OnSwordsCollected;
-    public event IntDelegate OnMonsterKillsEarned, OnExperienceGained;
-    public event NoParamDelegate OnEnemyStunned, OnGoldGoalReached, OnDefenseGoalReached;
+    public event IntDelegate OnPotionsCollected;
+    public event IntDelegate OnPoisonCollected, OnSwordsCollected;
+    public event IntDelegate OnMonsterKillsEarned;
+    public event CollectionResultDelegate OnExperienceGained, OnShieldsCollected, OnCoinCollected;
+    public event NoParamDelegate OnEnemyStunned, OnDefenseGoalReached, OnGoldGoalReached;
     public event NoParamDelegate OnExperienceGoalReached;
     public event PhaseDelegate OnPhaseChange;
     public event DamageDelegate OnMonstersAttack;
@@ -41,13 +43,13 @@ public class TileGameEventSystem : IEventInvoker
                 OnTileAddedToSelection?.Invoke(tileAddedToSelectionEvent.Tile);
                 break;
             case CoinCollectedEvent coinCollectedEvent:
-                OnCoinCollected?.Invoke(coinCollectedEvent.Amount);
+                OnCoinCollected?.Invoke(coinCollectedEvent.collectionResult);
                 break;
             case PotionsCollectedEvent potionsCollectedEvent:
                 OnPotionsCollected?.Invoke(potionsCollectedEvent.Amount);
                 break;
             case ShieldsCollectedEvent shieldsCollectedEvent:
-                OnShieldsCollected?.Invoke(shieldsCollectedEvent.Amount);
+                OnShieldsCollected?.Invoke(shieldsCollectedEvent.CollectionResult);
                 break;
             case PoisonCollectedEvent poisonCollectedEvent:
                 OnPoisonCollected?.Invoke(poisonCollectedEvent.Amount);
@@ -59,7 +61,7 @@ public class TileGameEventSystem : IEventInvoker
                 OnMonsterKillsEarned?.Invoke(monsterKillsEarnedEvent.Amount);
                 break;
             case ExperienceGainedEvent experienceGainedEvent:
-                OnExperienceGained?.Invoke(experienceGainedEvent.Amount);
+                OnExperienceGained?.Invoke(experienceGainedEvent.collectionResult);
                 break;
             case EnemyStunnedEvent enemyStunnedEvent:
                 OnEnemyStunned?.Invoke();

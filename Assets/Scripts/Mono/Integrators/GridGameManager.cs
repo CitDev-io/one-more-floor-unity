@@ -307,7 +307,7 @@ public class GridGameManager : MonoBehaviour
             case CoinCollectedEvent coinCollectedEvent:
                 // yield return performance here
                 // can maybe pass this handle as a lambda to time its fire
-                HandleCoinCollected(coinCollectedEvent.Amount);
+                HandleCoinCollected(coinCollectedEvent.collectionResult);
                 break;
             case PotionsCollectedEvent potionsCollectedEvent:
                 // yield return performance here
@@ -317,7 +317,7 @@ public class GridGameManager : MonoBehaviour
             case ShieldsCollectedEvent shieldsCollectedEvent:
                 // yield return performance here
                 // can maybe pass this handle as a lambda to time its fire
-                HandleShieldsCollected(shieldsCollectedEvent.Amount);
+                HandleShieldsCollected(shieldsCollectedEvent.CollectionResult);
                 break;
             case SwordsCollectedEvent swordsCollectedEvent:
                 // yield return performance here
@@ -332,7 +332,7 @@ public class GridGameManager : MonoBehaviour
             case ExperienceGainedEvent experienceGainedEvent:
                 // yield return performance here
                 // can maybe pass this handle as a lambda to time its fire
-                HandleExperienceGained(experienceGainedEvent.Amount);
+                HandleExperienceGained(experienceGainedEvent.collectionResult);
                 break;
             case EnemyStunnedEvent enemyStunnedEvent:
                 // yield return performance here
@@ -413,9 +413,9 @@ public class GridGameManager : MonoBehaviour
         Debug.Log($"PHASE NOW {phase.ToString()}");
     }
 
-    void HandleExperienceGained(int exp) {
+    void HandleExperienceGained(CollectionResult cr) {
       //  Debug.Log($"exp gained: {exp}");
-        FloatExp(exp);
+        FloatExp(cr.Collected + cr.BonusGained);
     }
 
     void HandleExperienceGoalReached() {
@@ -504,9 +504,9 @@ public class GridGameManager : MonoBehaviour
     void HandleMonsterStunned() {
         _gc.PlaySound("Sword_Hit");
     }
-    void HandleCoinCollected(int amt) {
+    void HandleCoinCollected(CollectionResult cr) {
         _gc.PlaySound("Coin_Collect");
-        FloatGold(amt);
+        FloatGold(cr.Collected + cr.BonusGained);
     }
 
     void HandlePotionsCollected(int amt) {
@@ -514,9 +514,9 @@ public class GridGameManager : MonoBehaviour
         FloatHeal(amt);
     }
 
-    void HandleShieldsCollected(int amt) {
+    void HandleShieldsCollected(CollectionResult cr) {
         _gc.PlaySound("Shield_Use");
-        FloatArmor(amt);
+        FloatArmor(cr.Collected + cr.BonusGained);
     }
 
     void HandleSwordsCollected(int amt) {

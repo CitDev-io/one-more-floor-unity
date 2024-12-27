@@ -1,7 +1,7 @@
 
 public class ShieldsCollectedEvent : TileGameEvent {
-    public readonly int Amount;
-    public ShieldsCollectedEvent(int amount) {
-        this.Amount = amount;
+    public readonly CollectionResult CollectionResult;
+    public ShieldsCollectedEvent(CollectionResult cr) {
+        CollectionResult = cr;
     }
 }

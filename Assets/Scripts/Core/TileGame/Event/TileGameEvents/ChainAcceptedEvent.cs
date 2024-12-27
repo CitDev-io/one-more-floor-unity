@@ -33,7 +33,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         if (coinGained > 0) {
             CollectionResult cr = currentState.Player.CollectCoins(coinGained);
             outputEvents.Add(
-                new CoinCollectedEvent(cr.Earned + cr.BonusGained)
+                new CoinCollectedEvent(cr)
             );
         }
 
@@ -71,7 +71,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         {
             CollectionResult result = currentState.Player.CollectShields(shieldsCollected);
             outputEvents.Add(
-                new ShieldsCollectedEvent(result.Earned + result.BonusGained)
+                new ShieldsCollectedEvent(result)
             );
         }
     
@@ -95,7 +95,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
             );
             CollectionResult result = currentState.Player.CollectKilledMonsters(killCount);
             outputEvents.Add(
-                new ExperienceGainedEvent(result.Earned + result.BonusGained)
+                new ExperienceGainedEvent(result)
             );
         }
 

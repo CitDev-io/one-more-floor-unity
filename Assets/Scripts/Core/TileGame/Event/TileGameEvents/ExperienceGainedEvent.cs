@@ -1,6 +1,6 @@
 public class ExperienceGainedEvent : TileGameEvent {
-    public readonly int Amount;
-    public ExperienceGainedEvent(int amount) {
-        this.Amount = amount;
+    public readonly CollectionResult collectionResult;
+    public ExperienceGainedEvent(CollectionResult cr) {
+        collectionResult = cr;
     }
 }
