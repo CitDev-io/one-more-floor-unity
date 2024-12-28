@@ -31,7 +31,6 @@ public class GridGameManager : MonoBehaviour
 
     Queue<TileGameEvent> _eventQueue = new Queue<TileGameEvent>();
     // [SerializeField] GameObject EnchantmentShopMenu;
-    // [SerializeField] GameObject XPShopMenu;
 
     public void SelectItemShopAtIndex(int index) {
         Debug.Log("ITEM");
@@ -45,7 +44,7 @@ public class GridGameManager : MonoBehaviour
 
     // public void SelectionXPShopOptionsAtIndexes(List<int> indexes) {
     //     Debug.Log("XP STUFF");
-    //     Board.LevelUpPurchase(indexes);
+    //     Board.LevelUpPurchase(indexes);abcdefghijklmnopqrstuvwxyz
     // }
 
     void FloatExp(int xp) {
@@ -134,7 +133,7 @@ public class GridGameManager : MonoBehaviour
     }
 
     IEnumerator AnimationEventQueue() {
-        while (true) {
+        while (true) { // can have a local coroutine available and reboot itself instead of a forever loop
             if (_eventQueue.Count > 0) {
                 TileGameEvent gameEvent = _eventQueue.Dequeue();
                 yield return StartCoroutine(DoPerformance(gameEvent));
@@ -252,7 +251,7 @@ public class GridGameManager : MonoBehaviour
         
 
         yield return new WaitForSeconds(cool_off_delay);
-        Debug.Log("Roll out hero, fade in tiles");
+        // Debug.Log("Roll out hero, fade in tiles");
         DmgCounter.Hide();
         ShieldCounter.Hide();
         // StartCoroutine(SlideHeroOut());
@@ -415,6 +414,7 @@ public class GridGameManager : MonoBehaviour
 
     void HandleExperienceGained(CollectionResult cr) {
       //  Debug.Log($"exp gained: {exp}");
+        cr.Commit();
         FloatExp(cr.Collected + cr.BonusGained);
     }
 
@@ -446,7 +446,6 @@ public class GridGameManager : MonoBehaviour
         
         List<Vector3> positionList = selection.Select(o => new Vector3(o.col, o.row, 0f)).ToList();
         _lr.SetPositions(positionList.ToArray());
-
 
         if (selection.Count == 0) {
             SelectionCountDoodad.gameObject.SetActive(false);
@@ -505,6 +504,7 @@ public class GridGameManager : MonoBehaviour
         _gc.PlaySound("Sword_Hit");
     }
     void HandleCoinCollected(CollectionResult cr) {
+        cr.Commit();
         _gc.PlaySound("Coin_Collect");
         FloatGold(cr.Collected + cr.BonusGained);
     }
@@ -516,6 +516,7 @@ public class GridGameManager : MonoBehaviour
 
     void HandleShieldsCollected(CollectionResult cr) {
         _gc.PlaySound("Shield_Use");
+        cr.Commit();
         FloatArmor(cr.Collected + cr.BonusGained);
     }
 
