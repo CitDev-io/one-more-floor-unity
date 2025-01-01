@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System;
+
 public class PlayerItem: StatMatrix
 {
     public string Name;
@@ -24,5 +27,27 @@ public class PlayerItem: StatMatrix
         }
 
         return result;
+    }
+
+    public static List<PlayerItem> GetRandomItemsForPlayerLevel(int itemCount, int level) {
+        List<PlayerItem> items = new List<PlayerItem>();
+        for (int i = 0; i < itemCount; i++) {
+            Random random = new Random();
+            items.Add(new PlayerItem() {
+                Strength = random.Next(0, level),
+                Dexterity = random.Next(0, level),
+                Vitality = random.Next(0, level),
+                Luck = random.Next(0, level),
+                WeaponDamage = random.Next(0, level),
+                Defense = random.Next(0, level),
+                ArmorPiercing = random.Next(0, level),
+                ArmorDurability = random.Next(0, level),
+                HitPoints = random.Next(0, level),
+                Name = "Random Item",
+                Description = "A random item",
+                Slot = (ItemSlot) random.Next(0, Enum.GetValues(typeof(ItemSlot)).Length)
+            });
+        }
+        return items;
     }
 }

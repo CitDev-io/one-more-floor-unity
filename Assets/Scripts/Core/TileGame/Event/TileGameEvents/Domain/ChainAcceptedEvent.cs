@@ -35,7 +35,13 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
             outputEvents.Add(
                 new CoinCollectedEvent(cr)
             );
+            if (currentState.Player.ReachedCoinGoalWhenAdding(cr.Collected + cr.BonusGained)) {
+                outputEvents.Add(
+                    new GoldGoalReachedEvent()
+                );
+            }
         }
+
 
         // POTIONS
         int potionsCollected = Chain

@@ -115,8 +115,8 @@ public class PlayerAvatar: StatSheet {
         return ExperiencePoints >= ExperienceGoal;
     }
 
-    public bool HasReachedCoinGoal() {
-        return Gold >= GoldGoal;
+    public bool ReachedCoinGoalWhenAdding(int toAddCount = 0) {
+        return Gold + toAddCount >= GoldGoal;
     }
 
     public bool HasReachedDefenseGoal() {

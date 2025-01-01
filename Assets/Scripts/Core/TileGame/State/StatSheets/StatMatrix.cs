@@ -1,5 +1,8 @@
 public class StatMatrix
 {
+
+    // followed the thread of having enum mapped stats in a dictionary. it's wordy in syntax, but it's beautiful 
+    // as something easily read and maintained!
     public int Strength = 0;
     public int Dexterity = 0;
     public int Vitality = 0;

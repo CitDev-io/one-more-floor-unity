@@ -339,8 +339,15 @@ public class GridGameManager : MonoBehaviour
                 HandleMonsterStunned();
                 break;
             case GoldGoalReachedEvent goldGoalReachedEvent:
-                // yield return performance here
-                // can maybe pass this handle as a lambda to time its fire
+                // event is not yet public, performance can time the announcement if needed
+                    // soo.... the following logic needs to be written
+                    // we generate three new items for the player then open the menu
+                    // yield HERE for the performance or presentation of the items
+                    var shopItems = Board.State.GetNewItemShopOptions();
+                    FindObjectOfType<UI_ItemShop>().SetDisplayItems(shopItems);
+                    FindObjectOfType<UI_ItemShop>().Show();
+
+                // event is public, open the menu
                 HandleGoldGoalReached();
                 break;
             case DefenseGoalReachedEvent defenseGoalReachedEvent:

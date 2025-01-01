@@ -188,3 +188,21 @@ In the future, we'll have to consider that if we insist the UI commits state upd
 
 
 ###  12-26-24
+
+### 12-28-24
+working on character scaling. first we're doing gold level ups. we now have a toggleable stat sheet to look at so we can 
+see current state.
+from here, we've lowered the gold goal to 10 to test its presentation and execution.
+currently: this is not happening synchronously. we need to have a mechanic like a coroutine that opens an immovable modal and
+subscribes to something to watch for userinput. the modal is responsible for this loop. it will allow the user to call an
+option that corresponds to a puiblic surface user-able function.
+once the modal is satisfied, we should have a selectionconfirmed domain event that has a moment to affect the stat sheets,
+perform, and release control when the awarded item has been processed and received by the user.
+as for the gold level up:
+the panel will pop up and present 3 item options that are hard coded. it DOES NOT yet have the plumbing to award the item
+need:
+- a starter method of manufacturing object options for the player that scales with player level, improves upon existing gear to
+varying degrees
+- somewhere in the CORE that will own these objects and their generation. This will have a public .Get() for the 3 new items
+- somewhere in the CORE that will own putting the item into the user's inventory, consider order of operations here for both
+the presentation and applying of the item to the stat sheet
