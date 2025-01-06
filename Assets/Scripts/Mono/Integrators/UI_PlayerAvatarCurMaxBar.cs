@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class UI_PlayerAvatarCurMaxBar : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     [SerializeField] int fullWidth = 172;
     [SerializeField] PlayerAvatarCurMaxType _curMaxType;
 
     private void Awake()
     {
-        _rc = FindObjectOfType<GridGameManager>();
+        _rc = FindObjectOfType<GameBridge>();
     }
     private void OnGUI()
     {

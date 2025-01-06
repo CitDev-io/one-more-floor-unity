@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UI_LevelProgressTicker : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     RectTransform _transform;
 
     public double _width;
@@ -10,7 +10,7 @@ public class UI_LevelProgressTicker : MonoBehaviour
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
         _transform = GetComponent<RectTransform>();
     }
     private void OnGUI()

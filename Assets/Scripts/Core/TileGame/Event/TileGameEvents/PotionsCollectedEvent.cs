@@ -1,7 +1,7 @@
 
 public class PotionsCollectedEvent : TileGameEvent {
-    public readonly int Amount;
-    public PotionsCollectedEvent(int amount) {
-        this.Amount = amount;
+    public readonly CollectionResult collectionResult;
+    public PotionsCollectedEvent(CollectionResult cr) {
+        this.collectionResult = cr;
     }
 }

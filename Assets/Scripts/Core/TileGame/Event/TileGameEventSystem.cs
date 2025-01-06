@@ -18,10 +18,9 @@ public class TileGameEventSystem : IEventInvoker
 {
     public event TilesDelegate OnPlayerCollectedTiles, OnSelectionChange;
     public event TileDelegate OnTileAddedToSelection;
-    public event IntDelegate OnPotionsCollected;
     public event IntDelegate OnPoisonCollected, OnSwordsCollected;
     public event IntDelegate OnMonsterKillsEarned;
-    public event CollectionResultDelegate OnExperienceGained, OnShieldsCollected, OnCoinCollected;
+    public event CollectionResultDelegate OnPotionsCollected, OnExperienceGained, OnShieldsCollected, OnCoinCollected;
     public event NoParamDelegate OnEnemyStunned, OnDefenseGoalReached, OnGoldGoalReached;
     public event NoParamDelegate OnExperienceGoalReached;
     public event PhaseDelegate OnPhaseChange;
@@ -46,7 +45,7 @@ public class TileGameEventSystem : IEventInvoker
                 OnCoinCollected?.Invoke(coinCollectedEvent.collectionResult);
                 break;
             case PotionsCollectedEvent potionsCollectedEvent:
-                OnPotionsCollected?.Invoke(potionsCollectedEvent.Amount);
+                OnPotionsCollected?.Invoke(potionsCollectedEvent.collectionResult);
                 break;
             case ShieldsCollectedEvent shieldsCollectedEvent:
                 OnShieldsCollected?.Invoke(shieldsCollectedEvent.CollectionResult);

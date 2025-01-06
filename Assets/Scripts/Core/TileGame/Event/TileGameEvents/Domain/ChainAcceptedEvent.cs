@@ -52,7 +52,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         {
             CollectionResult cr = currentState.Player.CollectPotions(potionsCollected);
             outputEvents.Add(
-                new PotionsCollectedEvent(cr.Earned + cr.BonusGained)
+                new PotionsCollectedEvent(cr)
             );
         }
 
@@ -117,7 +117,6 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         outputEvents.Add(
             new MonsterTurnEvent()
         );
-
 
         return outputEvents;
     }

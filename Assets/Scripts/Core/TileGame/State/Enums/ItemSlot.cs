@@ -4,6 +4,5 @@ public enum ItemSlot
     WEAPON,
     SHIELD,
     HELMET,
-    POTION,
-    CLASSITEM
+    POTION
 }

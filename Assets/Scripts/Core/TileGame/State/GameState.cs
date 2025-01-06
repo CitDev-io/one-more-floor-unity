@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using PlasticGui.WorkspaceWindow.Items;
 
 public interface IItemShopVendor {
     public List<PlayerItem> GetNewItemShopOptions();
-    public void ItemShopPurchase(int index);
+    public ValueTuple<PlayerItem, PlayerItem> ItemShopPurchase(int index);
 }
 
 public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker, IItemShopVendor {
@@ -99,13 +100,14 @@ public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker
         // );
     }
 
-    public void ItemShopPurchase(int index) {
-        if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
+    public ValueTuple<PlayerItem, PlayerItem> ItemShopPurchase(int index) {
+        // if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
 
         PlayerItem ItemPurchased = ItemShopOptions[index];
-        Player.AddItemToInventory(ItemPurchased);
+        ValueTuple<PlayerItem, PlayerItem> itemSwap = Player.AddItemToInventory(ItemPurchased);
         Player.SpendDownCoins();
         ItemShopOptions = null;
+        return itemSwap;
         
         // Trip();
         // Debug.("PURCHASE");

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class UI_GearInspector : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     [SerializeField] TextMeshProUGUI ItemTitle;
     [SerializeField] TextMeshProUGUI ItemDesc;
     [SerializeField] TextMeshProUGUI ItemStats;
@@ -13,7 +13,7 @@ public class UI_GearInspector : MonoBehaviour
 
     void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
     }
 
     void OnEnable() {

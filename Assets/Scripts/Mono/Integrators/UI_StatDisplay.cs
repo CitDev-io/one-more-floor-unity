@@ -3,7 +3,7 @@ using TMPro;
 
 public class UI_StatDisplay : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     [SerializeField] TextMeshProUGUI primaryStatText;
     [SerializeField] TextMeshProUGUI strStatsText;
     [SerializeField] TextMeshProUGUI dexStatsText;
@@ -15,7 +15,7 @@ public class UI_StatDisplay : MonoBehaviour
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
     }
     private void OnGUI()
     {

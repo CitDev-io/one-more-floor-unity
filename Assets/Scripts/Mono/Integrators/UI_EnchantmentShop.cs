@@ -3,7 +3,7 @@ using TMPro;
 
 public class UI_EnchantmentShop : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     [SerializeField] GameObject confirmButton;
 
     [SerializeField] UI_EnchantmentShopOptionTxter Option1;
@@ -31,7 +31,7 @@ public class UI_EnchantmentShop : MonoBehaviour
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
     }
     private void OnGUI()
     {

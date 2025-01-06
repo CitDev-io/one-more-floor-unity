@@ -34,16 +34,16 @@ public class PlayerItem: StatMatrix
         for (int i = 0; i < itemCount; i++) {
             Random random = new Random();
             items.Add(new PlayerItem() {
-                Strength = random.Next(0, level),
-                Dexterity = random.Next(0, level),
-                Vitality = random.Next(0, level),
-                Luck = random.Next(0, level),
-                WeaponDamage = random.Next(0, level),
-                Defense = random.Next(0, level),
-                ArmorPiercing = random.Next(0, level),
-                ArmorDurability = random.Next(0, level),
-                HitPoints = random.Next(0, level),
-                Name = "Random Item",
+                Strength = random.Next(0, level + 1),
+                Dexterity = random.Next(0, level + 1),
+                Vitality = random.Next(0, level + 1),
+                Luck = random.Next(0, level + 1),
+                WeaponDamage = random.Next(0, level + 1),
+                Defense = random.Next(0, level + 1),
+                ArmorPiercing = random.Next(0, level + 1),
+                ArmorDurability = random.Next(0, level + 1),
+                HitPoints = random.Next(0, level + 1),
+                Name = "Item",
                 Description = "A random item",
                 Slot = (ItemSlot) random.Next(0, Enum.GetValues(typeof(ItemSlot)).Length)
             });

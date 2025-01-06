@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class UI_ItemShop : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     [SerializeField] GameObject confirmButton;
     [SerializeField] GameObject replacementItem;
 
@@ -17,7 +17,7 @@ public class UI_ItemShop : MonoBehaviour
 
 
     void Awake() {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
         if (StartVisible) {
             Show();
         } else {
@@ -37,20 +37,21 @@ public class UI_ItemShop : MonoBehaviour
         GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
     PlayerItem EMPTY_PLAYER_ITEM = new PlayerItem(){
-        Slot = ItemSlot.CLASSITEM,
+        Slot = ItemSlot.WEAPON,
         Name = "Empty",
         Description = ""
     };
 
     public void ToggleSelectionByIndex(int index) {
-        if (selectedItemIndex == index) {
-            selectedItemIndex = -1;
-        } else {
+        // if (selectedItemIndex == index) {
+        //     selectedItemIndex = -1;
+        //     Replaces1.setDisplayItem(null);
+        // } else {
             selectedItemIndex = index;
             PlayerItem i = _rc.Board.State.Player.GetItemInInventorySlot(_rc.Board.State.ItemShopOptions[index].Slot);
             
             Replaces1.setDisplayItem(i??EMPTY_PLAYER_ITEM);
-        }
+        // }
     }
 
     public void SetDisplayItems(List<PlayerItem> items) {
@@ -67,7 +68,8 @@ public class UI_ItemShop : MonoBehaviour
     }
 
     public void ClickItemShopConfirm(){
-        _rc.SelectItemShopAtIndex(selectedItemIndex);
+        _rc.PLYR_ChooseItemShopPurchaseByIndex(selectedItemIndex);
         selectedItemIndex = -1;
+        Hide();
     }
 }
