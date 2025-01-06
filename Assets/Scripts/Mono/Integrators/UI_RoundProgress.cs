@@ -7,11 +7,11 @@ public class UI_RoundProgress : MonoBehaviour
     [SerializeField] TextMeshProUGUI text;
     [SerializeField] GameObject check;
 
-    GridGameManager _rc;
+    GameBridge _rc;
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
     }
 
     private void Start()

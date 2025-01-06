@@ -90,7 +90,7 @@ public class StatSheet
         addHpWithoutNegative(enchantment.HitPoints);
     }
 
-    internal void AddItemToInventory(PlayerItem newItem) {
+    internal ValueTuple<PlayerItem, PlayerItem> AddItemToInventory(PlayerItem newItem) {
         ItemSlot affectedSlot = newItem.Slot;
         PlayerItem oldItem = GetItemInInventorySlot(affectedSlot);
         Inventory[affectedSlot] = newItem;
@@ -98,6 +98,7 @@ public class StatSheet
 
         ResetTotalStats();
         addHpWithoutNegative(hpDiff);
+        return new ValueTuple<PlayerItem, PlayerItem>(oldItem, newItem);
     }
 
     internal void AddSkillupsToInventory(List<PlayerSkillup> skillups) {

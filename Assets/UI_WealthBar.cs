@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class UI_WealthBar : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     int fullHeight = 50;
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
     }
     private void OnGUI()
     {

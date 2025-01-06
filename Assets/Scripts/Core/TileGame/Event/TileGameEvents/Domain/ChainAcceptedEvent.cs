@@ -33,9 +33,15 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         if (coinGained > 0) {
             CollectionResult cr = currentState.Player.CollectCoins(coinGained);
             outputEvents.Add(
-                new CoinCollectedEvent(cr.Earned + cr.BonusGained)
+                new CoinCollectedEvent(cr)
             );
+            if (currentState.Player.ReachedCoinGoalWhenAdding(cr.Collected + cr.BonusGained)) {
+                outputEvents.Add(
+                    new GoldGoalReachedEvent()
+                );
+            }
         }
+
 
         // POTIONS
         int potionsCollected = Chain
@@ -46,7 +52,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         {
             CollectionResult cr = currentState.Player.CollectPotions(potionsCollected);
             outputEvents.Add(
-                new PotionsCollectedEvent(cr.Earned + cr.BonusGained)
+                new PotionsCollectedEvent(cr)
             );
         }
 
@@ -71,7 +77,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         {
             CollectionResult result = currentState.Player.CollectShields(shieldsCollected);
             outputEvents.Add(
-                new ShieldsCollectedEvent(result.Earned + result.BonusGained)
+                new ShieldsCollectedEvent(result)
             );
         }
     
@@ -95,7 +101,7 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
             );
             CollectionResult result = currentState.Player.CollectKilledMonsters(killCount);
             outputEvents.Add(
-                new ExperienceGainedEvent(result.Earned + result.BonusGained)
+                new ExperienceGainedEvent(result)
             );
         }
 
@@ -111,7 +117,6 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
         outputEvents.Add(
             new MonsterTurnEvent()
         );
-
 
         return outputEvents;
     }

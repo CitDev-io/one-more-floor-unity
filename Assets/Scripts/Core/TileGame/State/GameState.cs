@@ -1,6 +1,13 @@
+using System;
 using System.Collections.Generic;
+using PlasticGui.WorkspaceWindow.Items;
 
-public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker {
+public interface IItemShopVendor {
+    public List<PlayerItem> GetNewItemShopOptions();
+    public ValueTuple<PlayerItem, PlayerItem> ItemShopPurchase(int index);
+}
+
+public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker, IItemShopVendor {
     public PlayerAvatar Player;
     public TileGrid Tiles { get; private set; }
     public BoardPhase Phase { get; private set; } = BoardPhase.READY;
@@ -9,6 +16,13 @@ public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker
     public bool PlayersTurn = true;
     public Encounter Encounter;
     private readonly IEventInvoker SurfaceEventInvoker;
+    public List<PlayerItem> ItemShopOptions { get; private set; }
+    public IItemShopVendor ItemShopVendor => this;
+
+    public List<PlayerItem> GetNewItemShopOptions() {
+        ItemShopOptions = PlayerItem.GetRandomItemsForPlayerLevel(3, Player.Level);
+        return new List<PlayerItem>(ItemShopOptions);
+    }
 
     public GameState(IEventInvoker _SurfaceEventInvoker) {
         SurfaceEventInvoker = _SurfaceEventInvoker;
@@ -86,17 +100,17 @@ public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker
         // );
     }
 
-    public void ItemShopPurchase(int index) {
-        if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
+    public ValueTuple<PlayerItem, PlayerItem> ItemShopPurchase(int index) {
+        // if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
 
-        // PlayerItem ItemPurchased = ItemShopOptions[index];
-        // Player.AddItemToInventory(ItemPurchased);
-        // Player.SpendDownCoins();
-        // ItemShopOptions = null;
+        PlayerItem ItemPurchased = ItemShopOptions[index];
+        ValueTuple<PlayerItem, PlayerItem> itemSwap = Player.AddItemToInventory(ItemPurchased);
+        Player.SpendDownCoins();
+        ItemShopOptions = null;
+        return itemSwap;
         
         // Trip();
         // Debug.("PURCHASE");
-        UnityEngine.Debug.Log("PURCHASE");
     }
 }
 
@@ -130,7 +144,7 @@ public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker
 
     
     
-    // public PlayerItem[] ItemShopOptions { get; private set; }
+    
     // public PlayerItem[] EnchantmentShopOptions { get; private set; }
     // public PlayerSkillup[] XPShopOptions { get; private set; }
     // ItemSelector itemSelector;

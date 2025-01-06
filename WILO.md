@@ -173,3 +173,36 @@ time to introduce player scaling:
 
 wilo: sub-scene riffing. have a subscene bootstrapper for things like camera and eventsystem but what about building a UI directly into the menu scene to allow devs to manually set what is in the user's inventory? what the options are? what about manufacturing them on the spot? then they could maybe hit a button and save it as a SO. 
 i think building tools inside of the game for the dev is the move. we'll learn it quickly and it'll literally hand the game over to the team to balance and design.
+
+
+12-24-24
+WILO: story 106 enables 105+
+
+we don't need to revamp the whole system. i kind of like Domain vs Game Events. it allows the event engine to double as the Processor.
+
+Domain Events can chain amongst themselves.
+
+What we need to bring in from our last couple of games is the idea of Action-Invoked State Updates (#106).  Instead of putting it on the "Events" as we know them from OMF, we're going to incorporate them into sub-systems of the event chain like `CollectionResult`. This has all of the information the UI could ever need to show a collection event. This is the perfect place to provide an Action hook to the actual state update.
+
+In the future, we'll have to consider that if we insist the UI commits state updates, there will need to be an auto-commit adapter for headless runs.
+
+
+###  12-26-24
+
+### 12-28-24
+working on character scaling. first we're doing gold level ups. we now have a toggleable stat sheet to look at so we can 
+see current state.
+from here, we've lowered the gold goal to 10 to test its presentation and execution.
+currently: this is not happening synchronously. we need to have a mechanic like a coroutine that opens an immovable modal and
+subscribes to something to watch for userinput. the modal is responsible for this loop. it will allow the user to call an
+option that corresponds to a puiblic surface user-able function.
+once the modal is satisfied, we should have a selectionconfirmed domain event that has a moment to affect the stat sheets,
+perform, and release control when the awarded item has been processed and received by the user.
+as for the gold level up:
+the panel will pop up and present 3 item options that are hard coded. it DOES NOT yet have the plumbing to award the item
+need:
+- a starter method of manufacturing object options for the player that scales with player level, improves upon existing gear to
+varying degrees
+- somewhere in the CORE that will own these objects and their generation. This will have a public .Get() for the 3 new items
+- somewhere in the CORE that will own putting the item into the user's inventory, consider order of operations here for both
+the presentation and applying of the item to the stat sheet

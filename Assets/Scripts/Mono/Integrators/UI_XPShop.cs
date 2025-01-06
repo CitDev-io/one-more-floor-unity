@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class UI_XPShop : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     [SerializeField] GameObject confirmButton;
 
     [SerializeField] List<UI_XPShopOptionTxter> Options;
@@ -34,7 +34,7 @@ public class UI_XPShop : MonoBehaviour
 
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
     }
     private void OnGUI()
     {

@@ -115,8 +115,8 @@ public class PlayerAvatar: StatSheet {
         return ExperiencePoints >= ExperienceGoal;
     }
 
-    public bool HasReachedCoinGoal() {
-        return Gold >= GoldGoal;
+    public bool ReachedCoinGoalWhenAdding(int toAddCount = 0) {
+        return Gold + toAddCount >= GoldGoal;
     }
 
     public bool HasReachedDefenseGoal() {
@@ -131,12 +131,15 @@ public class PlayerAvatar: StatSheet {
         int bonusGained = CalcArmorGained(bonusShields);
         int armorToApply = armorEarned + bonusGained;
 
-        int overheal = Math.Max((Armor + armorToApply) - CalcMaxArmor(), 0);
+        int overheal = Math.Max(Armor + armorToApply - CalcMaxArmor(), 0);
     
-        Armor = Math.Max(Math.Min(Armor + armorToApply, CalcMaxArmor()), 0);
-        GearPoints += overheal;
+        Action CommitAx = () => {
+            Armor = Math.Max(Math.Min(Armor + armorToApply, CalcMaxArmor()), 0);
+            GearPoints += overheal;
+        };
 
         return new CollectionResult() {
+            Commit = CommitAx,
             Collected = shieldsCollected,
             GameTotalCollected = Armor,
             Earned = armorEarned,
@@ -153,9 +156,12 @@ public class PlayerAvatar: StatSheet {
         int successfulCoinBonuses = doRollsAgainstChance(bonusCoinRollCount, BonusCoinChance());
         int bonusCoins = successfulCoinBonuses;
 
-        Gold += CalcGoldGained(coinsEarned + bonusCoins);
+        Action CommitAx = () => {
+            Gold += CalcGoldGained(coinsEarned + bonusCoins);
+        };
 
         return new CollectionResult() {
+            Commit = CommitAx,
             Collected = collected,
             GameTotalCollected = Gold,
             Earned = CalcGoldGained(coinsEarned),
@@ -176,9 +182,12 @@ public class PlayerAvatar: StatSheet {
         int totalHealing = healingEarned + bonusHealGained;
         int overheal = Math.Max((Hp + totalHealing) - CalcMaxHp(), 0);
 
-        Hp = Math.Max(Math.Min(Hp + totalHealing, CalcMaxHp()), 0);
+        Action CommitAx = () => {
+            Hp = Math.Max(Math.Min(Hp + totalHealing, CalcMaxHp()), 0);
+        };
 
         return new CollectionResult() {
+            Commit = CommitAx,
             Collected = collected,
             GameTotalCollected = Hp,
             Earned = healingEarned,
@@ -196,9 +205,13 @@ public class PlayerAvatar: StatSheet {
         
         int successfulXpBonuses = doRollsAgainstChance(bonusExperienceRollCount, BonusXpChance());
         int bonusXp = successfulXpBonuses * PERROLL_BonusXP;
-        ExperiencePoints += experienceEarned + bonusXp;
+
+        Action CommitAx = () => {
+            ExperiencePoints += experienceEarned + bonusXp;
+        };
         
         return new CollectionResult(){
+            Commit = CommitAx,
             Collected = amt,
             GameTotalCollected = MonstersKilled,
             Earned = experienceEarned,

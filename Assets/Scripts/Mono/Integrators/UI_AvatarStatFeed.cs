@@ -3,13 +3,13 @@ using TMPro;
 
 public class UI_AvatarStatFeed : MonoBehaviour
 {
-    GridGameManager _rc;
+    GameBridge _rc;
     TextMeshProUGUI _txt;
     [SerializeField] PlayerAvatarStatType _statType;
     [SerializeField] string prefix = "";
     private void Awake()
     {
-        _rc = GameObject.FindObjectOfType<GridGameManager>();
+        _rc = GameObject.FindObjectOfType<GameBridge>();
         _txt = GetComponent<TextMeshProUGUI>();
     }
     private void OnGUI() {
