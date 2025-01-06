@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PlasticGui.WorkspaceWindow.Items;
 
 public interface IItemShopVendor {
     public List<PlayerItem> GetNewItemShopOptions();
