@@ -4356,7 +4356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   confirmButton: {fileID: 1402420424}
   replacementItem: {fileID: 107551962}
-  Option1: {fileID: 0}
+  Option1: {fileID: 2121468359}
   Option2: {fileID: 1454891694}
   Option3: {fileID: 1604518245}
   Replaces1: {fileID: 107551961}
@@ -19988,9 +19988,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetAspect: 0.5626566
-  actualAspect: 0.56265664
+  actualAspect: 0.5630373
   originalOrthographicSize: 3.5
-  scaleToModel: 0.9999999
+  scaleToModel: 0.99932384
   cam: {fileID: 2080959215}
   scaleMod: 6.58
 --- !u!114 &2080959218
@@ -20159,6 +20159,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2120689391}
   m_CullTransparentMesh: 1
+--- !u!114 &2121468359 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5003940019024996866, guid: ac83e90aa83344176947600ce5613f63, type: 3}
+  m_PrefabInstance: {fileID: 4053160736780345532}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c75e4ab690ff2b144ab952a67c330e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2127666786
 GameObject:
   m_ObjectHideFlags: 0
