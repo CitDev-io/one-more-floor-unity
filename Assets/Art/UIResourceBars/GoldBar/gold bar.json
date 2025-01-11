@@ -1,0 +1,42 @@
+{
+"skeleton": {
+	"hash": "hHtMmwysb6M",
+	"spine": "4.2.38",
+	"x": -1.5,
+	"y": -95,
+	"width": 592,
+	"height": 190,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bar", "parent": "root", "x": 22.39, "y": -0.35 },
+	{ "name": "goldbag", "parent": "bar", "x": 74.74, "y": 3.54 },
+	{ "name": "value", "parent": "bar", "x": 154.03, "y": -0.51 }
+],
+"slots": [
+	{ "name": "value", "bone": "value", "attachment": "value" },
+	{ "name": "goldbag", "bone": "goldbag", "attachment": "goldbag" },
+	{ "name": "healthbar", "bone": "bar", "attachment": "healthbar" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"goldbag": {
+				"goldbag": { "x": -3.13, "y": -8.69, "width": 93, "height": 73 }
+			},
+			"healthbar": {
+				"healthbar": { "x": 272.11, "y": 0.35, "width": 592, "height": 190 }
+			},
+			"value": {
+				"value": { "x": 192.08, "y": 0.85, "width": 378, "height": 82 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

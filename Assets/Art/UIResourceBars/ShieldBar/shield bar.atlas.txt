@@ -1,0 +1,13 @@
+shield bar.png
+size:593,274
+filter:Linear,Linear
+pma:true
+healthbar
+bounds:2,84,589,188
+offsets:1,1,591,190
+shield
+bounds:379,12,59,70
+offsets:1,1,61,72
+value
+bounds:2,2,375,80
+offsets:1,1,377,82

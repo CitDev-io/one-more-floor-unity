@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Puzzle.unity
     guid: 55522ed98352c8748a59ffff6fd9cdb2
   - enabled: 1
-    path: Assets/Menu-Inventory.unity
+    path: Assets/Riff/Menu-Inventory.unity
     guid: 360169b8d2b444d9c94083d774565219
   m_configObjects: {}
