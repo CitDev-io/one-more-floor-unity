@@ -79,6 +79,12 @@ public class ChainAcceptedEvent : TileGameEvent, IDomainEvent {
             outputEvents.Add(
                 new ShieldsCollectedEvent(result)
             );
+
+            if (currentState.Player.ReachedDefenseGoalWhenAdding(result.Collected + result.BonusGained)) {
+                outputEvents.Add(
+                    new DefenseGoalReachedEvent()
+                );
+            }
         }
     
         if (enemiesInSelection.Count > 0 && shieldsCollected > 0) {

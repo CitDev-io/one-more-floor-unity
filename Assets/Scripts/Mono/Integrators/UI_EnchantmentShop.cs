@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
+using System;
 
 public class UI_EnchantmentShop : MonoBehaviour
 {
@@ -20,18 +22,17 @@ public class UI_EnchantmentShop : MonoBehaviour
         }
     }
 
-    void OnEnable() {
-        // // if (_rc.Board.EnchantmentShopOptions != null && _rc.Board.EnchantmentShopOptions.Length == 4) {
-        //     Option1.setDisplayItem(_rc.Board.EnchantmentShopOptions[0]);
-        //     Option2.setDisplayItem(_rc.Board.EnchantmentShopOptions[1]);
-        //     Option3.setDisplayItem(_rc.Board.EnchantmentShopOptions[2]);
-        //     Option4.setDisplayItem(_rc.Board.EnchantmentShopOptions[3]);
-        // }
+    public void SetDisplayItems(List<ValueTuple<ItemSlot, StatMatrix>> items) {
+        Option1.setDisplayItem(items[0]);
+        Option2.setDisplayItem(items[1]);
+        Option3.setDisplayItem(items[2]);
+        Option4.setDisplayItem(items[3]);
     }
 
     private void Awake()
     {
         _rc = GameObject.FindObjectOfType<GameBridge>();
+        Hide();
     }
     private void OnGUI()
     {
@@ -40,7 +41,21 @@ public class UI_EnchantmentShop : MonoBehaviour
     }
 
     public void ClickItemShopConfirm(){
-        // _rc.SelectionEnchantmentShopOptionAtIndex(selectedItemIndex);
+        _rc.PLYR_ChooseEnchantShopPurchaseByIndex(selectedItemIndex);
         selectedItemIndex = -1;
+        Hide();
+    }
+
+        /* show and hide can be incorporated into the ui_toggle-active component */
+    public void Show() {
+        GetComponent<CanvasGroup>().alpha = 1;
+        GetComponent<CanvasGroup>().interactable = true;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
+    }
+
+    public void Hide() {
+        GetComponent<CanvasGroup>().alpha = 0;
+        GetComponent<CanvasGroup>().interactable = false;
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
 }

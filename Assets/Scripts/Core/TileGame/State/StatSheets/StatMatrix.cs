@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 public class StatMatrix
 {
 
@@ -78,5 +81,29 @@ public class StatMatrix
         if (HitPoints > 0) s += $"HP {HitPoints} ";
         if (BaseDamage > 0) s += $"BDMG {BaseDamage}";
         return s;
+    }
+
+    internal static List<(ItemSlot, StatMatrix)> GetRandomEnchantmentsForPlayerLevel(int v, int level)
+    {
+        List<(ItemSlot, StatMatrix)> items = new List<(ItemSlot, StatMatrix)>();
+        for (int i = 0; i < v; i++) {
+            Random random = new Random();
+            items.Add((
+                (ItemSlot) random.Next(0, Enum.GetValues(typeof(ItemSlot)).Length),
+                new StatMatrix() {
+                    Strength = random.Next(0, level + 1),
+                    Dexterity = random.Next(0, level + 1),
+                    Vitality = random.Next(0, level + 1),
+                    Luck = random.Next(0, level + 1),
+                    WeaponDamage = random.Next(0, level + 1),
+                    Defense = random.Next(0, level + 1),
+                    ArmorPiercing = random.Next(0, level + 1),
+                    ArmorDurability = random.Next(0, level + 1),
+                    HitPoints = random.Next(0, level + 1),
+                    BaseDamage = random.Next(0, level + 1)
+                }
+            ));
+        }
+        return items;
     }
 }

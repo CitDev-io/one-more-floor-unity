@@ -206,3 +206,8 @@ varying degrees
 - somewhere in the CORE that will own these objects and their generation. This will have a public .Get() for the 3 new items
 - somewhere in the CORE that will own putting the item into the user's inventory, consider order of operations here for both
 the presentation and applying of the item to the stat sheet
+
+
+
+### 1-6-2025
+- Should next be doing the Armor and XP upgrades shops. 

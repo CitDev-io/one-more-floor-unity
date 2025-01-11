@@ -6,7 +6,11 @@ public class PlayerItem: StatMatrix
     public string Name;
     public string Description;
     public ItemSlot Slot;
+    public StatMatrix Enchantment = new StatMatrix() { Luck = 1 };
 
+    public void Enchant(StatMatrix sm) {
+        Enchantment = sm;
+    }
     
     public static PlayerItem Reduce(params PlayerItem[] args) {
         PlayerItem result = new PlayerItem();
