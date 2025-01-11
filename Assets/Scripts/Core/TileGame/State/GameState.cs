@@ -6,6 +6,13 @@ public interface IItemShopVendor {
     public ValueTuple<PlayerItem, PlayerItem> ItemShopPurchase(int index);
 }
 
+/*
+
+    game state ought to be composed of partial class files that each specify
+    a interface and implement it so those that interact with it aren't
+    given the keys to the kingdom, just the kiosk they need
+*/
+
 public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker, IItemShopVendor {
     public PlayerAvatar Player;
     public TileGrid Tiles { get; private set; }
@@ -16,6 +23,7 @@ public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker
     public Encounter Encounter;
     private readonly IEventInvoker SurfaceEventInvoker;
     public List<PlayerItem> ItemShopOptions { get; private set; }
+    public List<(ItemSlot, StatMatrix)> EnchantmentShopOptions { get; private set; }
     public IItemShopVendor ItemShopVendor => this;
 
     public List<PlayerItem> GetNewItemShopOptions() {
@@ -100,16 +108,26 @@ public class GameState : ITileGridProvider, ITileCollectorContext, IEventInvoker
     }
 
     public ValueTuple<PlayerItem, PlayerItem> ItemShopPurchase(int index) {
-        // if (Phase != BoardPhase.ITEMSHOP) throw new System.Exception($"NOT RIGHT PHASE {Phase}, SHOULD BE ITEMSHOP");
-
         PlayerItem ItemPurchased = ItemShopOptions[index];
         ValueTuple<PlayerItem, PlayerItem> itemSwap = Player.AddItemToInventory(ItemPurchased);
         Player.SpendDownCoins();
         ItemShopOptions = null;
         return itemSwap;
-        
-        // Trip();
-        // Debug.("PURCHASE");
+    }
+
+    public (StatMatrix, StatMatrix) EnchantShopPurchase(int index)
+    {
+        ValueTuple<ItemSlot, StatMatrix> enchantmentPurchased = EnchantmentShopOptions[index];
+        (StatMatrix, StatMatrix) enchantSwap = Player.AddEnchantmentToItemInSlot(enchantmentPurchased);
+        Player.SpendDownDefensePoints();
+        EnchantmentShopOptions = null;
+        return enchantSwap;
+    }
+
+    public List<(ItemSlot, StatMatrix)> GetNewEnchantShopOptions()
+    {
+        EnchantmentShopOptions = StatMatrix.GetRandomEnchantmentsForPlayerLevel(4, Player.Level);
+        return new List<(ItemSlot, StatMatrix)>(EnchantmentShopOptions);
     }
 }
 

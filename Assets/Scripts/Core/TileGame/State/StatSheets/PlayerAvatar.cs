@@ -104,7 +104,7 @@ public class PlayerAvatar: StatSheet {
 
     public int GoldGoal = 100;
     public int GearPoints { get; private set; }
-    public int GearGoal = 50;
+    public int GearGoal = 100;
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 50;
     public int MonstersKilled { get; private set; }
@@ -117,6 +117,10 @@ public class PlayerAvatar: StatSheet {
 
     public bool ReachedCoinGoalWhenAdding(int toAddCount = 0) {
         return Gold + toAddCount >= GoldGoal;
+    }
+
+    public bool ReachedDefenseGoalWhenAdding(int toAddCount = 0) {
+        return GearPoints + toAddCount >= GearGoal;
     }
 
     public bool HasReachedDefenseGoal() {

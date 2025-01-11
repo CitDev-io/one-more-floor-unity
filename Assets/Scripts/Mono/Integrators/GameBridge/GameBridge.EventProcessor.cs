@@ -233,12 +233,13 @@ public partial class GameBridge {
                     
                     yield return StartCoroutine(PlayerInputYield_GoldShop());
 
-                // event is public, open the menu
+                // event is public, standard can have a handler if we need it, probs not
                 HandleGoldGoalReached();
                 break;
             case DefenseGoalReachedEvent defenseGoalReachedEvent:
-                // yield return performance here
-                // can maybe pass this handle as a lambda to time its fire
+                // time the announcement
+                yield return StartCoroutine(PlayerInputYield_EnchantShop());
+                // event is public, standard can have a handler if we need it, probs not
                 HandleDefenseGoalReached();
                 break;
             case PhaseChangeEvent phaseChangeEvent:

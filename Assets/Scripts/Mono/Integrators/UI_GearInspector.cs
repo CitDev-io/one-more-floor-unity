@@ -9,6 +9,7 @@ public class UI_GearInspector : MonoBehaviour
     [SerializeField] TextMeshProUGUI ItemTitle;
     [SerializeField] TextMeshProUGUI ItemDesc;
     [SerializeField] TextMeshProUGUI ItemStats;
+    [SerializeField] TextMeshProUGUI EnchantStats;
     [SerializeField] List<GameObject> HideObjectsOnStart;
 
     void Awake()
@@ -23,6 +24,7 @@ public class UI_GearInspector : MonoBehaviour
         ItemTitle.text = "";
         ItemDesc.text = "";
         ItemStats.text = "";
+        EnchantStats.text = "";
     }
 
     public void InspectInventoryAtSlot(string slot) {
@@ -31,5 +33,6 @@ public class UI_GearInspector : MonoBehaviour
         ItemTitle.text = item.Name.ToUpper();
         ItemDesc.text = item.Description.ToUpper();
         ItemStats.text = item.SummaryStats();
+        EnchantStats.text = item.Enchantment.SummaryStats();
     }
 }

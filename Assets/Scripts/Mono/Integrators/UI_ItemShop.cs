@@ -13,18 +13,13 @@ public class UI_ItemShop : MonoBehaviour
     [SerializeField] UI_ItemShopOptionTxter Option3;
     [SerializeField] UI_ItemShopOptionTxter Replaces1;
     int selectedItemIndex = -1;
-    [SerializeField] bool StartVisible = false;
 
 
     void Awake() {
         _rc = GameObject.FindObjectOfType<GameBridge>();
-        if (StartVisible) {
-            Show();
-        } else {
-            Hide();
-        }
+        Hide();
     }
-
+    /* show and hide can be incorporated into the ui_toggle-active component */
     public void Show() {
         GetComponent<CanvasGroup>().alpha = 1;
         GetComponent<CanvasGroup>().interactable = true;

@@ -81,13 +81,14 @@ public class StatSheet
 */
 
 
-    internal void AddEnchantmentToItemInSameSlot(PlayerItem enchantment) {
-        ItemSlot affectedSlot = enchantment.Slot;
-        PlayerItem unenchantedItem = GetItemInInventorySlot(affectedSlot);
-        Inventory[affectedSlot] = PlayerItem.Reduce(enchantment, unenchantedItem);
+    internal ValueTuple<StatMatrix, StatMatrix> AddEnchantmentToItemInSlot(ValueTuple<ItemSlot, StatMatrix> enchantment) {
+        PlayerItem item = GetItemInInventorySlot(enchantment.Item1);
+        StatMatrix oldEnchantment = item.Enchantment;
+        item.Enchant(enchantment.Item2);
 
         ResetTotalStats();
-        addHpWithoutNegative(enchantment.HitPoints);
+        addHpWithoutNegative(enchantment.Item2.HitPoints);
+        return new ValueTuple<StatMatrix, StatMatrix>(oldEnchantment, enchantment.Item2);
     }
 
     internal ValueTuple<PlayerItem, PlayerItem> AddItemToInventory(PlayerItem newItem) {
@@ -171,6 +172,7 @@ public class StatSheet
         StatMatrix[] allStats = Inventory
             .Select(z => (StatMatrix) z.Value)
             .Append(StarterStats)
+            .Union(Inventory.Select(z => z.Value.Enchantment))
             .Concat(Skillups)
             .ToArray();
 
