@@ -1,0 +1,17 @@
+goldBar.png
+size:1045,192
+filter:Linear,Linear
+pma:true
+goldbag
+bounds:972,99,91,71
+offsets:1,1,93,73
+rotate:90
+goldbar
+bounds:2,2,590,188
+offsets:1,1,592,191
+value
+bounds:594,109,376,81
+offsets:1,1,378,83
+valuePreview
+bounds:594,26,376,81
+offsets:1,1,378,83

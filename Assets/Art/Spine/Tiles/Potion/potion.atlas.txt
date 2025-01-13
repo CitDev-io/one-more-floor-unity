@@ -1,0 +1,13 @@
+potion.png
+size:387,239
+filter:Linear,Linear
+pma:true
+bottle
+bounds:2,2,234,235
+offsets:1,1,236,237
+green
+bounds:238,128,147,109
+offsets:1,1,149,111
+red
+bounds:238,17,147,109
+offsets:1,1,149,111

@@ -1,0 +1,16 @@
+xpBar.png
+size:1050,192
+filter:Linear,Linear
+pma:true
+star
+bounds:970,112,78,78
+offsets:1,1,80,80
+value
+bounds:593,109,375,81
+offsets:1,1,377,83
+valuePreview
+bounds:593,26,375,81
+offsets:1,1,377,83
+xpbar
+bounds:2,2,589,188
+offsets:1,1,591,191

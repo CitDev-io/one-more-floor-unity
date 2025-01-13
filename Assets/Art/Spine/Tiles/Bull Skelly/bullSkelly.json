@@ -1,0 +1,88 @@
+{
+"skeleton": {
+	"hash": "h7Bm2cTcfEo",
+	"spine": "4.2.38",
+	"x": -155.5,
+	"y": -141.5,
+	"width": 339,
+	"height": 301,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "head", "parent": "root", "x": -27.1, "y": -25.53 },
+	{ "name": "eyeGlow", "parent": "head", "x": -16.4, "y": 36.08 }
+],
+"slots": [
+	{ "name": "head", "bone": "head", "attachment": "head" },
+	{ "name": "eye glow red", "bone": "eyeGlow", "attachment": "eye glow red" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"eye glow red": {
+				"eye glow red": { "x": 23, "y": 0.95, "width": 198, "height": 124 }
+			},
+			"head": {
+				"head": { "x": 41.1, "y": 34.53, "width": 339, "height": 301 }
+			}
+		}
+	}
+],
+"animations": {
+	"asleep": {
+		"slots": {
+			"eye glow red": {
+				"attachment": [
+					{}
+				]
+			}
+		}
+	},
+	"awake": {},
+	"death": {
+		"slots": {
+			"eye glow red": {
+				"rgba": [
+					{ "color": "ffffffff" },
+					{ "time": 0.6667, "color": "ffffff00" }
+				]
+			}
+		},
+		"bones": {
+			"head": {
+				"rotate": [
+					{},
+					{ "time": 0.1667, "value": 6.13 },
+					{ "time": 0.3333, "value": -0.48 },
+					{ "time": 0.5, "value": 7 },
+					{ "time": 0.6667 }
+				]
+			}
+		}
+	},
+	"wakeUp": {
+		"slots": {
+			"eye glow red": {
+				"rgba": [
+					{ "color": "ffffff00" },
+					{ "time": 0.6667, "color": "ffffffff" }
+				]
+			}
+		},
+		"bones": {
+			"head": {
+				"rotate": [
+					{},
+					{ "time": 0.1667, "value": 6.13 },
+					{ "time": 0.3333, "value": -0.48 },
+					{ "time": 0.5, "value": 7 },
+					{ "time": 0.6667 }
+				]
+			}
+		}
+	}
+}
+}

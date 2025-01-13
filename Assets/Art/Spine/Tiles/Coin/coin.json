@@ -1,0 +1,32 @@
+{
+"skeleton": {
+	"hash": "IW9sda/QHVM",
+	"spine": "4.2.38",
+	"x": -106.5,
+	"y": -115.5,
+	"width": 214,
+	"height": 227,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "coin", "parent": "root", "x": -0.43, "y": 11.37 }
+],
+"slots": [
+	{ "name": "coin", "bone": "coin", "attachment": "coin" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"coin": {
+				"coin": { "x": 0.93, "y": -13.37, "width": 214, "height": 227 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

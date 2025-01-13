@@ -1,0 +1,12 @@
+basicSkelly.png
+size:381,253
+filter:Linear,Linear
+pma:true
+eye glow red
+bounds:268,66,185,111
+offsets:6,7,198,124
+rotate:90
+head
+bounds:2,2,249,264
+offsets:2,2,252,267
+rotate:90

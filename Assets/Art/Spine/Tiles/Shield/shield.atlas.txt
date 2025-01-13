@@ -1,0 +1,7 @@
+shield.png
+size:218,259
+filter:Linear,Linear
+pma:true
+shield
+bounds:2,2,214,255
+offsets:1,1,216,257

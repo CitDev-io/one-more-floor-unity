@@ -1,0 +1,11 @@
+bullSkelly.png
+size:453,303
+filter:Linear,Linear
+pma:true
+eye glow red
+bounds:340,116,185,111
+offsets:6,7,198,124
+rotate:90
+head
+bounds:2,2,336,299
+offsets:1,1,339,301

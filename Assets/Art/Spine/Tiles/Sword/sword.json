@@ -1,0 +1,32 @@
+{
+"skeleton": {
+	"hash": "JCsC6DpkLL8",
+	"spine": "4.2.38",
+	"x": -132.5,
+	"y": -132.5,
+	"width": 266,
+	"height": 264,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "sword", "parent": "root", "x": -41.4, "y": -43.09 }
+],
+"slots": [
+	{ "name": "sword", "bone": "sword", "attachment": "sword" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"sword": {
+				"sword": { "x": 41.9, "y": 42.59, "width": 266, "height": 264 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

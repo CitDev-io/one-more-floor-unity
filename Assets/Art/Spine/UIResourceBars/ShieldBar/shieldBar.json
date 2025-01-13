@@ -1,0 +1,47 @@
+{
+"skeleton": {
+	"hash": "gLxS3bWL28M",
+	"spine": "4.2.38",
+	"x": -0.5,
+	"y": -95.5,
+	"width": 591,
+	"height": 191,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "shieldBar", "parent": "root", "x": 23.7, "y": -0.58 },
+	{ "name": "shield", "parent": "shieldBar", "x": 71.19, "y": -1.29 },
+	{ "name": "value", "parent": "shieldBar", "x": 147.57, "y": 1.94 },
+	{ "name": "valuePreview", "parent": "shieldBar", "x": 147.57, "y": 12.3 }
+],
+"slots": [
+	{ "name": "valuePreview", "bone": "valuePreview", "attachment": "valuePreview" },
+	{ "name": "value", "bone": "value", "attachment": "value" },
+	{ "name": "shield", "bone": "shield", "attachment": "shield" },
+	{ "name": "shieldbar", "bone": "shieldBar", "attachment": "shieldbar" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"shield": {
+				"shield": { "x": 0.11, "y": -2.13, "width": 61, "height": 73 }
+			},
+			"shieldbar": {
+				"shieldbar": { "x": 271.3, "y": 0.58, "width": 591, "height": 191 }
+			},
+			"value": {
+				"value": { "x": 197.74, "y": -1.37, "width": 377, "height": 83 }
+			},
+			"valuePreview": {
+				"valuePreview": { "x": 197.74, "y": -11.72, "width": 377, "height": 83 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

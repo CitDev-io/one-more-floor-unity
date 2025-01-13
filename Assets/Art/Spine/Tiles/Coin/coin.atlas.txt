@@ -1,0 +1,7 @@
+coin.png
+size:216,229
+filter:Linear,Linear
+pma:true
+coin
+bounds:2,2,212,225
+offsets:1,1,214,227

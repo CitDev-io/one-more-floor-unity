@@ -1,0 +1,17 @@
+healthBar.png
+size:1041,192
+filter:Linear,Linear
+pma:true
+healthbar
+bounds:2,2,589,188
+offsets:1,1,591,191
+heart
+bounds:970,112,78,69
+offsets:1,2,80,72
+rotate:90
+value
+bounds:593,109,375,81
+offsets:1,1,377,83
+valuePreview
+bounds:593,26,375,81
+offsets:1,1,377,83

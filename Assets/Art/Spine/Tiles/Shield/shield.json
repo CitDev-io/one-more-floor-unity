@@ -1,0 +1,32 @@
+{
+"skeleton": {
+	"hash": "7uoX9Vhlp9U",
+	"spine": "4.2.38",
+	"x": -107.5,
+	"y": -128.5,
+	"width": 216,
+	"height": 257,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "shield", "parent": "root", "x": 0.61, "y": 11.11 }
+],
+"slots": [
+	{ "name": "shield", "bone": "shield", "attachment": "shield" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"shield": {
+				"shield": { "x": -0.11, "y": -11.11, "width": 216, "height": 257 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

@@ -1,0 +1,16 @@
+shieldBar.png
+size:1031,192
+filter:Linear,Linear
+pma:true
+shield
+bounds:970,119,59,71
+offsets:1,1,61,73
+shieldbar
+bounds:2,2,589,188
+offsets:1,1,591,191
+value
+bounds:593,109,375,81
+offsets:1,1,377,83
+valuePreview
+bounds:593,26,375,81
+offsets:1,1,377,83

@@ -1,0 +1,38 @@
+{
+"skeleton": {
+	"hash": "czoVTga3vRU",
+	"spine": "4.2.38",
+	"x": -117.5,
+	"y": -118.5,
+	"width": 236,
+	"height": 237,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "bottle", "parent": "root", "x": -27.22, "y": -24.89 },
+	{ "name": "liquid", "parent": "root", "x": -21.86, "y": -47.68 }
+],
+"slots": [
+	{ "name": "liquid", "bone": "liquid", "attachment": "red" },
+	{ "name": "bottle", "bone": "bottle", "attachment": "bottle" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"bottle": {
+				"bottle": { "x": 27.72, "y": 24.89, "width": 236, "height": 237 }
+			},
+			"liquid": {
+				"green": { "x": -5.14, "y": 1.68, "width": 149, "height": 111 },
+				"red": { "x": -5.14, "y": 1.68, "width": 149, "height": 111 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

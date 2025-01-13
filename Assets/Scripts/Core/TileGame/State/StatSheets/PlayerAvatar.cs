@@ -7,6 +7,7 @@ public enum PlayerAvatarStatType {
     XP,
     COINS,
     ARMOR,
+    ARMORCOUNTMAX,
     MONSTERKILLS,
     BOSSKILLS,
     HPCURMAX,
@@ -45,6 +46,7 @@ public class PlayerAvatar: StatSheet {
             PlayerAvatarStatType.XP => ExperiencePoints+"",
             PlayerAvatarStatType.COINS => Gold+"",
             PlayerAvatarStatType.ARMOR => Armor+"",
+            PlayerAvatarStatType.ARMORCOUNTMAX => Armor+"/" + CalcMaxArmor(),
             PlayerAvatarStatType.MONSTERKILLS => MonstersKilled+"",
             PlayerAvatarStatType.BOSSKILLS => BossesKilled+"",
             PlayerAvatarStatType.HPCURMAX => Hp + " / " + CalcMaxHp(),
@@ -102,9 +104,9 @@ public class PlayerAvatar: StatSheet {
     int PERSTRENGTH_BonusXPChance = 5;
     int PERROLL_BonusXP = 1;
 
-    public int GoldGoal = 100;
+    public int GoldGoal = 5;
     public int GearPoints { get; private set; }
-    public int GearGoal = 100;
+    public int GearGoal = 5;
     public int ExperiencePoints { get; private set; }
     public int ExperienceGoal = 50;
     public int MonstersKilled { get; private set; }

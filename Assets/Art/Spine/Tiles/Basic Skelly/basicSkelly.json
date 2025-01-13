@@ -1,0 +1,108 @@
+{
+"skeleton": {
+	"hash": "TEeznGdgmq8",
+	"spine": "4.2.38",
+	"x": -125.5,
+	"y": -133.5,
+	"width": 252,
+	"height": 267,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "head", "parent": "root", "x": -20.23, "y": -31.67 },
+	{ "name": "eyeGlow", "parent": "head", "x": -19.54, "y": 47.73 }
+],
+"slots": [
+	{ "name": "head", "bone": "head", "attachment": "head" },
+	{ "name": "eye glow red", "bone": "eyeGlow", "attachment": "eye glow red" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"eye glow red": {
+				"eye glow red": { "x": 19.28, "y": -4.56, "width": 198, "height": 124 }
+			},
+			"head": {
+				"head": { "x": 20.73, "y": 31.67, "width": 252, "height": 267 }
+			}
+		}
+	}
+],
+"animations": {
+	"asleep": {
+		"slots": {
+			"eye glow red": {
+				"attachment": [
+					{}
+				]
+			}
+		}
+	},
+	"awake": {
+		"slots": {
+			"eye glow red": {
+				"attachment": [
+					{ "name": "eye glow red" }
+				]
+			}
+		}
+	},
+	"wakeUp": {
+		"slots": {
+			"eye glow red": {
+				"rgba": [
+					{
+						"color": "ffffff00",
+						"curve": [ 0.222, 1, 0.444, 1, 0.222, 1, 0.444, 1, 0.222, 1, 0.444, 1, 0.222, 0, 0.444, 1 ]
+					},
+					{ "time": 0.6667, "color": "ffffffff" }
+				]
+			}
+		},
+		"bones": {
+			"head": {
+				"rotate": [
+					{},
+					{ "time": 0.1667, "value": 7.76 },
+					{ "time": 0.3333, "value": 3.74 },
+					{ "time": 0.5, "value": 8.52 },
+					{ "time": 0.6667, "value": 0.01 }
+				]
+			}
+		}
+	},
+	"wakeUp2": {
+		"slots": {
+			"eye glow red": {
+				"rgba": [
+					{
+						"color": "ffffffff",
+						"curve": [ 0.222, 1, 0.444, 1, 0.222, 1, 0.444, 1, 0.222, 1, 0.444, 1, 0.222, 1, 0.444, 0 ]
+					},
+					{ "time": 0.6667, "color": "ffffff00" }
+				]
+			}
+		},
+		"bones": {
+			"head": {
+				"rotate": [
+					{
+						"curve": [ 0.056, 1.41, 0.054, 4.15 ]
+					},
+					{
+						"time": 0.1667,
+						"value": 4.23,
+						"curve": [ 0.222, 4.27, 0.278, -2.71 ]
+					},
+					{ "time": 0.3333, "value": -2.93 },
+					{ "time": 0.5, "value": -3.57 },
+					{ "time": 0.6667, "value": 0.01 }
+				]
+			}
+		}
+	}
+}
+}

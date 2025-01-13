@@ -1,0 +1,47 @@
+{
+"skeleton": {
+	"hash": "3KJmBAwrxBU",
+	"spine": "4.2.38",
+	"x": -0.5,
+	"y": -95.5,
+	"width": 591,
+	"height": 191,
+	"images": "./images/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "xpbar", "parent": "root", "x": 22.75, "y": 0.17 },
+	{ "name": "star", "parent": "xpbar", "x": 71, "y": 1.16 },
+	{ "name": "value", "parent": "xpbar", "x": 148.41, "y": 0.58 },
+	{ "name": "valuePreview", "parent": "xpbar", "x": 147.83, "y": 9.89 }
+],
+"slots": [
+	{ "name": "valuePreview", "bone": "valuePreview", "attachment": "valuePreview" },
+	{ "name": "value", "bone": "value", "attachment": "value" },
+	{ "name": "star", "bone": "star", "attachment": "star" },
+	{ "name": "xpbar", "bone": "xpbar", "attachment": "xpbar" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"star": {
+				"star": { "x": 1.74, "y": 1.16, "width": 80, "height": 80 }
+			},
+			"value": {
+				"value": { "x": 197.84, "y": -0.75, "width": 377, "height": 83 }
+			},
+			"valuePreview": {
+				"valuePreview": { "x": 198.42, "y": -10.07, "width": 377, "height": 83 }
+			},
+			"xpbar": {
+				"xpbar": { "x": 272.25, "y": -0.17, "width": 591, "height": 191 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

@@ -1,0 +1,7 @@
+sword.png
+size:268,265
+filter:Linear,Linear
+pma:true
+sword
+bounds:2,2,264,261
+offsets:1,2,266,264
